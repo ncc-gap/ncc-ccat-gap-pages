@@ -57,8 +57,9 @@
 <h2>
 <a id="user-content-2-どのようにしてゲノムを読み取るか" class="anchor" href="#2-%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E3%81%97%E3%81%A6%E3%82%B2%E3%83%8E%E3%83%A0%E3%82%92%E8%AA%AD%E3%81%BF%E5%8F%96%E3%82%8B%E3%81%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. どのようにして、ゲノムを読み取るか</h2>
 <p>現在、塩基配列を読み取るにはシーケンサーと呼ばれる配列を解読する専用の機械を使用することが一般的です。</p>
-<p>現在広く用いられているシーケンサは次世代シーケンサー（NGS）とよばれています。
-従来法（サンガー法）が一つひとつ DNA 配列を決めていくのに対し、次世代シーケンサーはDNA配列を分割して、同時並行で配列を決定できるため解読時間は劇的に早くなりました。</p>
+<p>現在広く用いられているシーケンサーは次世代シーケンサー（NGS）とよばれています。
+従来法（サンガー法）が一つひとつ DNA 配列を決めていくのに対し、次世代シーケンサーは DNA 配列を分割して、同時並行で配列を決定します。
+従来法に比べて解読時間は劇的に速くなりました。</p>
 <h3>
 <a id="user-content-21-dnaの採取" class="anchor" href="#21-dna%E3%81%AE%E6%8E%A1%E5%8F%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.1 DNAの採取</h3>
 <p>まず、動物の血液や体細胞、植物の組織などを採取します。</p>
@@ -68,22 +69,25 @@
 <a id="user-content-22-シーケンサーによる解読" class="anchor" href="#22-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AB%E3%82%88%E3%82%8B%E8%A7%A3%E8%AA%AD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.2 シーケンサーによる解読</h3>
 <p>抽出したDNAの塩基配列を読みます。
 このとき、シーケンサーと呼ばれる塩基配列を読み取る機械を使用します。</p>
-<p>DNAの全塩基配列は約 30 億文字あり、順番に読んでいくと膨大な時間がかかりますので、シーケンサーではDNAを200文字くらいに小さく分割して読み取り時間を短縮しています。
-また、読み取り精度向上のため、分割したDNA（リードといいます）を複製して同じ領域を何度も繰り返して読みます。同一のゲノム領域に対するリードの重複数をシーケンスデプスと呼びます。</p>
+<p>DNAの全塩基配列は約 30 億文字あり、順番に読んでいくと膨大な時間がかかりますので、シーケンサーではDNAを小さく分割して読み取り時間を短縮しています。
+分割されたDNAをリードといいます。</p>
+<p>また、DNAを複製して同じ領域をカバーするリードを数多く作成します。信頼性向上のために、同じ領域を何度も解読して読み取りエラーを検出できるようにするためです。
+同じゲノム領域に対するリードの重複数をシーケンスデプスと呼びます。</p>
+<p><a href="../image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
 <ul>
 <li>(1) DNA を複製します</li>
 <li>(2) 複製した DNA を断片化します</li>
 <li>(3) 断片化した DNA の塩基配列を解読します</li>
 </ul>
-<p><a href="../image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
 <h3>
 <a id="user-content-23-アライメント" class="anchor" href="#23-%E3%82%A2%E3%83%A9%E3%82%A4%E3%83%A1%E3%83%B3%E3%83%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.3 アライメント</h3>
-<p>採取したDNAは断片化してしまいましたので、元の場所が分かりませんので、どれがどの部分にあたるか予想します。これをアライメントといいます。</p>
-<p>そのためには「元の場所」の基準が必要です。その基準をリファレンスゲノムといい、「国際参照ゲノム配列」という、2003年までに膨大な時間とコストをかけて解読したゲノムが使用されています。ヒトのゲノム配列の個人差は、0.1%程度と言われています。つまり大部分の箇所で一致するため、手本をガイドにして元の場所を見つけ出します。<a href="https://www.megabank.tohoku.ac.jp/news/michi/6187" rel="nofollow">^4</a></p>
+<p>採取したDNAは断片化したため、元の場所が分かりません。そこで、どれがどの部分にあたるか予想します。これをアライメントといいます。</p>
+<p>そのためには「元の場所」の基準が必要です。その基準をリファレンスゲノムといい、「国際参照ゲノム配列」という、2003年までに膨大な時間とコストをかけて解読したゲノムが使用されています。ヒトのゲノム配列の個人差は、0.1%程度と言われています。つまり大部分の箇所で一致するため、リファレンスゲノムをガイドにして元の場所を見つけることができます。<a href="https://www.megabank.tohoku.ac.jp/news/michi/6187" rel="nofollow">^4</a></p>
 <p><a href="../image/ID6187_02.png" target="_blank" rel="noopener noreferrer"><img src="../image/ID6187_02.png" alt="" style="max-width:100%;"></a></p>
 <p><strong>シングルリードとペアリード</strong></p>
-<p>次世代シークエンサーで解読できる塩基は、DNAの断片のうちごく一部であり通常、100～200塩基程度です。これをシングルリードといいます。</p>
-<p>ペアリードは二本鎖のそれぞれについて、端から150塩基ずつ解読します。塩基はペアになる組み合わせが決まっているので、片方を解読すればもう片方の塩基の並びも判明します。これにより、DNAの断片の両端が解読可能となります。</p>
+<p>次世代シークエンサーで解読できる塩基は、DNAの断片のうちごく一部であり通常、100～200塩基程度です。</p>
+<p>ペアエンドモード（ペアリード）は二本鎖のそれぞれについて、端から150塩基ずつ解読します。塩基はペアになる組み合わせが決まっているので、片方を解読すればもう片方の塩基の並びも判明します。これにより、DNAの断片の両端が解読可能となります。</p>
+<p>ペアを使用しない手法はペアリードに対してシングルエンドモード（シングルリード）といいます。</p>
 <p><a href="../image/seq3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq3.PNG" alt="" style="max-width:100%;"></a></p>
 <p>読み取ったゲノムの情報をシーケンスデータと呼びます。</p>
 <h2>
@@ -148,6 +152,14 @@ ACCATGTCCACAGCCAGACCCTCCTCCACTCCAGAGACTGTCCACACCTCCACAGTGCTTACCACCACGGCCACCACAAC
 <span class="pl-s">ACACAAGCACCCTTGGTACAGCCACCACGGGAGGCCCCACGACGCCTGCAGGCTCCACAGAACCCACTGTCCCAGGGGTGGCCACATCCACCCTTCCAAC</span>
 <span class="pl-s">+</span>
 <span class="pl-s">;&gt;;:?A?A?67=A:&gt;;&lt;87768;&gt;;;:6767;72&gt;7;&gt;5/4&gt;:::@AA66==@??:A?8==9=@&gt;:865&gt;;?&gt;9?8=&lt;??8&lt;??????&gt;&lt;3:&gt;;9?????</span></pre></div>
+<p>FASTQ は 4 行で 1 つのリードを表現します</p>
+<ul>
+<li>1行目：リードID</li>
+<li>2行目：塩基配列</li>
+<li>3行目：＋固定</li>
+<li>4行目：2行目に記述した配列のクオリティ</li>
+</ul>
+<p><a href="../image/fastq.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/fastq.PNG" alt="" style="max-width:100%;"></a></p>
 <p>ファイルの拡張子は、.fastq, .fq などです。
 圧縮されていれば、.fastq.gz, .fq.gz のようになります。（FASTA の場合は、.fasta, .fa, fa.gz など。）
 また、_1.fq.gz, _2.fq.gz のように番号がついているものは、ペアエンドモードでシーケンスされた結果です。
@@ -162,6 +174,20 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 <div class="highlight highlight-source-shell"><pre>$ samtools view _GRCh37/sample/dna/simulate_T.sam <span class="pl-k">|</span> head -n 2
 11-2657290-2657453-30832        163     1       11225180        32      100M    =       11225339        259     AAACCCACAGCCAATATCAGACTGAATGAGCAAAAACTGGAAGCATTCCATTTGAAAACTGGCACAAGACAGGGATGCCCTCTCTCACCACTCCTATTCA        :<span class="pl-k">&gt;</span><span class="pl-k">;</span><span class="pl-k">&lt;</span><span class="pl-k">?</span>A<span class="pl-k">?</span>A<span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">C9=</span>&lt;=A:;;&amp;D;?;5&lt;A:&gt;:===55:@::&gt;/9=9::?;&gt;;A3:?:5864&gt;9:&gt;&gt;&lt;&lt;?&gt;&lt;?:A;&gt;9??=;:&gt;:&lt;&lt;==?;09????9;?&lt;&gt;:    NM:i:3  MD:Z:19T8G20C50 AS:i:85 XS:i:90</span>
 <span class="pl-s">11-2657290-2657453-30832        83      1       11225339        32      100M    =       11225180        -259    TAGGAAAAGAGGAAGTCAAATTGTCCCTGTTTGCAGATGACATGATTGTATATTTAGAAAACCCCGTCATCTCAGCCCAAAATCTCCTTAAGCTGATAAG        =7;&gt;9=;?:;??:9??????=?=&lt;;&gt;&lt;;A??:;&gt;;2269;=8;&gt;&gt;;?9&gt;;??&lt;=&lt;;;?:&gt;CD+/,,:9;=9&gt;:A===AE.;&gt;5==A?C,:88:6665&gt;;&gt;    NM:i:1  MD:Z:36G63      AS:i:95 XS:i:100</span></pre></div>
+<p>SAM ファイル中のアラインメントの部分はタブ区切りで、全部で 11 カラム以上からなり、それぞれのカラムは以下のようになっています。</p>
+<ul>
+<li>QNAME: リードの名前</li>
+<li>FLAG: アラインメント結果</li>
+<li>RNAME: リファレンスの名前</li>
+<li>POS: リファレンス上における、リードがマップされた開始位置。</li>
+<li>CIGAR:</li>
+<li>MAPQ: マッピングクオリティ</li>
+<li>RNEXT: ペアエンドの場合、相手方のリード名（QNAME）。</li>
+<li>PNEXT: ペアエンドの場合、相手方のマップされた開始位置。</li>
+<li>TLEN:</li>
+<li>SEQ: FASTQ の塩基配列データ</li>
+<li>QUAL: FASTQ のクオリティデータ。</li>
+</ul>
 <h3>
 <a id="user-content-bam-2" class="anchor" href="#bam-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BAM <a href="http://array.cell-innovator.com/?p=3014" rel="nofollow">^2</a>
 </h3>
