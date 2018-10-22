@@ -50,27 +50,30 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../image/dna-rna.jpg" target="_blank" rel="noopener noreferrer"><img src="../image/dna-rna.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/dna-rna.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/dna-rna.PNG" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
 <h2>
 <a id="user-content-2-どのようにしてゲノムを読み取るか" class="anchor" href="#2-%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E3%81%97%E3%81%A6%E3%82%B2%E3%83%8E%E3%83%A0%E3%82%92%E8%AA%AD%E3%81%BF%E5%8F%96%E3%82%8B%E3%81%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. どのようにして、ゲノムを読み取るか</h2>
-<p>現在、塩基配列を読み取るにはシーケンサーと呼ばれる配列を解読する専用の機械を使用することが一般的です。</p>
+<p>現在、塩基配列を読み取る（シーケンスといいます）にはシーケンサーと呼ばれる配列を解読する専用の機械を使用することが一般的です。</p>
 <p>現在広く用いられているシーケンサーは次世代シーケンサー（NGS）とよばれています。
-従来法（サンガー法）が一つひとつ DNA 配列を決めていくのに対し、次世代シーケンサーは DNA 配列を断片化して、同時並行で配列を決定します。
+従来法であるサンガー法が一つひとつ DNA 配列を決めていくのに対し、次世代シーケンサーは DNA 配列を断片化して、同時並行で配列を決定します。
 従来法に比べて、圧倒的に低コストでのゲノムシーケンスが可能になりました。</p>
 <h3>
 <a id="user-content-21-dnaの採取" class="anchor" href="#21-dna%E3%81%AE%E6%8E%A1%E5%8F%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.1 DNAの採取</h3>
 <p>まず、動物の血液や体細胞、植物の組織などを採取します。</p>
-<p>採取した組織から化学的処理を行い、DNAを抽出します。
-RNAのシークエンスをする場合は、RNAの抽出を行います。</p>
+<p>採取した組織から化学的処理を行い、DNA を抽出します。
+RNA のシークエンスをする場合は、RNA の抽出を行います。</p>
 <p><a href="../image/seq1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq1.PNG" alt="" style="max-width:100%;"></a></p>
 <h3>
 <a id="user-content-22-シーケンサーによる解読" class="anchor" href="#22-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AB%E3%82%88%E3%82%8B%E8%A7%A3%E8%AA%AD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.2 シーケンサーによる解読</h3>
-<p>シーケンサーではDNAを小さく断片化し、同時並行での配列を読み取りを行うことで、大量のDNA配列の決定を行います。
-断片化されてシーケンサーされたDNAは一般的にショートリードと呼ばれます。</p>
-<p>シーケンサーの精度は100%ではなく、読み取りエラーなども生じます。
+<p>シーケンサーではDNAを小さく断片化し、同時並行で配列を読み取ることで、大量のDNA配列の決定を行います。
+断片化されてシーケンサーされた DNA をリードと呼びます。</p>
+<p>一般的には DNA を 300〜1,000 bp (リードの長さの単位。Base Pair の略で塩基の意味）ほどの長さに断片化したものを、ショートリードと呼びます。
+反対にもっと長く断片化（一般的には 10kbp ほど）したものをロングリードと呼びます。
+ここでは、現在多く使用されているショートリードについて解説します。</p>
+<p>しかし、シーケンサーの精度は完全ではなく、読み取りエラーなども生じます。
 そのために、同じ領域がショートリードに複数回カバーされ、エラーと本物のシグナルが区別できるように、シーケンスのデータ量を調整することが一般的です。
 同じゲノム領域をカバーするショートリードの本数はシーケンスデプスと呼ばれています。</p>
 <p><a href="../image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
@@ -81,26 +84,22 @@ RNAのシークエンスをする場合は、RNAの抽出を行います。</p>
 </ul>
 <h3>
 <a id="user-content-23-アライメント" class="anchor" href="#23-%E3%82%A2%E3%83%A9%E3%82%A4%E3%83%A1%E3%83%B3%E3%83%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.3 アライメント</h3>
-<p>シーケンサーから生成されたショートリードは断片化されているために、ゲノム上の元の場所（どの染色体のどの箇所？）が分かりません。
-そこで、各々のショートリードのゲノム上のポジションを決定する必要があります。この処理をアライメントといいます。</p>
-<p>そのためには「ゲノムの元の場所」の基準が必要です。その基準をリファレンスゲノムといい、
-「ヒトゲノム計画」というプロジェクトで、1990年から2003年までに世界中で膨大な時間とコストをかけて解読したゲノムを元に決定されています。
-ヒトのゲノム配列の個人差は、0.1%程度と言われています。つまり大部分の箇所で一致するため、リファレンスゲノムをガイドにして元の場所を見つけることができます。<a href="https://www.megabank.tohoku.ac.jp/news/michi/6187" rel="nofollow">^4</a></p>
+<p>シーケンサーから生成されたショートリードは断片化されているために、ゲノム上の元の場所「どの染色体のどの箇所か」が分かりません。
+そこで、各々のショートリードのゲノム上のポジションを決定する必要があります。この処理をアライメント、もしくはマッピングといいます。</p>
+<p>そのためには「ゲノムの元の場所」の基準が必要です。その基準をリファレンスゲノムといい、「ヒトゲノム計画」というプロジェクトにて、1990年から2003年までに世界中で膨大な時間とコストをかけて解読したゲノムを元に決定されています。
+ヒトのゲノム配列の個人差は、0.1% 程度と言われています。つまり大部分の箇所で一致するため、リファレンスゲノムをガイドにして元の場所を見つけることができます。<a href="https://www.megabank.tohoku.ac.jp/news/michi/6187" rel="nofollow">^4</a></p>
 <p><a href="../image/ID6187_02.png" target="_blank" rel="noopener noreferrer"><img src="../image/ID6187_02.png" alt="" style="max-width:100%;"></a></p>
 <p><strong>シングルリードとペアリード</strong></p>
-<p>多くの場合、断片化されたDNAは両端から読み取られます（ペアエンド法）。
-例えばDNAを300<del>1000bpほどの長さに断片化して、両端から100</del>200塩基ずつの読み取りを行うといった形が一般的です。
-ペアエンド法の利点は色々とありますが、例えば、
-リードのペアが染色体上の別の箇所にマッピングされた情報を利用して、染色体の構造異常（挿入、欠失、逆位、転座）などが検出できること、
-ショートリードをアセンブリする際に、有利になることなどが挙げられます。
-ペアを使用しない手法はペアエンド法に対してシングルエンド法と呼ばれます。</p>
+<p>多くの場合、断片化された DNA は両端から読み取られます（ペアエンド法）。
+DNA を 300〜1,000 塩基ほどの長さに断片化して、両端から 100〜200 塩基ずつの読み取りを行うといった形が一般的です。</p>
+<p>ペアを使用しない手法はペアエンド法に対してシングルエンド法と呼ばれます。</p>
+<p>ペアエンド法により読み取られたショートリードをペアリード、シングルエンド法により読み取られたショートリードをシングルリードといいます。</p>
 <p><a href="../image/seq3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq3.PNG" alt="" style="max-width:100%;"></a></p>
 <p>読み取ったゲノムの情報をシーケンスデータと呼びます。</p>
 <h2>
 <a id="user-content-3-シーケンスデータの種類" class="anchor" href="#3-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B9%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E7%A8%AE%E9%A1%9E" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. シーケンスデータの種類</h2>
 <p>シークエンスデータには様々な種類がありますが、大きくは読み取り対象・領域の違いとファイルフォーマットの違いに分けられます。</p>
-<p>ここでは読み取り対象・領域の違いについて記載します。</p>
-<p>ここでは、塩基配列を読み取る対象として主要な DNA と RNA について説明します。</p>
+<p>ここでは塩基配列を読み取る対象として主要な DNA と RNA における読み取り領域について説明します。</p>
 <p>遺伝情報を調べる目的では DNA が多く利用されますが、どの遺伝子がどれだけ読み取られているか（発現しているか）を調査する等の目的で RNA も多く使用されています。</p>
 <table>
 <thead>
@@ -122,7 +121,7 @@ RNAのシークエンスをする場合は、RNAの抽出を行います。</p>
 <td align="left">WXS</td>
 <td align="left">DNA</td>
 <td align="left">数十 Gbyte</td>
-<td align="left">DNAには翻訳されて生体活動に使用されるエキソン領域と使用されないイントロン領域があります。データ量を抑えるためにエキソン領域だけを読み取ったデータです。exomeと呼ぶこともあります。</td>
+<td align="left">Whole eXsome Sequence といい、データ量を抑えるためにエキソン領域だけを読み取ったデータです。（DNA には翻訳されて生体活動に使用されるエキソン領域と使用されないイントロン領域があります）exome と呼ぶこともあります。</td>
 </tr>
 <tr>
 <td align="left">ターゲット</td>
@@ -138,16 +137,27 @@ RNAのシークエンスをする場合は、RNAの抽出を行います。</p>
 </tr>
 </tbody>
 </table>
+<p><strong>BED ファイル</strong></p>
+<p>WXS（全エキソン）、ターゲットシーケンスでは興味のある領域の配列だけを取り出してシーケンスを行なっています。WGS（全ゲノム）と比較して安価かつ軽量に興味のある領域に絞った解析を行うことができます。</p>
+<p>この際に、「興味のある領域」の情報は通常BED (ベッド) ファイルで記載されていることがほとんどです。
+BED ファイルは ”染色体、開始位置、終了位置、（オプションとして領域の名称など）”のカラムから構成されるタブ区切りのテキストファイルです。</p>
+<div class="highlight highlight-source-shell"><pre>$ head -n 5 target.bed
+chr1    69090   70008   OR4F5
+chr1    367658  368597  OR4F16
+chr1    621095  622034  OR4F16
+chr1    861321  861393  SAMD11
+chr1    865534  865716  SAMD11</pre></div>
 <h2>
 <a id="user-content-4-読み取った配列のファイルフォーマット" class="anchor" href="#4-%E8%AA%AD%E3%81%BF%E5%8F%96%E3%81%A3%E3%81%9F%E9%85%8D%E5%88%97%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. 読み取った配列のファイルフォーマット</h2>
-<p>読み取った配列情報をファイルに保存するには形式には様々なフォーマットがありますが、代表的なフォーマットは、FASTQ （ファストキュー）と、SAM（サム）BAM（バム）です。</p>
+<p>読み取った配列情報をファイルに保存するには形式には様々なフォーマットがありますが、代表的なフォーマットは、FASTQ （ファストキュー）とSAM（サム）、BAM（バム）です。</p>
+<p>これら 3 つのファイルフォーマットについて解説します。</p>
 <h3>
 <a id="user-content-fastq-2" class="anchor" href="#fastq-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FASTQ <a href="http://array.cell-innovator.com/?p=3014" rel="nofollow">^2</a>
 </h3>
 <p>FASTQ は、シーケンサーが読み取ったリードの配列を保存したものです。
 もとは、ATGCの文字を記述するだけの FASTA（ファスタ）というフォーマットがあり、
 それに加え、シーケンサーで読み取った各塩基のクオリティー（シーケンスの信頼度）のスコアを付与したものです。</p>
-<p>リードを1本1本、記録しているため、数千万行から数億行の大きなサイズのファイルです。
+<p>リードを1本1本、記録しているため、数千万行から数億行というサイズの大きなファイルです。
 テキストファイルですので、テキストエディタで開くと、文字が読めます。
 （圧縮されている場合は、一度展開する必要があります。エディタによってはそのまま読めるものもあります。）</p>
 <div class="highlight highlight-source-shell"><pre>$ head -n 12 example/simulate_read1.fq
@@ -183,28 +193,28 @@ ACCATGTCCACAGCCAGACCCTCCTCCACTCCAGAGACTGTCCACACCTCCACAGTGCTTACCACCACGGCCACCACAAC
 <h3>
 <a id="user-content-sam-2" class="anchor" href="#sam-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SAM <a href="http://array.cell-innovator.com/?p=3014" rel="nofollow">^2</a>
 </h3>
-<p>シーケンサーから出力されたリード(FASTQ) を、リファレンスとなる配列にマッピングした結果は、SAM（サム）形式のファイルになります。
+<p>シーケンサーから出力されたリード (FASTQ) をリファレンスとなる配列にマッピングした結果は、SAM 形式のファイルになります。
 1本1本のリードが、ゲノム上のどこにマップされたかを示します。
 FASTQ の中身も含むので、ファイルのサイズは数十ギガバイト (GB) と大きくなります。
 ファイルの拡張子は、.sam です。</p>
-<div class="highlight highlight-source-shell"><pre>$ samtools view _GRCh37/sample/dna/simulate_T.sam <span class="pl-k">|</span> head -n 2
+<div class="highlight highlight-source-shell"><pre>$ samtools view example/simulate.sam <span class="pl-k">|</span> head -n 4
 11-2657290-2657453-30832        163     1       11225180        32      100M    =       11225339        259     AAACCCACAGCCAATATCAGACTGAATGAGCAAAAACTGGAAGCATTCCATTTGAAAACTGGCACAAGACAGGGATGCCCTCTCTCACCACTCCTATTCA        :<span class="pl-k">&gt;</span><span class="pl-k">;</span><span class="pl-k">&lt;</span><span class="pl-k">?</span>A<span class="pl-k">?</span>A<span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">C9=</span>&lt;=A:;;&amp;D;?;5&lt;A:&gt;:===55:@::&gt;/9=9::?;&gt;;A3:?:5864&gt;9:&gt;&gt;&lt;&lt;?&gt;&lt;?:A;&gt;9??=;:&gt;:&lt;&lt;==?;09????9;?&lt;&gt;:    NM:i:3  MD:Z:19T8G20C50 AS:i:85 XS:i:90</span>
 <span class="pl-s">11-2657290-2657453-30832        83      1       11225339        32      100M    =       11225180        -259    TAGGAAAAGAGGAAGTCAAATTGTCCCTGTTTGCAGATGACATGATTGTATATTTAGAAAACCCCGTCATCTCAGCCCAAAATCTCCTTAAGCTGATAAG        =7;&gt;9=;?:;??:9??????=?=&lt;;&gt;&lt;;A??:;&gt;;2269;=8;&gt;&gt;;?9&gt;;??&lt;=&lt;;;?:&gt;CD+/,,:9;=9&gt;:A===AE.;&gt;5==A?C,:88:6665&gt;;&gt;    NM:i:1  MD:Z:36G63      AS:i:95 XS:i:100</span>
 <span class="pl-s">11-2656416-2656564-38446        99      1       56709680        12      100M    =       56709828        247     TTAGATCCCATTTGTCAATTTTGGCTTTTGTTGCCATTGCTTTTGGTGTTTGAGACATGAAGTCCTTGCCCATGCCTATGTCCTGAATGGTATTGCCTAG        ;&gt;&gt;:A:AAACA&lt;A76==&lt;&gt;714/$:?3::&lt;:;&lt;=:A#?A&gt;:&gt;&lt;&gt;;88;&lt;66(E?A&gt;0)E&gt;9049=&gt;4&lt;;&gt;63:?=;&gt;6578;????;9&gt;;&gt;&lt;&gt;&lt;?????=    NM:i:0  MD:Z:100        AS:i:100   XS:i:100</span>
 <span class="pl-s">11-2656416-2656564-38446        147     1       56709828        12      99M1S   =       56709680        -247    AATCCATCTTGAATTAATTTTTGTATAAGGTGTAAGGAAGGGATCCAGTTTCAGCTTTCTACATATGGCTAGCCAGTTTTCCCAGTACCATTTATTAAAT        ;&gt;;7&gt;;&gt;&gt;&gt;;&gt;;&gt;?&lt;???=??9;&gt;;??;&gt;:&lt;A?=?9&gt;A&lt;;&gt;&lt;@:&gt;:6;86667==:=9:267&gt;49=8:8:::&gt;=17&lt;;7;&gt;37D=!6?CA?=A?AAA;&gt;&gt;    NM:i:1  MD:Z:85C13      AS:i:94 XS:i:100</span></pre></div>
-<p>SAM ファイル中のアラインメントの部分はタブ区切りで、全部で 11 カラム以上からなり、それぞれのカラムは以下のようになっています。</p>
+<p>SAM ファイルは 1 行で 1 つのリードを表し、タブ区切りで 11 カラム以上からなり、それぞれのカラムは以下のようになっています。</p>
 <ul>
 <li>QNAME: リードの名前</li>
 <li>FLAG: アラインメント結果</li>
 <li>RNAME: リファレンスの名前</li>
-<li>POS: リファレンス上における、リードがマップされた開始位置。</li>
-<li>CIGAR: リファレンスに対する挿入・欠失の有無などについてのサマリーを表す。</li>
+<li>POS: リファレンス上における、リードがマップされた開始位置</li>
+<li>CIGAR: リファレンスに対する挿入・欠失の有無などについてのサマリー</li>
 <li>MAPQ: マッピングクオリティ</li>
-<li>RNEXT: ペアエンドの場合、相手方のリード名（QNAME）。</li>
-<li>PNEXT: ペアエンドの場合、相手方のマップされた開始位置。</li>
-<li>TLEN: ペアのリードの位置を表したもの。</li>
+<li>RNEXT: ペアエンドの場合、相手方のリード名 (QNAME)</li>
+<li>PNEXT: ペアエンドの場合、相手方のマップされた開始位置</li>
+<li>TLEN: ペアのリードの位置を表したもの</li>
 <li>SEQ: FASTQ の塩基配列データ</li>
-<li>QUAL: FASTQ のクオリティデータ。</li>
+<li>QUAL: FASTQ のクオリティデータ</li>
 </ul>
 <p>サンプルを用意しましたので、興味のある方はダウンロードした後、ワードパッドやエクセルなど適当なエディターで開いてみてください。</p>
 <ul>
@@ -218,10 +228,11 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 1サンプルにつき1個の BAM ファイルになります（ペアエンドでもマッピング後のファイルは1個）。
 ファイルの拡張子は、.bam です。圧縮といっても、単純に gzip や、bzip2 で圧縮したわけではないため、専用のツール (samtoolsなど) を使って圧縮や展開を行います。
 （よって、sam.gz や sam.bz2 ではありません。）</p>
-<pre><code>$ samtools view _GRCh37/sample/dna/simulate_T.bam | head -n 2
-11-2657290-2657453-30832        163     1       11225180        32      100M    =       11225339        259     AAACCCACAGCCAATATCAGACTGAATGAGCAAAAACTGGAAGCATTCCATTTGAAAACTGGCACAAGACAGGGATGCCCTCTCTCACCACTCCTATTCA        :&gt;;&lt;?A?A&lt;&lt;C9=&lt;=A:;;&amp;D;?;5&lt;A:&gt;:===55:@::&gt;/9=9::?;&gt;;A3:?:5864&gt;9:&gt;&gt;&lt;&lt;?&gt;&lt;?:A;&gt;9??=;:&gt;:&lt;&lt;==?;09????9;?&lt;&gt;:    NM:i:3  MD:Z:19T8G20C50 AS:i:85 XS:i:90
-11-2657290-2657453-30832        83      1       11225339        32      100M    =       11225180        -259    TAGGAAAAGAGGAAGTCAAATTGTCCCTGTTTGCAGATGACATGATTGTATATTTAGAAAACCCCGTCATCTCAGCCCAAAATCTCCTTAAGCTGATAAG        =7;&gt;9=;?:;??:9??????=?=&lt;;&gt;&lt;;A??:;&gt;;2269;=8;&gt;&gt;;?9&gt;;??&lt;=&lt;;;?:&gt;CD+/,,:9;=9&gt;:A===AE.;&gt;5==A?C,:88:6665&gt;;&gt;    NM:i:1  MD:Z:36G63      AS:i:95 XS:i:100
-</code></pre>
+<div class="highlight highlight-source-shell"><pre>$ samtools view example/simulate.bam <span class="pl-k">|</span> head -n 4
+11-2657290-2657453-30832        163     1       11225180        32      100M    =       11225339        259     AAACCCACAGCCAATATCAGACTGAATGAGCAAAAACTGGAAGCATTCCATTTGAAAACTGGCACAAGACAGGGATGCCCTCTCTCACCACTCCTATTCA        :<span class="pl-k">&gt;</span><span class="pl-k">;</span><span class="pl-k">&lt;</span><span class="pl-k">?</span>A<span class="pl-k">?</span>A<span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">C9=</span>&lt;=A:;;&amp;D;?;5&lt;A:&gt;:===55:@::&gt;/9=9::?;&gt;;A3:?:5864&gt;9:&gt;&gt;&lt;&lt;?&gt;&lt;?:A;&gt;9??=;:&gt;:&lt;&lt;==?;09????9;?&lt;&gt;:    NM:i:3  MD:Z:19T8G20C50 AS:i:85 XS:i:90</span>
+<span class="pl-s">11-2657290-2657453-30832        83      1       11225339        32      100M    =       11225180        -259    TAGGAAAAGAGGAAGTCAAATTGTCCCTGTTTGCAGATGACATGATTGTATATTTAGAAAACCCCGTCATCTCAGCCCAAAATCTCCTTAAGCTGATAAG        =7;&gt;9=;?:;??:9??????=?=&lt;;&gt;&lt;;A??:;&gt;;2269;=8;&gt;&gt;;?9&gt;;??&lt;=&lt;;;?:&gt;CD+/,,:9;=9&gt;:A===AE.;&gt;5==A?C,:88:6665&gt;;&gt;    NM:i:1  MD:Z:36G63      AS:i:95 XS:i:100</span>
+<span class="pl-s">11-2656416-2656564-38446        99      1       56709680        12      100M    =       56709828        247     TTAGATCCCATTTGTCAATTTTGGCTTTTGTTGCCATTGCTTTTGGTGTTTGAGACATGAAGTCCTTGCCCATGCCTATGTCCTGAATGGTATTGCCTAG        ;&gt;&gt;:A:AAACA&lt;A76==&lt;&gt;714/$:?3::&lt;:;&lt;=:A#?A&gt;:&gt;&lt;&gt;;88;&lt;66(E?A&gt;0)E&gt;9049=&gt;4&lt;;&gt;63:?=;&gt;6578;????;9&gt;;&gt;&lt;&gt;&lt;?????=    NM:i:0  MD:Z:100        AS:i:100   XS:i:100</span>
+<span class="pl-s">11-2656416-2656564-38446        147     1       56709828        12      99M1S   =       56709680        -247    AATCCATCTTGAATTAATTTTTGTATAAGGTGTAAGGAAGGGATCCAGTTTCAGCTTTCTACATATGGCTAGCCAGTTTTCCCAGTACCATTTATTAAAT        ;&gt;;7&gt;;&gt;&gt;&gt;;&gt;;&gt;?&lt;???=??9;&gt;;??;&gt;:&lt;A?=?9&gt;A&lt;;&gt;&lt;@:&gt;:6;86667==:=9:267&gt;49=8:8:::&gt;=17&lt;;7;&gt;37D=!6?CA?=A?AAA;&gt;&gt;    NM:i:1  MD:Z:85C13      AS:i:94 XS:i:100</span></pre></div>
 <h3>
 <a id="user-content-fastq--sam--bam-のサイズ比較" class="anchor" href="#fastq--sam--bam-%E3%81%AE%E3%82%B5%E3%82%A4%E3%82%BA%E6%AF%94%E8%BC%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FASTQ / SAM / BAM のサイズ比較</h3>
 <p>ある WGX サンプルでサイズを比較した結果が以下の表になります。</p>
@@ -251,8 +262,8 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 <h3>
 <a id="user-content-ゲノムブラウザ" class="anchor" href="#%E3%82%B2%E3%83%8E%E3%83%A0%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ゲノムブラウザ</h3>
 <p>シーケンスデータはテキストデータもしくは圧縮されたデータのため、ゲノムブラウザという専用のツールを使って視覚化したほうが解釈が容易になります。</p>
-<p><a href="http://software.broadinstitute.org/software/igv/" rel="nofollow">IGVビューアー</a> が広く利用されているゲノムブラウザの一つです。</p>
-<p>以下はとあるサンプルの WGS と WXS を IGVビューアーで見た図です。
+<p><a href="http://software.broadinstitute.org/software/igv/" rel="nofollow">IGV ビューアー</a> は広く利用されているゲノムブラウザの一つです。</p>
+<p>以下はとあるサンプルの WGS（ゲノム全体を読み取ったシーケンスデータ）と WXS（エキソン領域だけ読み取ったシーケンスデータ）を IGV ビューアーで見た図です。
 WGS の場合、全体に満遍なくシーケンスされているのに対して、WXS の場合、エキソン領域だけシーケンスされていることが読み取れます。</p>
 <table>
 <thead>
@@ -308,6 +319,8 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </tr>
 </tbody>
 </table>
+<p>点変異を検出するためのソフトウェアは数多くの研究者により開発されていますが、主なものはシーケンサーメーカーであるイルミナ社が開発した <a href="https://github.com/Illumina/strelka">strelka2</a> や
+マサチューセッツ工科大学とハーバード大学の研究所により設立された研究機関である Broad Institute で開発された <a href="https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_cancer_m2_MuTect2.php" rel="nofollow">mutect2</a> が広く用いられています。</p>
 <h3>
 <a id="user-content-構造変異" class="anchor" href="#%E6%A7%8B%E9%80%A0%E5%A4%89%E7%95%B0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>構造変異</h3>
 <p>代表的な構造異常を次に示します。</p>
@@ -343,6 +356,33 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </tr>
 </tbody>
 </table>
+<p>ペアエンド法でシーケンスしているとリードのペアが染色体上の別の箇所にマッピングされてますので、このような染色体の構造が検出できます。</p>
+<h3>
+<a id="user-content-変異情報のフォーマット" class="anchor" href="#%E5%A4%89%E7%95%B0%E6%83%85%E5%A0%B1%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>変異情報のフォーマット</h3>
+<p>解析により検出した変異情報をファイルとして保存するには VCF (Variant Call Format) と呼ばれるファイル形式が広く用いられています。</p>
+<p>次に VCF の例を示します。この例にあるにように、VCF ファイルの先頭にはまず <code>##</code> から始まるヘッダー部分があり変異検出時の情報などが記載されています。その後、<code>#</code> から始まるヘッダー行でカラム名称を定義し、実際のデータが記載されています。</p>
+<p>一行につき一つの変異が記載されています。</p>
+<pre><code>##fileformat=VCFv4.1
+##FILTER=&lt;ID=q25,Description="Quality below 25"g&gt;
+##INFO=&lt;ID=DP,Number=1,Type=Integer,Description="Total Depth"&gt;
+##FORMAT=&lt;ID=GT,Number=1,Type=String,Description="Genotype"&gt;
+##FORMAT=&lt;ID=GQ,Number=1,Type=Integer,Description="Genotype Quality"&gt;
+##FORMAT=&lt;ID=DP,Number=1,Type=Integer,Description="Read Depth"&gt;
+##FILTER=&lt;ID=q30,Description="Quality below 30"&gt;
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	10001
+1	135	.	C	T	28	PASS	DP=5	GT:GQ:DP	1|1:28:5
+1	138	.	T	C	36	PASS	DP=5	GT:GQ:DP	1|1:36:5
+1	346	.	C	T	32	PASS	DP=3	GT:GQ:DP	1|1:32:3
+1	508	.	T	C	27	PASS	DP=4	GT:GQ:DP	1|1:27:4
+1	657	.	C	T	32	PASS	DP=3	GT:GQ:DP	1|1:32:3
+1	698	.	G	A	32	PASS	DP=6	GT:GQ:DP	1|1:32:6
+1	730	.	G	A	28	PASS	DP=3	GT:GQ:DP	1|1:28:3
+1	833	.	C	T	36	PASS	DP=4	GT:GQ:DP	1|1:36:4
+1	892	.	T	G	36	PASS	DP=4	GT:GQ:DP	1|1:36:4
+1	953	.	T	C	32	PASS	DP=5	GT:GQ:DP	1|1:32:5
+1	1260	.	T	A	30	PASS	DP=3	GT:GQ:DP	1|1:30:3
+1	2309	.	T	A	36	PASS	DP=4	GT:GQ:DP	1|1:36:4
+</code></pre>
 <h2>
 <a id="user-content-7-公共データベース" class="anchor" href="#7-%E5%85%AC%E5%85%B1%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>7. 公共データベース</h2>
 <p>がんのゲノム解析は世界中で行われており、多くの情報が公開されています。
@@ -359,11 +399,11 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 <h3>
 <a id="user-content-snp-データベース" class="anchor" href="#snp-%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SNP データベース</h3>
 <p><strong>SNP（スニップ）とは</strong></p>
-<p>ヒトのゲノムDNAの約30億個の塩基の並びは、全ての人間において同じではありません。
+<p>ヒトのゲノム DNA の約 30 億個の塩基の並びは、全ての人間において同じではありません。
 標準的な塩基配列と比べると、一塩基だけが違って多様性(多型)が生じていることがあり、これを Single Nucleotide Polymorphism (SNP) といいます。
-SNPの大多数は、ヒトの個性であり、生命維持活動に影響をもたらすものではありません。
-しかし、遺伝子や制御領域にある一部のSNPは、遺伝的な個人差を生じさせている可能性があります。
-つまり、SNPは、基本的な体質、医薬品の効力や副作用などの個人差や、高血圧、糖尿病などの多因子性遺伝子疾患の発症の個人差などの指標になる可能性があり、SNPの解析により、個人別のテーラーメイド医療や予測医療への可能性が広がると期待されています。<a href="https://kotobank.jp/word/SNP-185393" rel="nofollow">^3</a></p>
+SNP の大多数は、ヒトの個性であり、生命維持活動に影響をもたらすものではありません。
+しかし、遺伝子や制御領域にある一部の SNP は、遺伝的な個人差を生じさせている可能性があります。
+つまり、SNP は基本的な体質、医薬品の効力や副作用などの個人差や、高血圧、糖尿病などの多因子性遺伝子疾患の発症の個人差などの指標になる可能性があり、SNP の解析により、個人別のテーラーメイド医療や予測医療への可能性が広がると期待されています。<a href="https://kotobank.jp/word/SNP-185393" rel="nofollow">^3</a></p>
 <h2>
 <a id="user-content-出典" class="anchor" href="#%E5%87%BA%E5%85%B8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>出典</h2>
 <ul>
