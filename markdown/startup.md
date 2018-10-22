@@ -113,7 +113,7 @@ FASTQ は、シーケンサーが読み取ったリードの配列を保存し�
 （圧縮されている場合は、一度展開する必要があります。エディタによってはそのまま読めるものもあります。）
 
 ```Bash
-$ head -n 8 _GRCh37/sample/dna/simulate_N_read1.fq
+$ head -n 12 example/simulate_read1.fq
 @11-1265791-1265931-0/1
 ACCATGTCCACAGCCAGACCCTCCTCCACTCCAGAGACTGTCCACACCTCCACAGTGCTTACCACCACGGCCACCACAACCGGGGCCACCGGCTCTGTGG
 +
@@ -122,6 +122,10 @@ ACCATGTCCACAGCCAGACCCTCCTCCACTCCAGAGACTGTCCACACCTCCACAGTGCTTACCACCACGGCCACCACAAC
 ACACAAGCACCCTTGGTACAGCCACCACGGGAGGCCCCACGACGCCTGCAGGCTCCACAGAACCCACTGTCCCAGGGGTGGCCACATCCACCCTTCCAAC
 +
 ;>;:?A?A?67=A:>;<87768;>;;:6767;72>7;>5/4>:::@AA66==@??:A?8==9=@>:865>;?>9?8=<??8<??????><3:>;9?????
+@11-1272905-1273051-4/1
+CTGGCTTCCCCAGCTCCCACTTCTCTACTCCCTGCTTCTGCAGGGCATTTGGACAGTTTTTCTCGCCCGGTGAGTGCATGTGGATAACGCTGCTGTACCC
++
+>>>9:AAA==<5545D;.::5<9;7:8<::>>55<4547=9;3:?9A<>;?@;:??A=A???66;<??A=><?6=;=>;>;<9:560;#?9?=><:???>
 ```
 
 FASTQ は 4 行で 1 つのリードを表現します
@@ -138,6 +142,11 @@ FASTQ は 4 行で 1 つのリードを表現します
 また、_1.fq.gz, _2.fq.gz のように番号がついているものは、ペアエンドモードでシーケンスされた結果です。
 この場合、1サンプルあたり、2つのFASTQファイルがあります。
 
+サンプルを用意しましたので、興味のある方はダウンロードした後、ワードパッドやエクセルなど適当なエディターで開いてみてください。
+
+ - [リード1](../example/simulate_read1.fq)
+ - [リード2](../example/simulate_read2.fq)
+
 ### SAM [^2]
 
 シーケンサーから出力されたリード(FASTQ) を、リファレンスとなる配列にマッピングした結果は、SAM（サム）形式のファイルになります。
@@ -149,6 +158,8 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 $ samtools view _GRCh37/sample/dna/simulate_T.sam | head -n 2
 11-2657290-2657453-30832        163     1       11225180        32      100M    =       11225339        259     AAACCCACAGCCAATATCAGACTGAATGAGCAAAAACTGGAAGCATTCCATTTGAAAACTGGCACAAGACAGGGATGCCCTCTCTCACCACTCCTATTCA        :>;<?A?A<<C9=<=A:;;&D;?;5<A:>:===55:@::>/9=9::?;>;A3:?:5864>9:>><<?><?:A;>9??=;:>:<<==?;09????9;?<>:    NM:i:3  MD:Z:19T8G20C50 AS:i:85 XS:i:90
 11-2657290-2657453-30832        83      1       11225339        32      100M    =       11225180        -259    TAGGAAAAGAGGAAGTCAAATTGTCCCTGTTTGCAGATGACATGATTGTATATTTAGAAAACCCCGTCATCTCAGCCCAAAATCTCCTTAAGCTGATAAG        =7;>9=;?:;??:9??????=?=<;><;A??:;>;2269;=8;>>;?9>;??<=<;;?:>CD+/,,:9;=9>:A===AE.;>5==A?C,:88:6665>;>    NM:i:1  MD:Z:36G63      AS:i:95 XS:i:100
+11-2656416-2656564-38446        99      1       56709680        12      100M    =       56709828        247     TTAGATCCCATTTGTCAATTTTGGCTTTTGTTGCCATTGCTTTTGGTGTTTGAGACATGAAGTCCTTGCCCATGCCTATGTCCTGAATGGTATTGCCTAG        ;>>:A:AAACA<A76==<>714/$:?3::<:;<=:A#?A>:><>;88;<66(E?A>0)E>9049=>4<;>63:?=;>6578;????;9>;><><?????=    NM:i:0  MD:Z:100        AS:i:100   XS:i:100
+11-2656416-2656564-38446        147     1       56709828        12      99M1S   =       56709680        -247    AATCCATCTTGAATTAATTTTTGTATAAGGTGTAAGGAAGGGATCCAGTTTCAGCTTTCTACATATGGCTAGCCAGTTTTCCCAGTACCATTTATTAAAT        ;>;7>;>>>;>;>?<???=??9;>;??;>:<A?=?9>A<;><@:>:6;86667==:=9:267>49=8:8:::>=17<;7;>37D=!6?CA?=A?AAA;>>    NM:i:1  MD:Z:85C13      AS:i:94 XS:i:100
 ```
 
 SAM ファイル中のアラインメントの部分はタブ区切りで、全部で 11 カラム以上からなり、それぞれのカラムは以下のようになっています。
@@ -157,7 +168,7 @@ SAM ファイル中のアラインメントの部分はタブ区切りで、全�
  - FLAG: アラインメント結果
  - RNAME: リファレンスの名前
  - POS: リファレンス上における、リードがマップされた開始位置。
- - CIGAR:　リファレンスに対する挿入・欠失の有無などについてのサマリーを表す。
+ - CIGAR: リファレンスに対する挿入・欠失の有無などについてのサマリーを表す。
  - MAPQ: マッピングクオリティ
  - RNEXT: ペアエンドの場合、相手方のリード名（QNAME）。
  - PNEXT: ペアエンドの場合、相手方のマップされた開始位置。
@@ -165,6 +176,9 @@ SAM ファイル中のアラインメントの部分はタブ区切りで、全�
  - SEQ: FASTQ の塩基配列データ
  - QUAL: FASTQ のクオリティデータ。
 
+サンプルを用意しましたので、興味のある方はダウンロードした後、ワードパッドやエクセルなど適当なエディターで開いてみてください。
+
+ - [SAM ファイル](../example/simulate.sam)
 
 ### BAM [^2]
 
