@@ -16,16 +16,35 @@ python3 ./markdown2html.py
 import glob
 import urllib.request
 import urllib.parse
+import sys
+import os
+
+from html.parser import HTMLParser
+
+class MyHTMLParser(HTMLParser):
+    h1 = False
+    title = ""    
+    def handle_starttag(self, tag, attrs):
+        if tag == "h1":
+            self.h1 = True
+
+    def handle_endtag(self, tag):
+        if tag == "h1":
+            self.h1 = False
+        
+    def handle_data(self, data):
+        if self.h1 == True:
+            self.title += data.rstrip()
 
 html_header = """<html lang="ja">
 <head>
-  <title>index</title>
+  <title>{title}</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="github-markdown.css"/>
     <style>
-        body {
+        body {{
             margin: 80px;
-        }
+        }}
     </style>
 </head>
 <body>
@@ -35,9 +54,6 @@ html_footer = """
 </body>
 </html>
 """
-
-import sys
-import os
 
 current = os.path.abspath(os.path.dirname(sys.argv[0]) + "/../")
 mds = glob.glob(current + "/markdown/*.md")
@@ -55,8 +71,12 @@ for md in mds:
     print ("%s\n  ==> %s" % (md, current))
     
     with open(output, 'w') as file:
-        file.write(html_header)
-        file.write(open('temp').read())
+        contents = open('temp').read()
+        parser = MyHTMLParser()
+        parser.feed(contents)
+
+        file.write(html_header.format(title = parser.title))
+        file.write(contents)
         file.write(html_footer)
     
     os.remove('temp')
