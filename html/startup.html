@@ -56,7 +56,7 @@
 </table>
 <h2>
 <a id="user-content-2-どのようにしてゲノムを読み取るか" class="anchor" href="#2-%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E3%81%97%E3%81%A6%E3%82%B2%E3%83%8E%E3%83%A0%E3%82%92%E8%AA%AD%E3%81%BF%E5%8F%96%E3%82%8B%E3%81%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. どのようにして、ゲノムを読み取るか</h2>
-<p>現在、塩基配列を読み取る（シーケンスといいます）にはシーケンサーと呼ばれる配列を解読する専用の機械を使用することが一般的です。</p>
+<p>塩基配列を読み取ることをシーケンスといい、それにはシーケンサーと呼ばれる専用の機械を使用することが一般的です。</p>
 <p>現在広く用いられているシーケンサーは次世代シーケンサー（NGS）とよばれています。
 従来法であるサンガー法が一つひとつ DNA 配列を決めていくのに対し、次世代シーケンサーは DNA 配列を断片化して、同時並行で配列を決定します。
 従来法に比べて、圧倒的に低コストでのゲノムシーケンスが可能になりました。</p>
@@ -64,17 +64,17 @@
 <a id="user-content-21-dnaの採取" class="anchor" href="#21-dna%E3%81%AE%E6%8E%A1%E5%8F%96" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.1 DNAの採取</h3>
 <p>まず、動物の血液や体細胞、植物の組織などを採取します。</p>
 <p>採取した組織から化学的処理を行い、DNA を抽出します。
-RNA のシークエンスをする場合は、RNA の抽出を行います。</p>
+（RNA のシークケンスをする場合は、RNA の抽出を行います）</p>
 <p><a href="../image/seq1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq1.PNG" alt="" style="max-width:100%;"></a></p>
 <h3>
 <a id="user-content-22-シーケンサーによる解読" class="anchor" href="#22-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AB%E3%82%88%E3%82%8B%E8%A7%A3%E8%AA%AD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.2 シーケンサーによる解読</h3>
-<p>シーケンサーではDNAを小さく断片化し、同時並行で配列を読み取ることで、大量のDNA配列の決定を行います。
-断片化されてシーケンサーされた DNA をリードと呼びます。</p>
+<p>シーケンサーでは DNA を小さく断片化し、同時並行で配列を読み取ることで、大量のDNA配列の決定を行います。
+断片化ののち、シーケンスされた DNA をリードと呼びます。</p>
 <p>一般的には DNA を 300〜1,000 bp (リードの長さの単位。Base Pair の略で塩基の意味）ほどの長さに断片化したものを、ショートリードと呼びます。
 反対にもっと長く断片化（一般的には 10kbp ほど）したものをロングリードと呼びます。
 ここでは、現在多く使用されているショートリードについて解説します。</p>
-<p>しかし、シーケンサーの精度は完全ではなく、読み取りエラーなども生じます。
-そのために、同じ領域がショートリードに複数回カバーされ、エラーと本物のシグナルが区別できるように、シーケンスのデータ量を調整することが一般的です。
+<p>広く使用されているシーケンサーですが、精度は完全ではなく、読み取りエラーなども生じます。
+そのために、同じ領域をショートリードで複数回カバーし、エラーと本物のシグナルが区別できるように、シーケンスのデータ量を調整することが一般的です。
 同じゲノム領域をカバーするショートリードの本数はシーケンスデプスと呼ばれています。</p>
 <p><a href="../image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
 <ul>
@@ -121,7 +121,7 @@ DNA を 300〜1,000 塩基ほどの長さに断片化して、両端から 100�
 <td align="left">WXS</td>
 <td align="left">DNA</td>
 <td align="left">数十 Gbyte</td>
-<td align="left">Whole eXsome Sequence といい、データ量を抑えるためにエキソン領域だけを読み取ったデータです。（DNA には翻訳されて生体活動に使用されるエキソン領域と使用されないイントロン領域があります）exome と呼ぶこともあります。</td>
+<td align="left">Whole eXome Sequence といい、データ量を抑えるためにエキソン領域だけを読み取ったデータです。（DNA には翻訳されて生体活動に使用されるエキソン領域と使用されないイントロン領域があります）WES (Whole Exome Sequence) や 単に exome と呼ぶこともあります。</td>
 </tr>
 <tr>
 <td align="left">ターゲット</td>
@@ -235,7 +235,7 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 <span class="pl-s">11-2656416-2656564-38446        147     1       56709828        12      99M1S   =       56709680        -247    AATCCATCTTGAATTAATTTTTGTATAAGGTGTAAGGAAGGGATCCAGTTTCAGCTTTCTACATATGGCTAGCCAGTTTTCCCAGTACCATTTATTAAAT        ;&gt;;7&gt;;&gt;&gt;&gt;;&gt;;&gt;?&lt;???=??9;&gt;;??;&gt;:&lt;A?=?9&gt;A&lt;;&gt;&lt;@:&gt;:6;86667==:=9:267&gt;49=8:8:::&gt;=17&lt;;7;&gt;37D=!6?CA?=A?AAA;&gt;&gt;    NM:i:1  MD:Z:85C13      AS:i:94 XS:i:100</span></pre></div>
 <h3>
 <a id="user-content-fastq--sam--bam-のサイズ比較" class="anchor" href="#fastq--sam--bam-%E3%81%AE%E3%82%B5%E3%82%A4%E3%82%BA%E6%AF%94%E8%BC%83" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FASTQ / SAM / BAM のサイズ比較</h3>
-<p>ある WGX サンプルでサイズを比較した結果が以下の表になります。</p>
+<p>ある WXS （全エキソン）サンプルでサイズを比較した結果が以下の表になります。</p>
 <p>シーケンサーが作成した FASTQ ファイルに対して、アライメント情報を付与した SAM ファイルは 1.5 倍ほどの大きさになり、SAM ファイルを圧縮した BAM ファイルは 3～5 分の一程度に圧縮されます。</p>
 <table>
 <thead>
@@ -279,7 +279,7 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </table>
 <h2>
 <a id="user-content-5-がんはゲノムの病気である" class="anchor" href="#5-%E3%81%8C%E3%82%93%E3%81%AF%E3%82%B2%E3%83%8E%E3%83%A0%E3%81%AE%E7%97%85%E6%B0%97%E3%81%A7%E3%81%82%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. がんはゲノムの病気である</h2>
-<p>がんはヒトのDNAの後天的変異が原因で発生します。</p>
+<p>がんはヒトの DNA の変異が原因で発生します。</p>
 <p>ヒトは通常生活している中で化学物質、紫外線、ウイルス感染による炎症など、いろいろなストレスにさらされています。</p>
 <p>それらは DNA に対し化学的な影響を与えますが、多くは passenger 変異と呼ばれる影響のない変異です。</p>
 <p>しかし、まれに重要な遺伝子の主要な部位に変異が生じると、がん化や細胞の異常増殖の原因となり、こういった変異は、 driver 変異と呼ばれています。</p>
@@ -356,7 +356,7 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </tr>
 </tbody>
 </table>
-<p>ペアエンド法でシーケンスしているとリードのペアが染色体上の別の箇所にマッピングされてますので、このような染色体の構造が検出できます。</p>
+<p>ペアエンド法でシーケンスしていると構造異常の場合、リードのペアが染色体上の別の箇所にマッピングされますので、このような染色体の異常が検出できます。</p>
 <h3>
 <a id="user-content-変異情報のフォーマット" class="anchor" href="#%E5%A4%89%E7%95%B0%E6%83%85%E5%A0%B1%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>変異情報のフォーマット</h3>
 <p>解析により検出した変異情報をファイルとして保存するには VCF (Variant Call Format) と呼ばれるファイル形式が広く用いられています。</p>
