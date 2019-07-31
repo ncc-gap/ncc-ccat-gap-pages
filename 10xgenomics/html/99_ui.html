@@ -1,0 +1,44 @@
+<html lang="ja">
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
+    <link rel="stylesheet" type="text/css" href="./extention.css"/>
+</head>
+<body>
+<p>2019.7.31　作成　NCC</p>
+<h2>
+<a id="user-content-option-cell-ranger-ユーザインタフェースの利用" class="anchor" href="#option-cell-ranger-%E3%83%A6%E3%83%BC%E3%82%B6%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AE%E5%88%A9%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option. Cell Ranger ユーザインタフェースの利用</h2>
+<p>cellranger パイプラインにはユーザインターフェールが用意されています。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a></p>
+<p>公開ポートはランダムなため、 <code>--uiport=80</code> をつけて80番固定することができます。<br>
+ユーザインターフェースの場所は実行ログに記載されています。</p>
+<pre><code>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
+/work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
+cellranger mkfastq (3.0.2)
+Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
+-------------------------------------------------------------------------------
+
+Martian Runtime - '3.0.2-v3.2.0'
+Serving UI at http://ip-172-31-40-38:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 # &lt;- ★ここ
+
+Running preflight checks (please wait)...
+（以下省略）
+</code></pre>
+<p>AWS インスタンスを使用していると、デフォルトで内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
+<p>インスタンスの外部ネットワークアドレスは以下のようにして取得することができます。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、目的のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「IPv4 パブリック IP」を探します。<br>
+なお、内部ネットワークアドレスは「プライベート IP」という名前で記載されています。</p>
+<p><a href="../image/ec2_34.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_34.PNG" alt="" style="max-width:100%;"></a></p>
+<p>外部ネットワークアドレスに読み替えるとユーザインターフェースの URL は以下のようになります。</p>
+<p><a href="http://13.58.138.49:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0" rel="nofollow">http://13.58.138.49:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0</a></p>
+<p>ブラウザで開くと以下のような画面が表示されます。</p>
+<p><a href="../image/pipeline_monitoring_ui.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/pipeline_monitoring_ui.PNG" alt="" style="max-width:100%;"></a></p>
+<p>より詳しい解説は <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a> を参照してください。</p>
+<hr>
+<p>以上です。</p>
+
+</body>
+</html>

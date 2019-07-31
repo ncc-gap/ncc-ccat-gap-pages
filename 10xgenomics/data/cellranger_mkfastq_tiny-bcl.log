@@ -1,0 +1,56 @@
+[root@ip-172-31-40-38 work]# cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+/work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
+cellranger mkfastq (3.0.2)
+Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
+-------------------------------------------------------------------------------
+
+Martian Runtime - '3.0.2-v3.2.0'
+2019-01-29 09:49:08 [runtime] Reattaching in local mode.
+Serving UI at http://ip-172-31-40-38:34959?auth=F3b5LnTDxAFIb3WufTsHd8cmTDwYggbi2CnVYGABgTE
+
+2019-01-29 09:49:08 [runtime] (reset-partial)   ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_FASTQS_PREFLIGHT.fork0.chnk0
+2019-01-29 09:49:08 [runtime] (reset-partial)   ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_FASTQS_PREFLIGHT_LOCAL.fork0.chnk0
+2019-01-29 09:49:08 [runtime] Found orphaned local stage: ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_FASTQS_PREFLIGHT
+2019-01-29 09:49:08 [runtime] Found orphaned local stage: ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_FASTQS_PREFLIGHT_LOCAL
+Checking run folder...
+Checking RunInfo.xml...
+Checking system environment...
+Checking barcode whitelist...
+Emitting run information...
+Checking read specification...
+Checking samplesheet specs...
+Checking for dual index flowcell...
+2019-01-29 09:49:08 [runtime] (ready)           ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.PREPARE_SAMPLESHEET
+2019-01-29 09:49:08 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.PREPARE_SAMPLESHEET.fork0.chnk0.main
+2019-01-29 09:49:09 [runtime] (chunks_complete) ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.PREPARE_SAMPLESHEET
+2019-01-29 09:49:09 [runtime] (ready)           ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET
+2019-01-29 09:49:09 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET.fork0.split
+2019-01-29 09:49:09 [runtime] (split_complete)  ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET
+2019-01-29 09:49:09 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET.fork0.chnk0.main
+2019-01-29 09:49:17 [runtime] (chunks_complete) ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET
+2019-01-29 09:49:17 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET.fork0.join
+2019-01-29 09:49:17 [runtime] (join_complete)   ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.BCL2FASTQ_WITH_SAMPLESHEET
+2019-01-29 09:49:17 [runtime] (ready)           ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_QC_SUMMARY
+2019-01-29 09:49:17 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_QC_SUMMARY.fork0.split
+2019-01-29 09:49:17 [runtime] (split_complete)  ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_QC_SUMMARY
+2019-01-29 09:49:17 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_QC_SUMMARY.fork0.join
+2019-01-29 09:49:18 [runtime] (join_complete)   ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MAKE_QC_SUMMARY
+2019-01-29 09:49:18 [runtime] (ready)           ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE
+2019-01-29 09:49:18 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE.fork0.split
+2019-01-29 09:49:18 [runtime] (split_complete)  ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE
+2019-01-29 09:49:18 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE.fork0.chnk0.main
+2019-01-29 09:49:18 [runtime] (chunks_complete) ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE
+2019-01-29 09:49:18 [runtime] (run:local)       ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE.fork0.join
+2019-01-29 09:49:18 [runtime] (join_complete)   ID.tiny-bcl.MAKE_FASTQS_CS.MAKE_FASTQS.MERGE_FASTQS_BY_LANE_SAMPLE
+
+Outputs:
+- Run QC metrics:        null
+- FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+- Interop output folder: /work/tiny-bcl/outs/interop_path
+- Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-29 09:49:24 Shutting down.
+Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz

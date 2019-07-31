@@ -2,8 +2,8 @@
 <head>
   <title>がんゲノム解析入門</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="../cancer-genome/html/github-markdown.css"/>
-    <link rel="stylesheet" type="text/css" href="../cancer-genome/html/extention.css"/>
+    <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
+    <link rel="stylesheet" type="text/css" href="./extention.css"/>
 </head>
 <body>
 <h1>
@@ -21,7 +21,7 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/cell-dna.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/cell-dna.PNG" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/cell-dna.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/cell-dna.PNG" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -35,7 +35,7 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/gene-map.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/gene-map.PNG" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/gene-map.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/gene-map.PNG" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -48,7 +48,7 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/dna-rna.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/dna-rna.PNG" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/dna-rna.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/dna-rna.PNG" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -63,7 +63,7 @@
 <p>まず、動物の血液や体細胞、植物の組織などを採取します。</p>
 <p>採取した組織から化学的処理を行い、DNA を抽出します。<br>
 （RNA のシークケンスをする場合は、RNA の抽出を行います）</p>
-<p><a href="../cancer-genome/image/seq1.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/seq1.PNG" alt="" style="max-width:100%;"></a></p>
+<p><a href="../image/seq1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq1.PNG" alt="" style="max-width:100%;"></a></p>
 <h3>
 <a id="user-content-22-シーケンサーによる解読" class="anchor" href="#22-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AB%E3%82%88%E3%82%8B%E8%A7%A3%E8%AA%AD" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.2 シーケンサーによる解読</h3>
 <p>シーケンサーでは DNA を小さく断片化し、同時並行で配列を読み取ることで、大量のDNA配列の決定を行います。<br>
@@ -74,7 +74,7 @@
 <p>広く使用されているシーケンサーですが、精度は完全ではなく、読み取りエラーなども生じます。<br>
 そのために、同じ領域をショートリードで複数回カバーし、エラーと本物のシグナルが区別できるように、シーケンスのデータ量を調整することが一般的です。<br>
 同じゲノム領域をカバーするショートリードの本数はシーケンスデプスと呼ばれています。</p>
-<p><a href="../cancer-genome/image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
+<p><a href="../image/seq2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq2.PNG" alt="" style="max-width:100%;"></a></p>
 <ul>
 <li>(1) DNA を複製します</li>
 <li>(2) 複製した DNA を断片化します</li>
@@ -86,13 +86,13 @@
 そこで、各々のショートリードのゲノム上のポジションを決定する必要があります。この処理をアライメント、もしくはマッピングといいます。</p>
 <p>そのためには「ゲノムの元の場所」の基準が必要です。その基準をリファレンスゲノムといい、「ヒトゲノム計画」というプロジェクトにて、1990年から2003年までに世界中で膨大な時間とコストをかけて解読したゲノムを元に決定されています。<br>
 ヒトのゲノム配列の個人差は、0.1% 程度と言われています。つまり大部分の箇所で一致するため、リファレンスゲノムをガイドにして元の場所を見つけることができます。<a href="https://www.megabank.tohoku.ac.jp/news/michi/6187" rel="nofollow">^4</a></p>
-<p><a href="../cancer-genome/image/ID6187_02.png" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/ID6187_02.png" alt="" style="max-width:100%;"></a></p>
+<p><a href="../image/ID6187_02.png" target="_blank" rel="noopener noreferrer"><img src="../image/ID6187_02.png" alt="" style="max-width:100%;"></a></p>
 <p><strong>シングルリードとペアリード</strong></p>
 <p>多くの場合、断片化された DNA は両端から読み取られます（ペアエンド法）。<br>
 DNA を 300〜1,000 塩基ほどの長さに断片化して、両端から 100〜200 塩基ずつの読み取りを行うといった形が一般的です。</p>
 <p>ペアを使用しない手法はペアエンド法に対してシングルエンド法と呼ばれます。</p>
 <p>ペアエンド法により読み取られたショートリードをペアリード、シングルエンド法により読み取られたショートリードをシングルリードといいます。</p>
-<p><a href="../cancer-genome/image/seq3.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/seq3.PNG" alt="" style="max-width:100%;"></a></p>
+<p><a href="../image/seq3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/seq3.PNG" alt="" style="max-width:100%;"></a></p>
 <p>読み取ったゲノムの情報をシーケンスデータと呼びます。</p>
 <h2>
 <a id="user-content-3-シーケンスデータの種類" class="anchor" href="#3-%E3%82%B7%E3%83%BC%E3%82%B1%E3%83%B3%E3%82%B9%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E7%A8%AE%E9%A1%9E" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. シーケンスデータの種類</h2>
@@ -178,15 +178,15 @@ CTGGCTTCCCCAGCTCCCACTTCTCTACTCCCTGCTTCTGCAGGGCATTTGGACAGTTTTTCTCGCCCGGTGAGTGCATG
 <li>3行目：＋固定</li>
 <li>4行目：2行目に記述した配列のクオリティ</li>
 </ul>
-<p><a href="../cancer-genome/image/fastq.PNG" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/fastq.PNG" alt="" style="max-width:100%;"></a></p>
+<p><a href="../image/fastq.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/fastq.PNG" alt="" style="max-width:100%;"></a></p>
 <p>ファイルの拡張子は、.fastq, .fq などです。<br>
 圧縮されていれば、.fastq.gz, .fq.gz のようになります。（FASTA の場合は、.fasta, .fa, fa.gz など。）<br>
 また、_1.fq.gz, _2.fq.gz のように番号がついているものは、ペアエンドモードでシーケンスされた結果です。<br>
 この場合、1サンプルあたり、2つのFASTQファイルがあります。</p>
 <p>サンプルを用意しましたので、興味のある方はダウンロードした後、ワードパッドやエクセルなど適当なエディターで開いてみてください。</p>
 <ul>
-<li><a href="../cancer-genome/data/simulate_read1.fq">リード1</a></li>
-<li><a href="../cancer-genome/data/simulate_read2.fq">リード2</a></li>
+<li><a href="../data/simulate_read1.fq">リード1</a></li>
+<li><a href="../data/simulate_read2.fq">リード2</a></li>
 </ul>
 <h3>
 <a id="user-content-sam-2" class="anchor" href="#sam-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SAM <a href="http://array.cell-innovator.com/?p=3014" rel="nofollow">^2</a>
@@ -216,7 +216,7 @@ FASTQ の中身も含むので、ファイルのサイズは数十ギガバイ�
 </ul>
 <p>サンプルを用意しましたので、興味のある方はダウンロードした後、ワードパッドやエクセルなど適当なエディターで開いてみてください。</p>
 <ul>
-<li><a href="../cancer-genome/data/simulate.sam">SAM ファイル</a></li>
+<li><a href="../data/simulate.sam">SAM ファイル</a></li>
 </ul>
 <h3>
 <a id="user-content-bam-2" class="anchor" href="#bam-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BAM <a href="http://array.cell-innovator.com/?p=3014" rel="nofollow">^2</a>
@@ -271,7 +271,7 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/igv.png" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/igv.png" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/igv.png" target="_blank" rel="noopener noreferrer"><img src="../image/igv.png" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -291,7 +291,7 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/cancer-cell.png" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/cancer-cell.png" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/cancer-cell.png" target="_blank" rel="noopener noreferrer"><img src="../image/cancer-cell.png" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -315,7 +315,7 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="../cancer-genome/image/mutation.png" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/mutation.png" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/mutation.png" target="_blank" rel="noopener noreferrer"><img src="../image/mutation.png" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -363,22 +363,22 @@ WGS の場合、全体に満遍なくシーケンスされているのに対し�
 <tbody>
 <tr>
 <td align="left">Duplication (重複)</td>
-<td align="center"><a href="../cancer-genome/image/sv1.jpg" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/sv1.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/sv1.jpg" target="_blank" rel="noopener noreferrer"><img src="../image/sv1.jpg" alt="" style="max-width:100%;"></a></td>
 <td align="left">ある領域が重複した状態です</td>
 </tr>
 <tr>
 <td align="left">Deletion (欠失)</td>
-<td align="center"><a href="../cancer-genome/image/sv2.jpg" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/sv2.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/sv2.jpg" target="_blank" rel="noopener noreferrer"><img src="../image/sv2.jpg" alt="" style="max-width:100%;"></a></td>
 <td align="left">ある領域が欠失した状態です</td>
 </tr>
 <tr>
 <td align="left">Inversion (逆位)</td>
-<td align="center"><a href="../cancer-genome/image/sv3.jpg" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/sv3.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/sv3.jpg" target="_blank" rel="noopener noreferrer"><img src="../image/sv3.jpg" alt="" style="max-width:100%;"></a></td>
 <td align="left">ある領域が上下逆転してしまう現象です</td>
 </tr>
 <tr>
 <td align="left">Translocation (転座)</td>
-<td align="center"><a href="../cancer-genome/image/sv4.jpg" target="_blank" rel="noopener noreferrer"><img src="../cancer-genome/image/sv4.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="../image/sv4.jpg" target="_blank" rel="noopener noreferrer"><img src="../image/sv4.jpg" alt="" style="max-width:100%;"></a></td>
 <td align="left">染色体の一部または全部が他の染色体に結合した状態です</td>
 </tr>
 </tbody>

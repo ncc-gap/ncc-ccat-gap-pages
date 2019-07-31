@@ -18,6 +18,7 @@ import urllib.request
 import urllib.parse
 import sys
 import os
+import re
 
 from html.parser import HTMLParser
 
@@ -40,12 +41,8 @@ html_header = """<html lang="ja">
 <head>
   <title>{title}</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="github-markdown.css"/>
-    <style>
-        body {{
-            margin: 80px;
-        }}
-    </style>
+    <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
+    <link rel="stylesheet" type="text/css" href="./extention.css"/>
 </head>
 <body>
 """
@@ -56,7 +53,7 @@ html_footer = """
 """
 
 current = os.path.abspath(os.path.dirname(sys.argv[0]) + "/../")
-mds = glob.glob(current + "/markdown/*.md")
+mds = glob.glob(current + "/*/markdown/*.md")
 
 for md in mds:
     
@@ -67,8 +64,10 @@ for md in mds:
     f = urllib.request.urlopen(request,data)
     open('temp','bw').write(f.read())
     
-    output = current + "/html/" + os.path.splitext(os.path.basename(md))[0] + ".html"
-    print ("%s\n  ==> %s" % (md, current))
+    output = re.sub(r'\.md$', ".html", md.replace("/markdown/", "/html/"))
+    os.makedirs(os.path.dirname(output), exist_ok = True)
+    
+    print ("%s\n  ==> %s" % (md, output))
     
     with open(output, 'w') as file:
         contents = open('temp').read()

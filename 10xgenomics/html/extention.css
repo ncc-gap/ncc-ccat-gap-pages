@@ -1,0 +1,8 @@
+body {
+  margin: 80px;
+}
+body img {
+  border: solid 3px #DDD;
+  max-width: 800px;
+  margin-bottom: 50px;
+}
