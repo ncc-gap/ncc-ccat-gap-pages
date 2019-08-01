@@ -82,7 +82,7 @@ Cell Rangerは tar ファイルとして公開されており、提供されて�
 ファイル名のバージョンはダウンロードしたファイルに合わせてください。
 
 ```Bash
-tar -xzvf cellranger-3.0.2.tar.gz
+tar -xzvf cellranger-3.1.0.tar.gz
 ```
 
 ### 1-3. リファレンスファイルをダウンロードして解凍する
@@ -96,7 +96,7 @@ tar -xzvf cellranger-3.0.2.tar.gz
 ファイル名のバージョンはダウンロードしたファイルに合わせてください。
 
 ```Bash
-tar -xzvf refdata-cellranger-GRCh38-3.0.0.tar.gz
+tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz
 ```
 
 ### 1-4. Cell Ranger にパスを通す
@@ -104,7 +104,7 @@ tar -xzvf refdata-cellranger-GRCh38-3.0.0.tar.gz
 Cell Ranger ディレクトリを PATH に追加します。これで `cellranger` コマンドを起動することができます。
 
 ```Bash
-export PATH=/work/cellranger-3.0.2:$PATH
+export PATH=/work/cellranger-3.1.0:$PATH
 ```
 
 ### 1-5. インストールの確認
@@ -134,7 +134,7 @@ cellranger upload your@email.edu tiny/tiny.mri.tgz
 ```Bash
 wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
 unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
-yum install bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 ```
 
 ---

@@ -13,7 +13,7 @@
 ```
 cd /work
 cellranger count --id=tiny-bcl3-count \
---transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 --fastqs=./tiny-bcl3/outs/fastq_path \
 --expect-cells=1000
 ```
@@ -45,7 +45,7 @@ cellranger cout を実行します。
 
 ```Bash
 cellranger count --id=pbmc_1k_v3 \
---transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 --fastqs=./pbmc_1k_v3_fastqs/ \
 --expect-cells=1000
 ```
@@ -54,10 +54,9 @@ cellranger count --id=pbmc_1k_v3 \
 
 ```
 $ cellranger count --id=pbmc_1k_v3 \
-> --transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+> --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 > --fastqs=./pbmc_1k_v3_fastqs/ \
-> --expect-cells=1000 \
-> --uiport=80
+> --expect-cells=1000
 (省略)
 
 Outputs:

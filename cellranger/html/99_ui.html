@@ -11,21 +11,19 @@
 <a id="user-content-option-cell-ranger-ユーザインタフェースの利用" class="anchor" href="#option-cell-ranger-%E3%83%A6%E3%83%BC%E3%82%B6%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AE%E5%88%A9%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option. Cell Ranger ユーザインタフェースの利用</h2>
 <p>cellranger パイプラインにはユーザインターフェールが用意されています。</p>
 <p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a></p>
-<p>公開ポートはランダムなため、 <code>--uiport=80</code> をつけて80番固定することができます。<br>
-ユーザインターフェースの場所は実行ログに記載されています。</p>
-<pre><code>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
+<p>ユーザインターフェースの場所は実行ログに記載されています。</p>
+<div class="highlight highlight-source-shell"><pre>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
 /work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
 cellranger mkfastq (3.0.2)
 Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
 -------------------------------------------------------------------------------
 
-Martian Runtime - '3.0.2-v3.2.0'
-Serving UI at http://ip-172-31-40-38:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 # &lt;- ★ここ
+Martian Runtime - <span class="pl-s"><span class="pl-pds">'</span>3.0.2-v3.2.0<span class="pl-pds">'</span></span>
+Serving UI at http://ip-172-31-40-38:80<span class="pl-k">?</span>auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 <span class="pl-c"><span class="pl-c">#</span> &lt;- ★ここ</span>
 
 Running preflight checks (please wait)...
-（以下省略）
-</code></pre>
-<p>AWS インスタンスを使用していると、デフォルトで内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
+（以下省略）</pre></div>
+<p>AWS インスタンスで実行している、内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
 <p>インスタンスの外部ネットワークアドレスは以下のようにして取得することができます。</p>
 <p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
 左端のメニューから「インスタンス」を選択した後、目的のインスタンスを選択します。<br>
@@ -38,7 +36,28 @@ Running preflight checks (please wait)...
 <p><a href="../image/pipeline_monitoring_ui.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/pipeline_monitoring_ui.PNG" alt="" style="max-width:100%;"></a></p>
 <p>より詳しい解説は <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a> を参照してください。</p>
 <hr>
-<p>以上です。</p>
+<p>※ 注意１</p>
+<p>AWS インスタンスにはセキュリティグループがあり、ポート番号を指定してアクセスを許可する必要があります。<br>
+以下の手順で設定します。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、現在のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「セキュリティグループ」のリンクをクリックします。</p>
+<p><a href="../image/ec2_35.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_35.PNG" alt="" style="max-width:100%;"></a></p>
+<p>セキュリティグループの画面が表示されますので、「インバウンド」→「編集」とクリックして、セキュリティグループの編集画面を表示します。<br>
+「ルールの追加」ボタンをクリックして行を追加し、ポート番号を入力します。<br>
+アクセスを許可する IP アドレス範囲 (「マイIP」を選択すると、現在の自分のIPアドレスを設定できます) を入力したら「保存」を押してください。</p>
+<p><a href="../image/ec2_36.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_36.PNG" alt="" style="max-width:100%;"></a></p>
+<p>※ 注意２<br>
+公開ポートはランダムなため、 <code>--uiport=3600</code> のように <code>--uiport</code> オプションをつけることで固定することができます。</p>
+<p>ただし、Linux では TCP/IP ポート番号のうち 1024 未満は特権ポート (privileged ports) といい、特権プロセス（CAP_NET_BIND_SERVICE ケーパビリティを持つプロセス）でないとアクセスできません。<br>
+そのため、3600 など 1024 以上のポート番号を指定したほうがよいでしょう。</p>
+<hr>
+<p>以上です。
+不要になった AWS インスタンスは適宜停止するか削除してください。</p>
+<ul>
+<li><a href="./aws_ec2_instance.html">AWS EC2 を利用する場合</a></li>
+<li><a href="./aws_cloud9.html">AWS Cloud9 を利用する場合</a></li>
+</ul>
 
 </body>
 </html>

@@ -16,7 +16,7 @@
 <p>順番に実行していれば 2-5 までの結果がありますので、それを使用して <code>cellranger count</code> コマンドを実行します。</p>
 <pre><code>cd /work
 cellranger count --id=tiny-bcl3-count \
---transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 --fastqs=./tiny-bcl3/outs/fastq_path \
 --expect-cells=1000
 </code></pre>
@@ -37,15 +37,14 @@ tar xvf pbmc_1k_v3_fastqs.tar
 --fastqs にダウンロードしたサンプルのfastqディレクトリを指定します。<br>
 --except-cells にはサンプルのページに <code>run with --expect-cells=1000</code> と記載がありますので、1000を指定します。</p>
 <div class="highlight highlight-source-shell"><pre>cellranger count --id=pbmc_1k_v3 \
---transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 --fastqs=./pbmc_1k_v3_fastqs/ \
 --expect-cells=1000</pre></div>
 <p>以下はログです。</p>
 <pre><code>$ cellranger count --id=pbmc_1k_v3 \
-&gt; --transcriptome=./refdata-cellranger-GRCh38-3.0.0 \
+&gt; --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
 &gt; --fastqs=./pbmc_1k_v3_fastqs/ \
-&gt; --expect-cells=1000 \
-&gt; --uiport=80
+&gt; --expect-cells=1000
 (省略)
 
 Outputs:

@@ -73,7 +73,7 @@ mount /dev/sdb /work
 <p><a href="../image/download1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/download1.PNG" alt="" style="max-width:100%;"></a></p>
 <p>ダウンロードしたファイルを解凍します。<br>
 ファイル名のバージョンはダウンロードしたファイルに合わせてください。</p>
-<div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-3.0.2.tar.gz</pre></div>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-3.1.0.tar.gz</pre></div>
 <h3>
 <a id="user-content-1-3-リファレンスファイルをダウンロードして解凍する" class="anchor" href="#1-3-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%81%97%E3%81%A6%E8%A7%A3%E5%87%8D%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-3. リファレンスファイルをダウンロードして解凍する</h3>
 <p>1-2 で開いたダウンロード画面にリファレンスのダウンロードコマンドも表示されています。<br>
@@ -81,11 +81,11 @@ mount /dev/sdb /work
 <p><a href="../image/download2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/download2.PNG" alt="" style="max-width:100%;"></a></p>
 <p>1-2 と同様にダウンロードしたファイルを解凍します。<br>
 ファイル名のバージョンはダウンロードしたファイルに合わせてください。</p>
-<div class="highlight highlight-source-shell"><pre>tar -xzvf refdata-cellranger-GRCh38-3.0.0.tar.gz</pre></div>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz</pre></div>
 <h3>
 <a id="user-content-1-4-cell-ranger-にパスを通す" class="anchor" href="#1-4-cell-ranger-%E3%81%AB%E3%83%91%E3%82%B9%E3%82%92%E9%80%9A%E3%81%99" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-4. Cell Ranger にパスを通す</h3>
 <p>Cell Ranger ディレクトリを PATH に追加します。これで <code>cellranger</code> コマンドを起動することができます。</p>
-<div class="highlight highlight-source-shell"><pre><span class="pl-k">export</span> PATH=/work/cellranger-3.0.2:<span class="pl-smi">$PATH</span></pre></div>
+<div class="highlight highlight-source-shell"><pre><span class="pl-k">export</span> PATH=/work/cellranger-3.1.0:<span class="pl-smi">$PATH</span></pre></div>
 <h3>
 <a id="user-content-1-5-インストールの確認" class="anchor" href="#1-5-%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%AE%E7%A2%BA%E8%AA%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-5. インストールの確認</h3>
 <p>cellranger パイプラインが正しくインストールされていることを確認するために <code>cellranger testrun</code> を実行します。</p>
@@ -101,7 +101,7 @@ mount /dev/sdb /work
 <p>前述までに cellranger パイプラインをインストールしましたが、イルミナの <code>bcl2fastq2</code> は入っていませんので、別途インストールする必要があります。</p>
 <div class="highlight highlight-source-shell"><pre>wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
 unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
-yum install bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm</pre></div>
+sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm</pre></div>
 <hr>
 <p><a href="./02_mkfastq.html">2. cellranger mkfastq を実行してみる</a> に進んでください。</p>
 

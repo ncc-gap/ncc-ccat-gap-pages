@@ -62,7 +62,7 @@ tar -xzvf cellranger-tiny-bcl-1.2.0.tar.gz
 │         ├── cellranger-tiny-bcl-1.2.0
 │         └── cellranger-tiny-bcl-simple-1.2.0.csv
 │         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
-└── refdata-cellranger-GRCh38-3.0.0
+└── refdata-cellranger-GRCh38-and-mm10-3.1.0
 ```
 
 ### 2-2. 簡単な csv サンプルシートを使用して mkfastq を実行する
