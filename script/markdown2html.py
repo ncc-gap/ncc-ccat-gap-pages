@@ -43,12 +43,13 @@ html_header = """<html lang="ja">
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
     <link rel="stylesheet" type="text/css" href="./extention.css"/>
-</head>
+{header}</head>
 <body>
+{body_header}
 """
 
 html_footer = """
-</body>
+{body_footer}</body>
 </html>
 """
 
@@ -63,7 +64,22 @@ for md in mds:
     request.add_header('Content-Type','text/plain')
     f = urllib.request.urlopen(request,data)
     open('temp','bw').write(f.read())
-    
+
+    header_file = os.path.dirname(md) + "/header.js"
+    header = ""
+    if os.path.exists(header_file):
+        header = open(header_file).read()
+
+    body_header_file = os.path.dirname(md) + "/body-header.js"
+    body_header = ""
+    if os.path.exists(body_header_file):
+        body_header = open(body_header_file).read()
+
+    body_footer_file = os.path.dirname(md) + "/body-footer.js"
+    body_footer = ""
+    if os.path.exists(body_footer_file):
+        body_footer = open(body_footer_file).read()
+        
     output = re.sub(r'\.md$', ".html", md.replace("/markdown/", "/html/"))
     os.makedirs(os.path.dirname(output), exist_ok = True)
     
@@ -74,8 +90,8 @@ for md in mds:
         parser = MyHTMLParser()
         parser.feed(contents)
 
-        file.write(html_header.format(title = parser.title))
+        file.write(html_header.format(title = parser.title, header = header, body_header = body_header))
         file.write(contents)
-        file.write(html_footer)
+        file.write(html_footer.format(body_footer = body_footer))
     
     os.remove('temp')

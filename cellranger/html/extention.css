@@ -6,3 +6,32 @@ body img {
   max-width: 800px;
   margin-bottom: 50px;
 }
+
+#contents { 
+margin-left: 350px;
+
+}
+.toc {
+background: #f6f8fa;
+width: 300px;
+position: fixed;
+color: #666;
+}
+.toc a {
+color: #444;
+}
+.toc .toc-h2 {
+margin-left: 10px;
+margin-right: 10px;
+}
+.toc .toc-h3 {
+margin-left: 30px;
+margin-right: 10px;
+font-size: small;
+}
+.toc .toc-active {
+background: orange;
+}
+.toc.right {
+right: 0
+}

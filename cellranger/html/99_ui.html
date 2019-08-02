@@ -4,25 +4,32 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
     <link rel="stylesheet" type="text/css" href="./extention.css"/>
+<script src="./js/jquery.js"></script>
+<script src="./js/toc.js"></script>
 </head>
 <body>
+<div class="toc">
+</div>
+<div id="contents">
+
 <p>2019.7.31　作成　NCC</p>
 <h2>
 <a id="user-content-option-cell-ranger-ユーザインタフェースの利用" class="anchor" href="#option-cell-ranger-%E3%83%A6%E3%83%BC%E3%82%B6%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AE%E5%88%A9%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option. Cell Ranger ユーザインタフェースの利用</h2>
-<p>cellranger パイプラインにはユーザインターフェールが用意されています。</p>
+<p>cellranger パイプラインにはユーザインターフェースが用意されています。</p>
 <p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a></p>
 <p>ユーザインターフェースの場所は実行ログに記載されています。</p>
-<div class="highlight highlight-source-shell"><pre>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
+<pre><code>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
 /work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
 cellranger mkfastq (3.0.2)
 Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
 -------------------------------------------------------------------------------
 
-Martian Runtime - <span class="pl-s"><span class="pl-pds">'</span>3.0.2-v3.2.0<span class="pl-pds">'</span></span>
-Serving UI at http://ip-172-31-40-38:80<span class="pl-k">?</span>auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 <span class="pl-c"><span class="pl-c">#</span> &lt;- ★ここ</span>
+Martian Runtime - '3.0.2-v3.2.0'
+Serving UI at http://ip-172-31-40-38:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 # &lt;--- ★ ここです ★
 
 Running preflight checks (please wait)...
-（以下省略）</pre></div>
+（以下省略）
+</code></pre>
 <p>AWS インスタンスで実行している、内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
 <p>インスタンスの外部ネットワークアドレスは以下のようにして取得することができます。</p>
 <p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
@@ -31,13 +38,14 @@ Running preflight checks (please wait)...
 なお、内部ネットワークアドレスは「プライベート IP」という名前で記載されています。</p>
 <p><a href="../image/ec2_34.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_34.PNG" alt="" style="max-width:100%;"></a></p>
 <p>外部ネットワークアドレスに読み替えるとユーザインターフェースの URL は以下のようになります。</p>
-<p><a href="http://13.58.138.49:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0" rel="nofollow">http://13.58.138.49:80?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0</a></p>
+<p><a href="http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0" rel="nofollow">http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0</a></p>
 <p>ブラウザで開くと以下のような画面が表示されます。</p>
 <p><a href="../image/pipeline_monitoring_ui.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/pipeline_monitoring_ui.PNG" alt="" style="max-width:100%;"></a></p>
 <p>より詳しい解説は <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a> を参照してください。</p>
 <hr>
 <p>※ 注意１</p>
-<p>AWS インスタンスにはセキュリティグループがあり、ポート番号を指定してアクセスを許可する必要があります。<br>
+<p>インスタンス起動した AWS インスタンスは無制限に全世界に公開しているわけではなくアクセス制限を行っています。今回は 22 番ポートのみ許可しています。<br>
+そのため、新しくアクセスするためにはセキュリティグループに対してポート番号とアクセス先を指定してアクセスを許可する必要があります。<br>
 以下の手順で設定します。</p>
 <p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
 左端のメニューから「インスタンス」を選択した後、現在のインスタンスを選択します。<br>
@@ -48,16 +56,24 @@ Running preflight checks (please wait)...
 アクセスを許可する IP アドレス範囲 (「マイIP」を選択すると、現在の自分のIPアドレスを設定できます) を入力したら「保存」を押してください。</p>
 <p><a href="../image/ec2_36.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_36.PNG" alt="" style="max-width:100%;"></a></p>
 <p>※ 注意２<br>
-公開ポートはランダムなため、 <code>--uiport=3600</code> のように <code>--uiport</code> オプションをつけることで固定することができます。</p>
+cellranger パイプラインが設定する公開ポートはランダムなため、 <code>--uiport=3600</code> のように <code>--uiport</code> オプションをつけることで固定することができます。</p>
 <p>ただし、Linux では TCP/IP ポート番号のうち 1024 未満は特権ポート (privileged ports) といい、特権プロセス（CAP_NET_BIND_SERVICE ケーパビリティを持つプロセス）でないとアクセスできません。<br>
 そのため、3600 など 1024 以上のポート番号を指定したほうがよいでしょう。</p>
 <hr>
 <p>以上です。
-不要になった AWS インスタンスは適宜停止するか削除してください。</p>
+不要になった AWS インスタンスは以下を参考に適宜停止するか削除してください。</p>
 <ul>
 <li><a href="./aws_ec2_instance.html">AWS EC2 を利用する場合</a></li>
 <li><a href="./aws_cloud9.html">AWS Cloud9 を利用する場合</a></li>
 </ul>
 
+</div>
+
+<script>
+    $('.toc').toc({
+        'container': '#contents',
+        'selectors': 'h2, h3',
+    });
+</script>
 </body>
 </html>

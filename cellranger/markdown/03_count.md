@@ -10,7 +10,7 @@
 
 順番に実行していれば 2-5 までの結果がありますので、それを使用して `cellranger count` コマンドを実行します。  
 
-```
+```Bash
 cd /work
 cellranger count --id=tiny-bcl3-count \
 --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
@@ -27,21 +27,21 @@ cellranger count --id=tiny-bcl3-count \
 
 ### 3-2. 現実的なデータで実行する
 
-10xgenomicsが Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。
+10xgenomics は Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。
 
 https://support.10xgenomics.com/single-cell-gene-expression/datasets
 
 
 上記のうち、「1k PBMCs from a Healthy Donor (v3 chemistry)」をダウンロードします。
 
-```
+```Bash
 wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
 tar xvf pbmc_1k_v3_fastqs.tar
 ```
 
 cellranger cout を実行します。  
---fastqs にダウンロードしたサンプルのfastqディレクトリを指定します。  
---except-cells にはサンプルのページに `run with --expect-cells=1000` と記載がありますので、1000を指定します。
+--fastqs にダウンロードしたサンプルの fastq ディレクトリを指定します。  
+--except-cells にはサンプルのページに `run with --expect-cells=1000` と記載がありますので、1000 を指定します。
 
 ```Bash
 cellranger count --id=pbmc_1k_v3 \
@@ -50,7 +50,9 @@ cellranger count --id=pbmc_1k_v3 \
 --expect-cells=1000
 ```
 
-以下はログです。
+以下はログの一部です。  
+"Pipestance completed successfully!" と表示されていれば成功です。  
+全体のログは [ここ](../data/cellranger_count_pbmc_1k_v3.log) にアップロードしています。
 
 ```
 $ cellranger count --id=pbmc_1k_v3 \
@@ -80,13 +82,13 @@ Pipestance completed successfully!
 Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
 ```
 
-全体のログは [ここ](../data/cellranger_count_pbmc_1k_v3.log) です。
-
-実行ログに記載されているサマリは [ここ](../data/pbmc_1k_v3/outs/web_summary.html) にアップロードしています。
+実行ログの最後 "Outputs:" にサマリの出力場所が記載されています。
 
 ```
 Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
 ```
+
+ [ここ](../data/pbmc_1k_v3/outs/web_summary.html) にアップロードしていますので、興味があれば参考に見てください。
 
 ---
 

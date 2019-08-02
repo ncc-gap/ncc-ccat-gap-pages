@@ -4,8 +4,14 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
     <link rel="stylesheet" type="text/css" href="./extention.css"/>
+<script src="./js/jquery.js"></script>
+<script src="./js/toc.js"></script>
 </head>
 <body>
+<div class="toc">
+</div>
+<div id="contents">
+
 <p>2019.7.31　作成　NCC</p>
 <h1>
 <a id="user-content-aws-cloud9-を使用して-linux-サーバを構築する" class="anchor" href="#aws-cloud9-%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6-linux-%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS Cloud9 を使用して Linux サーバを構築する</h1>
@@ -134,5 +140,13 @@ AWS Cloud9 の環境はデフォルト設定で、30分無操作で停止状態�
 <p>確認画面が表示されますので、内容を確認したら、「はい、削除する」ボタンを押します。</p>
 <p><a href="../image/ec2_33.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_33.PNG" alt="" style="max-width:100%;"></a></p>
 
+</div>
+
+<script>
+    $('.toc').toc({
+        'container': '#contents',
+        'selectors': 'h2, h3',
+    });
+</script>
 </body>
 </html>

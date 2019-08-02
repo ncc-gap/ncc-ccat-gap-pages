@@ -4,8 +4,14 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
     <link rel="stylesheet" type="text/css" href="./extention.css"/>
+<script src="./js/jquery.js"></script>
+<script src="./js/toc.js"></script>
 </head>
 <body>
+<div class="toc">
+</div>
+<div id="contents">
+
 <p>2019.7.31　作成　NCC</p>
 <h1>
 <a id="user-content-aws-環境で-cell-ranger-環境を構築する" class="anchor" href="#aws-%E7%92%B0%E5%A2%83%E3%81%A7-cell-ranger-%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS 環境で Cell Ranger 環境を構築する</h1>
@@ -24,32 +30,24 @@ Cell Ranger には、single-cell 遺伝子発現実験に関連する4つのパ�
 <strong>cellranger reanalyze</strong> は cellranger count または cellranger aggr によって生成された機能バーコード行列を取得し、調整可能なパラメータ設定を使用して次元削減、クラスタリング、および遺伝子発現アルゴリズムを再実行します。</li>
 </ul>
 <p>これらのパイプラインは、Chromium-specific algorithms と RNA 解析に広く使用されているアラインメントルール STAR とを組み合わせたものです。<br>
-出力は標準的なBAM, MEX, CSV, HDF5 と HTML であり、細胞情報が付与されています。</p>
+出力は標準的な BAM, MEX, CSV, HDF5 と HTML であり、細胞情報が付与されています。</p>
 <p>詳しくは以下を参考にしてください。</p>
 <p><a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger" rel="nofollow">What is Cell Ranger?</a></p>
 <p>本文書では Cell Ranger 公式ドキュメントを参照しながら AWS インスタンス上に Cell Raner 環境を構築し、サンプルデータを cellranger count を使用して解析してみるまでを解説します。</p>
 <h2>
-<a id="user-content-目次" class="anchor" href="#%E7%9B%AE%E6%AC%A1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>目次</h2>
-<ul>
-<li><a href="#">1. Cell Ranger のインストール</a></li>
-<li><a href="./02_mkfastq.html">2. cellranger mkfastq を実行してみる</a></li>
-<li><a href="./03_count.html">3. cellranger count を実行してみる</a></li>
-<li><a href="./99_ui.html">Option. Cell Ranger ユーザインタフェースの利用</a></li>
-</ul>
-<h2>
 <a id="user-content-1-cell-ranger-のインストール" class="anchor" href="#1-cell-ranger-%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Cell Ranger のインストール</h2>
 <p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation" rel="nofollow">Cell Ranger Installation</a></p>
 <h3>
-<a id="user-content-1-1-aws-ec2-インスタンスを起動する" class="anchor" href="#1-1-aws-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-1. AWS EC2 インスタンスを起動する</h3>
+<a id="user-content-1-1-aws-ec2-インスタンスを起動" class="anchor" href="#1-1-aws-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E8%B5%B7%E5%8B%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-1. AWS EC2 インスタンスを起動</h3>
 <p>AWS コンソールにログインし、EC2 インスタンスを起動します。</p>
-<p>Cell Ranger は以下の <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements" rel="nofollow">システム要件</a> となっていますので、1TB ディスクストレージ (gp2) をつけてインスタンスタイプ t3.2xlarge を選択します。</p>
+<p>Cell Ranger は以下の <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements" rel="nofollow">システム要件</a> となっていますので、1TByte のディスクストレージ (gp2) をつけてインスタンスタイプ t3.2xlarge を選択します。</p>
 <pre><code>System Requirements
  - 8-core Intel
  - 64GB RAM
  - 1TB free disk space
  - 64-bit CentOS/RedHat 6.0 or Ubuntu 12.04
 </code></pre>
-<p>セキュリティグループではポート22番と80番を開けておいてください。<br>
+<p>セキュリティグループではポート 22 番を開けておいてください。<br>
 その他の設定はデフォルトのままで構いません。</p>
 <p>詳細な手順は以下を参照してください。</p>
 <ul>
@@ -57,16 +55,16 @@ Cell Ranger には、single-cell 遺伝子発現実験に関連する4つのパ�
 <li><a href="./aws_cloud9.html">AWS Cloud9 を利用する場合</a></li>
 </ul>
 <p>EC2 インスタンスが起動したら、 SSH ログインし、アタッチしたストレージを初期化して <code>/work</code> ディレクトリにマウントしておきます。<br>
-実際に使用する場合はマウント先はなんでも構いませんが、ここでは解説の記載に合わせて <code>/work</code> ディレクトリとしておきます。</p>
+実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて <code>/work</code> ディレクトリとしておきます。</p>
 <div class="highlight highlight-source-shell"><pre>mkfs -t ext4 /dev/sdb
 mkdir /work
 mount /dev/sdb /work
 <span class="pl-c1">cd</span> /work/</pre></div>
 <p>ターミナルはこのまま使いますので、ログインしたままにしておいてください。</p>
 <h3>
-<a id="user-content-1-2-cell-ranger-ファイルをダウンロードして解凍する" class="anchor" href="#1-2-cell-ranger-%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%81%97%E3%81%A6%E8%A7%A3%E5%87%8D%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-2. Cell Ranger ファイルをダウンロードして解凍する</h3>
+<a id="user-content-1-2-cell-ranger-ファイルをダウンロード" class="anchor" href="#1-2-cell-ranger-%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-2. Cell Ranger ファイルをダウンロード</h3>
 <p>Cell Rangerは tar ファイルとして公開されており、提供されています。<br>
-必要なソフトウェア依存関係をすべてまとめたもので、さまざまなLinuxディストリビューションで動作するように事前にコンパイルされていますので、インストールはこのファイルをダウンロードして解凍するだけです。</p>
+必要なソフトウェア依存関係をすべてまとめたもので、さまざまな Linux ディストリビューションで動作するように事前にコンパイルされていますので、インストールはこのファイルをダウンロードして解凍するだけです。</p>
 <p>まず、<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest" rel="nofollow">このページ</a> にアクセスし、「10x Genomics End User Software License Agreement」を確認して必要事項を入力した後、「Continue to Downloads」ボタンをクリックします。</p>
 <p>「Continue to Downloads」ボタンをクリックすると、次のような画面が表示されます。
 赤枠の中がダウンロードコマンドですので、すべて選択して、1-1 でログインしたターミナルに張り付けて実行します。</p>
@@ -75,7 +73,7 @@ mount /dev/sdb /work
 ファイル名のバージョンはダウンロードしたファイルに合わせてください。</p>
 <div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-3.1.0.tar.gz</pre></div>
 <h3>
-<a id="user-content-1-3-リファレンスファイルをダウンロードして解凍する" class="anchor" href="#1-3-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%81%97%E3%81%A6%E8%A7%A3%E5%87%8D%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-3. リファレンスファイルをダウンロードして解凍する</h3>
+<a id="user-content-1-3-リファレンスファイルをダウンロード" class="anchor" href="#1-3-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-3. リファレンスファイルをダウンロード</h3>
 <p>1-2 で開いたダウンロード画面にリファレンスのダウンロードコマンドも表示されています。<br>
 赤枠の中をすべて選択して、ターミナルに張り付けて実行します。</p>
 <p><a href="../image/download2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/download2.PNG" alt="" style="max-width:100%;"></a></p>
@@ -96,14 +94,244 @@ mount /dev/sdb /work
 <p>パイプラインの実行結果は成否にかかわらず <code>tiny/tiny.mri.tgz</code> に出力されており、10xGenomics にサポートを求めるときは次のコマンドでこのファイルを送付するようです。</p>
 <pre><code>cellranger upload your@email.edu tiny/tiny.mri.tgz
 </code></pre>
-<h2>
-<a id="user-content-1-6-bcl2fastq2-をインストール" class="anchor" href="#1-6-bcl2fastq2-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-6. bcl2fastq2 をインストール</h2>
+<h3>
+<a id="user-content-1-6-bcl2fastq2-をインストール" class="anchor" href="#1-6-bcl2fastq2-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-6. bcl2fastq2 をインストール</h3>
 <p>前述までに cellranger パイプラインをインストールしましたが、イルミナの <code>bcl2fastq2</code> は入っていませんので、別途インストールする必要があります。</p>
 <div class="highlight highlight-source-shell"><pre>wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
 unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
 sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm</pre></div>
 <hr>
-<p><a href="./02_mkfastq.html">2. cellranger mkfastq を実行してみる</a> に進んでください。</p>
+<h2>
+<a id="user-content-2-cellranger-mkfastq-の実行" class="anchor" href="#2-cellranger-mkfastq-%E3%81%AE%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. cellranger mkfastq の実行</h2>
+<p>この項では <code>cellranger mkfastq</code> を使用して FASTQ を生成します。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq" rel="nofollow">Generating FASTQs with cellranger mkfastq</a></p>
+<h3>
+<a id="user-content-2-1-コマンドとオプション" class="anchor" href="#2-1-%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A8%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-1. コマンドとオプション</h3>
+<p>cellranger mkfastq コマンドの基本形は以下のどちらかです</p>
+<h4>
+<a id="user-content---csv-オプションを使用する場合-10xgenomics-推奨" class="anchor" href="#--csv-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88-10xgenomics-%E6%8E%A8%E5%A5%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>--csv オプションを使用する場合 (10xGenomics 推奨)</h4>
+<p><a href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a></p>
+<div class="highlight highlight-source-shell"><pre>cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv</pre></div>
+<h4>
+<a id="user-content---samplesheet-オプションを使用する場合" class="anchor" href="#--samplesheet-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>--samplesheet オプションを使用する場合</h4>
+<p>samplesheet とは Illumina Experiment Manager互換のサンプルシートのことであり、ファイルのパスを指定します。</p>
+<p><a href="../data/cellranger-tiny-bcl-samplesheet-1.2.0.csv">samplesheet サンプルはこちら</a></p>
+<div class="highlight highlight-source-shell"><pre>cellranger mkfastq --id=tiny-bcl2 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<p>どちらにしても --run オプションは必須であり、 Illumina BCL へのパスを指定します。</p>
+<p>--id は出力ディレクトリ名です。必須ではありませんが明示したほうがよいでしょう。デフォルトは --run オプションで指定されるフローセルの名前です。</p>
+<p>また、QC を実行するには --qc オプションも合わせて指定する必要があります。</p>
+<p>その他のオプションについては 10xGenomics のドキュメント <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#arguments_options" rel="nofollow">Arguments and Options</a> を参照してください。</p>
+<p>サンプルが提供されていますので、ダウンロードしておきます。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+mkdir data
+<span class="pl-c1">cd</span> data
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-simple-1.2.0.csv
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<p>ダウンロードしたファイルを解答します。</p>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-tiny-bcl-1.2.0.tar.gz</pre></div>
+<p>ここまでの作業により、データは以下のように配置されているはずです。</p>
+<pre><code>/work
+├── data
+│         ├── cellranger-tiny-bcl-1.2.0
+│         └── cellranger-tiny-bcl-simple-1.2.0.csv
+│         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+└── refdata-cellranger-GRCh38-and-mm10-3.1.0
+</code></pre>
+<h3>
+<a id="user-content-2-2---csv-オプションを使用して-mkfastq-を実行" class="anchor" href="#2-2---csv-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6-mkfastq-%E3%82%92%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-2. --csv オプションを使用して mkfastq を実行</h3>
+<p><code>cellranger mkfastq</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv</pre></div>
+<p>実行ログは以下のように出力されます。 <code>Pipestance completed successfully!</code> と表示されていれば成功です。</p>
+<pre><code>$ cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+(省略)
 
+Outputs:
+- Run QC metrics:        null
+- FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+- Interop output folder: /work/tiny-bcl/outs/interop_path
+- Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-29 09:49:24 Shutting down.
+Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
+</code></pre>
+<p>全体のログは <a href="../data/cellranger_mkfastq_tiny-bcl.log">ここ</a> です。</p>
+<h3>
+<a id="user-content-2-3-実行した-csv-サンプルシートを確認" class="anchor" href="#2-3-%E5%AE%9F%E8%A1%8C%E3%81%97%E3%81%9F-csv-%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%82%B7%E3%83%BC%E3%83%88%E3%82%92%E7%A2%BA%E8%AA%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-3. 実行した csv サンプルシートを確認</h3>
+<p>サンプルシートを見てみます。<br>
+<a href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a><br>
+Lane, Sample, Index の構成になっています。</p>
+<pre><code>$ cat /work/data/cellranger-tiny-bcl-simple-1.2.0.csv
+Lane,Sample,Index
+1,test_sample,SI-P03-C9
+</code></pre>
+<p>構成が簡単なため、10xGenomics は CSV サンプルシートを使用することを推奨しています。</p>
+<table>
+<thead>
+<tr>
+<th align="left">列名</th>
+<th align="left">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Lane</td>
+<td align="left">処理するフローセルのレーン。単一レーン、範囲（2〜4など）、または「*」のいずれかになります。</td>
+</tr>
+<tr>
+<td align="left">Sample</td>
+<td align="left">サンプルの名前。この名前は、生成されたすべての FASTQ ファイルのprefixとなり、すべてのダウンストリーム10xパイプラインの <code>--sample</code> 引数に対応します。 サンプル名は、イルミナの bcl2fastq 命名要件に準拠している必要があります。文字、数字、アンダースコア(_)、ハイフン(-)のみが許可されています。ドット(.)を含む他の記号は使用できません。</td>
+</tr>
+<tr>
+<td align="left">Index</td>
+<td align="left">ライブラリ構築に使用した 10x のサンプルインデックスセット, e.g., SI-GA-A12.</td>
+</tr>
+</tbody>
+</table>
+<h3>
+<a id="user-content-2-4---samplesheet-オプションを使用して-mkfastq-を実行" class="anchor" href="#2-4---samplesheet-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6-mkfastq-%E3%82%92%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-4. --samplesheet オプションを使用して mkfastq を実行</h3>
+<p><code>cellranger mkfastq</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger mkfastq --id=tiny-bcl2 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<h3>
+<a id="user-content-2-5-quality-control-をつけて実行" class="anchor" href="#2-5-quality-control-%E3%82%92%E3%81%A4%E3%81%91%E3%81%A6%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-5. Quality Control をつけて実行</h3>
+<p><code>--qc</code> オプションをつけて実行します。</p>
+<pre><code>cellranger mkfastq --id=tiny-bcl3 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc
+</code></pre>
+<p>QC 出力結果と構成については 10xGenomics のドキュメント <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#qc_metrics" rel="nofollow">Reading Quality Control Metrics</a> を参照してください。</p>
+<hr>
+<h2>
+<a id="user-content-3-cellranger-count-を実行" class="anchor" href="#3-cellranger-count-%E3%82%92%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. cellranger count を実行</h2>
+<p>この項では <code>cellranger count</code> を使用して Single-Library Analysis を行います。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count" rel="nofollow">Single-Library Analysis with Cell Ranger</a></p>
+<h3>
+<a id="user-content-3-1-簡単なサンプルで実行" class="anchor" href="#3-1-%E7%B0%A1%E5%8D%98%E3%81%AA%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%81%A7%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3-1. 簡単なサンプルで実行</h3>
+<p>順番に実行していれば 2-5 までの結果がありますので、それを使用して <code>cellranger count</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger count --id=tiny-bcl3-count \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+--fastqs=./tiny-bcl3/outs/fastq_path \
+--expect-cells=1000</pre></div>
+<p>--fastqs オプションに前回の出力結果のうち、fastq_path ディレクトリを渡します。<br>
+--transcriptome オプションには 1-3 でダウンロードしたリファレンスファイルのディレクトリを指定します。<br>
+--except-cells は期待されるセル数ですが、ここでは公式ドキュメントのとおり、1000とします。（デフォルトは3000です）</p>
+<p>その他オプションは公式ドキュメントを参照してください。
+<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count#args" rel="nofollow">Command Line Argument</a></p>
+<h3>
+<a id="user-content-3-2-現実的なデータで実行" class="anchor" href="#3-2-%E7%8F%BE%E5%AE%9F%E7%9A%84%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%81%A7%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3-2. 現実的なデータで実行</h3>
+<p>10xgenomics は Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。</p>
+<p><a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets" rel="nofollow">https://support.10xgenomics.com/single-cell-gene-expression/datasets</a></p>
+<p>上記のうち、「1k PBMCs from a Healthy Donor (v3 chemistry)」をダウンロードします。</p>
+<div class="highlight highlight-source-shell"><pre>wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
+tar xvf pbmc_1k_v3_fastqs.tar</pre></div>
+<p>cellranger cout を実行します。<br>
+--fastqs にダウンロードしたサンプルの fastq ディレクトリを指定します。<br>
+--except-cells にはサンプルのページに <code>run with --expect-cells=1000</code> と記載がありますので、1000 を指定します。</p>
+<div class="highlight highlight-source-shell"><pre>cellranger count --id=pbmc_1k_v3 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+--fastqs=./pbmc_1k_v3_fastqs/ \
+--expect-cells=1000</pre></div>
+<p>以下はログの一部です。<br>
+"Pipestance completed successfully!" と表示されていれば成功です。<br>
+全体のログは <a href="../data/cellranger_count_pbmc_1k_v3.log">ここ</a> にアップロードしています。</p>
+<pre><code>$ cellranger count --id=pbmc_1k_v3 \
+&gt; --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+&gt; --fastqs=./pbmc_1k_v3_fastqs/ \
+&gt; --expect-cells=1000
+(省略)
+
+Outputs:
+- Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+- Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
+- BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
+- BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
+- Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
+- Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
+- Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
+- Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
+- Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
+- Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
+- CRISPR-specific analysis:                 null
+- Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-30 09:08:05 Shutting down.
+Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
+</code></pre>
+<p>実行ログの最後 "Outputs:" にサマリの出力場所が記載されています。</p>
+<pre><code>Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+</code></pre>
+<p><a href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考に見てください。</p>
+<hr>
+<h2>
+<a id="user-content-option-cell-ranger-ユーザインタフェースの利用" class="anchor" href="#option-cell-ranger-%E3%83%A6%E3%83%BC%E3%82%B6%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AE%E5%88%A9%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option. Cell Ranger ユーザインタフェースの利用</h2>
+<p>cellranger パイプラインにはユーザインターフェースが用意されています。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a></p>
+<p>ユーザインターフェースの場所は実行ログに記載されています。</p>
+<pre><code>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
+/work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
+cellranger mkfastq (3.0.2)
+Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
+-------------------------------------------------------------------------------
+
+Martian Runtime - '3.0.2-v3.2.0'
+Serving UI at http://ip-172-31-40-38:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 # &lt;--- ★ ここです ★
+
+Running preflight checks (please wait)...
+（以下省略）
+</code></pre>
+<p>AWS インスタンスで実行している、内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
+<p>インスタンスの外部ネットワークアドレスは以下のようにして取得することができます。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、目的のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「IPv4 パブリック IP」を探します。<br>
+なお、内部ネットワークアドレスは「プライベート IP」という名前で記載されています。</p>
+<p><a href="../image/ec2_34.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_34.PNG" alt="" style="max-width:100%;"></a></p>
+<p>外部ネットワークアドレスに読み替えるとユーザインターフェースの URL は以下のようになります。</p>
+<p><a href="http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0" rel="nofollow">http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0</a></p>
+<p>ブラウザで開くと以下のような画面が表示されます。</p>
+<p><a href="../image/pipeline_monitoring_ui.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/pipeline_monitoring_ui.PNG" alt="" style="max-width:100%;"></a></p>
+<p>より詳しい解説は <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a> を参照してください。</p>
+<hr>
+<h3>
+<a id="user-content-注意１-セキュリティグループの変更" class="anchor" href="#%E6%B3%A8%E6%84%8F%EF%BC%91-%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%AE%E5%A4%89%E6%9B%B4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>注意１ セキュリティグループの変更</h3>
+<p>インスタンス起動した AWS インスタンスは無制限に全世界に公開しているわけではなくアクセス制限を行っています。今回は 22 番ポートのみ許可しています。<br>
+そのため、新しくアクセスするためにはセキュリティグループに対してポート番号とアクセス先を指定してアクセスを許可する必要があります。<br>
+以下の手順で設定します。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、現在のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「セキュリティグループ」のリンクをクリックします。</p>
+<p><a href="../image/ec2_35.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_35.PNG" alt="" style="max-width:100%;"></a></p>
+<p>セキュリティグループの画面が表示されますので、「インバウンド」→「編集」とクリックして、セキュリティグループの編集画面を表示します。<br>
+「ルールの追加」ボタンをクリックして行を追加し、ポート番号を入力します。<br>
+アクセスを許可する IP アドレス範囲 (「マイIP」を選択すると、現在の自分のIPアドレスを設定できます) を入力したら「保存」を押してください。</p>
+<p><a href="../image/ec2_36.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_36.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-注意２-公開ポートを固定" class="anchor" href="#%E6%B3%A8%E6%84%8F%EF%BC%92-%E5%85%AC%E9%96%8B%E3%83%9D%E3%83%BC%E3%83%88%E3%82%92%E5%9B%BA%E5%AE%9A" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>注意２ 公開ポートを固定</h3>
+<p>cellranger パイプラインが設定する公開ポートはランダムなため、 <code>--uiport=3600</code> のように <code>--uiport</code> オプションをつけることで固定することができます。</p>
+<p>ただし、Linux では TCP/IP ポート番号のうち 1024 未満は特権ポート (privileged ports) といい、特権プロセス（CAP_NET_BIND_SERVICE ケーパビリティを持つプロセス）でないとアクセスできません。<br>
+そのため、3600 など 1024 以上のポート番号を指定したほうがよいでしょう。</p>
+<hr>
+<p>以上です。
+不要になった AWS インスタンスは以下を参考に適宜停止するか削除してください。</p>
+<ul>
+<li><a href="./aws_ec2_instance.html">AWS EC2 を利用する場合</a></li>
+<li><a href="./aws_cloud9.html">AWS Cloud9 を利用する場合</a></li>
+</ul>
+
+</div>
+
+<script>
+    $('.toc').toc({
+        'container': '#contents',
+        'selectors': 'h2, h3',
+    });
+</script>
 </body>
 </html>

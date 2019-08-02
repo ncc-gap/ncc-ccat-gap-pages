@@ -4,8 +4,14 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
     <link rel="stylesheet" type="text/css" href="./extention.css"/>
+<script src="./js/jquery.js"></script>
+<script src="./js/toc.js"></script>
 </head>
 <body>
+<div class="toc">
+</div>
+<div id="contents">
+
 <p>2019.7.31　作成　NCC</p>
 <h1>
 <a id="user-content-aws-ec2-を使用して-linux-サーバを構築する" class="anchor" href="#aws-ec2-%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6-linux-%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS EC2 を使用して Linux サーバを構築する</h1>
@@ -185,5 +191,13 @@ Connection to ec2-52-194-226-103.ap-northeast-1.compute.amazonaws.com closed.</p
 <p>確認画面が表示されますので、内容を確認したら、「はい」ボタンを押します。</p>
 <p><a href="../image/ec2_31.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_31.PNG" alt="" style="max-width:100%;"></a></p>
 
+</div>
+
+<script>
+    $('.toc').toc({
+        'container': '#contents',
+        'selectors': 'h2, h3',
+    });
+</script>
 </body>
 </html>
