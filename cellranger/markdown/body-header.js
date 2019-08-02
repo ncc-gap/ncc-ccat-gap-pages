@@ -1,3 +1,2 @@
-<div class="toc">
-</div>
+<div id="toc"></div>
 <div id="contents">

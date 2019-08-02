@@ -1,8 +1,2 @@
 </div>
-
-<script>
-    $('.toc').toc({
-        'container': '#contents',
-        'selectors': 'h2, h3',
-    });
-</script>
+<script src="./js/auto-toc.js"></script>

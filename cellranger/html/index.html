@@ -1,0 +1,635 @@
+<html lang="ja">
+<head>
+  <title>AWS 環境で Cell Ranger 環境を構築する</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="./github-markdown.css"/>
+    <link rel="stylesheet" type="text/css" href="./extention.css"/>
+<script src="./js/jquery.js"></script>
+<script src="./js/auto-toc.js"></script>
+</head>
+<body>
+<div id="toc"></div>
+<div id="contents">
+
+<p>2019.7.31　作成　NCC</p>
+<h1>
+<a id="user-content-aws-環境で-cell-ranger-環境を構築する" class="anchor" href="#aws-%E7%92%B0%E5%A2%83%E3%81%A7-cell-ranger-%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS 環境で Cell Ranger 環境を構築する</h1>
+<h2>
+<a id="user-content-cell-ranger-とは" class="anchor" href="#cell-ranger-%E3%81%A8%E3%81%AF" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cell Ranger とは</h2>
+<p>Cell Ranger は single-cell の RNA-seq に対する解析パイプラインであり、Chromium single-cell RNA-seq によるシーケンスデータをアラインメントし、feature-barcode 行列を生成してクラスタリングと遺伝子発現分析を行います。<br>
+Cell Ranger には、single-cell 遺伝子発現実験に関連する4つのパイプラインが含まれています。</p>
+<ul>
+<li>
+<strong>cellranger mkfastq</strong> は Illumina シーケンサによって生成された Raw Base Call (BCL) ファイルを FASTQ ファイルに逆多重化します。</li>
+<li>
+<strong>cellranger count</strong> は cellranger mkfastq で作成した FASTQ ファイルを使用して、アライメント、フィルタリング、バーコードカウント、および UMI カウントを実行します。</li>
+<li>
+<strong>cellranger aggr</strong> は複数回の実行結果を集約し、結合データを分析します。</li>
+<li>
+<strong>cellranger reanalyze</strong> は cellranger count または cellranger aggr によって生成された機能バーコード行列を取得し、調整可能なパラメータ設定を使用して次元削減、クラスタリング、および遺伝子発現アルゴリズムを再実行します。</li>
+</ul>
+<p>これらのパイプラインは、Chromium-specific algorithms と RNA 解析に広く使用されているアラインメントルール STAR とを組み合わせたものです。<br>
+出力は標準的な BAM, MEX, CSV, HDF5 と HTML であり、細胞情報が付与されています。</p>
+<p>詳しくは以下を参考にしてください。</p>
+<p><a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger" rel="nofollow">What is Cell Ranger?</a></p>
+<p>本文書では Cell Ranger 公式ドキュメントを参照しながら AWS インスタンス上に Cell Raner 環境を構築し、サンプルデータを cellranger count を使用して解析してみるまでを解説します。</p>
+<h2>
+<a id="user-content-1-cell-ranger-のインストール" class="anchor" href="#1-cell-ranger-%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Cell Ranger のインストール</h2>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation" rel="nofollow">Cell Ranger Installation</a></p>
+<h3>
+<a id="user-content-1-1-aws-ec2-インスタンスを起動" class="anchor" href="#1-1-aws-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E8%B5%B7%E5%8B%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-1. AWS EC2 インスタンスを起動</h3>
+<p>AWS コンソールにログインし、EC2 インスタンスを起動します。</p>
+<p>Cell Ranger は以下の <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements" rel="nofollow">システム要件</a> となっていますので、1TByte のディスクストレージ (gp2) をつけてインスタンスタイプ t3.2xlarge を選択します。</p>
+<pre><code>System Requirements
+ - 8-core Intel
+ - 64GB RAM
+ - 1TB free disk space
+ - 64-bit CentOS/RedHat 6.0 or Ubuntu 12.04
+</code></pre>
+<p>セキュリティグループではポート 22 番を開けておいてください。<br>
+その他の設定はデフォルトのままで構いません。</p>
+<p>詳細な手順は以下を参照してください。</p>
+<ul>
+<li><a href="#aws-ec2-%E3%81%AE%E5%88%A9%E7%94%A8">AWS EC2 を利用する場合</a></li>
+<li><a href="#aws-cloud9-%E3%81%AE%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">AWS Cloud9 を利用する場合</a></li>
+</ul>
+<p>EC2 インスタンスが起動したら、 SSH ログインし、アタッチしたストレージを初期化して <code>/work</code> ディレクトリにマウントしておきます。<br>
+実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて <code>/work</code> ディレクトリとしておきます。</p>
+<div class="highlight highlight-source-shell"><pre>mkfs -t ext4 /dev/sdb
+mkdir /work
+mount /dev/sdb /work
+<span class="pl-c1">cd</span> /work/</pre></div>
+<p>ターミナルはこのまま使いますので、ログインしたままにしておいてください。</p>
+<h3>
+<a id="user-content-1-2-cell-ranger-をダウンロード" class="anchor" href="#1-2-cell-ranger-%E3%82%92%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-2. Cell Ranger をダウンロード</h3>
+<p>Cell Rangerは tar ファイルとして公開されており、提供されています。<br>
+必要なソフトウェア依存関係をすべてまとめたもので、さまざまな Linux ディストリビューションで動作するように事前にコンパイルされていますので、インストールはこのファイルをダウンロードして解凍するだけです。</p>
+<p>まず、<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest" rel="nofollow">このページ</a> にアクセスし、「10x Genomics End User Software License Agreement」を確認して必要事項を入力した後、「Continue to Downloads」ボタンをクリックします。</p>
+<p>「Continue to Downloads」ボタンをクリックすると、次のような画面が表示されます。
+赤枠の中がダウンロードコマンドですので、すべて選択して、1-1 でログインしたターミナルに張り付けて実行します。</p>
+<p><a href="../image/download1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/download1.PNG" alt="" style="max-width:100%;"></a></p>
+<p>ダウンロードしたファイルを解凍します。<br>
+ファイル名のバージョンはダウンロードしたファイルに合わせてください。</p>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-3.1.0.tar.gz</pre></div>
+<h3>
+<a id="user-content-1-3-リファレンスファイルの準備" class="anchor" href="#1-3-%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E6%BA%96%E5%82%99" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-3. リファレンスファイルの準備</h3>
+<p>1-2 で開いたダウンロード画面にリファレンスのダウンロードコマンドも表示されています。<br>
+赤枠の中をすべて選択して、ターミナルに張り付けて実行します。</p>
+<p><a href="../image/download2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/download2.PNG" alt="" style="max-width:100%;"></a></p>
+<p>1-2 と同様にダウンロードしたファイルを解凍します。<br>
+ファイル名のバージョンはダウンロードしたファイルに合わせてください。</p>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz</pre></div>
+<h3>
+<a id="user-content-1-4-cell-ranger-にパスを通す" class="anchor" href="#1-4-cell-ranger-%E3%81%AB%E3%83%91%E3%82%B9%E3%82%92%E9%80%9A%E3%81%99" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-4. Cell Ranger にパスを通す</h3>
+<p>Cell Ranger ディレクトリを PATH に追加します。これで <code>cellranger</code> コマンドを起動することができます。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-k">export</span> PATH=/work/cellranger-3.1.0:<span class="pl-smi">$PATH</span></pre></div>
+<h3>
+<a id="user-content-1-5-インストールの確認" class="anchor" href="#1-5-%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%AE%E7%A2%BA%E8%AA%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-5. インストールの確認</h3>
+<p>cellranger パイプラインが正しくインストールされていることを確認するために <code>cellranger testrun</code> を実行します。</p>
+<div class="highlight highlight-source-shell"><pre>cellranger testrun --id=tiny</pre></div>
+<p>以下のように表示されれば成功です。</p>
+<pre><code>Pipestance completed successfully!
+</code></pre>
+<p>パイプラインの実行結果は成否にかかわらず <code>tiny/tiny.mri.tgz</code> に出力されており、10xGenomics にサポートを求めるときは次のコマンドでこのファイルを送付するようです。</p>
+<pre><code>cellranger upload your@email.edu tiny/tiny.mri.tgz
+</code></pre>
+<h3>
+<a id="user-content-1-6-bcl2fastq2-をインストール" class="anchor" href="#1-6-bcl2fastq2-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1-6. bcl2fastq2 をインストール</h3>
+<p>前述までに cellranger パイプラインをインストールしましたが、イルミナの <code>bcl2fastq2</code> は入っていませんので、別途インストールする必要があります。</p>
+<div class="highlight highlight-source-shell"><pre>wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
+unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm</pre></div>
+<hr>
+<h2>
+<a id="user-content-2-cellranger-mkfastq-の実行" class="anchor" href="#2-cellranger-mkfastq-%E3%81%AE%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. cellranger mkfastq の実行</h2>
+<p>この項では <code>cellranger mkfastq</code> を使用して FASTQ を生成します。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq" rel="nofollow">Generating FASTQs with cellranger mkfastq</a></p>
+<h3>
+<a id="user-content-2-1-コマンドとオプション" class="anchor" href="#2-1-%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A8%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-1. コマンドとオプション</h3>
+<p>cellranger mkfastq コマンドの基本形は以下のどちらかです</p>
+<h4>
+<a id="user-content---csv-オプションを使用する場合-10xgenomics-推奨" class="anchor" href="#--csv-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88-10xgenomics-%E6%8E%A8%E5%A5%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>--csv オプションを使用する場合 (10xGenomics 推奨)</h4>
+<p><a href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a></p>
+<div class="highlight highlight-source-shell"><pre>cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv</pre></div>
+<h4>
+<a id="user-content---samplesheet-オプションを使用する場合" class="anchor" href="#--samplesheet-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>--samplesheet オプションを使用する場合</h4>
+<p>samplesheet とは Illumina Experiment Manager互換のサンプルシートのことであり、ファイルのパスを指定します。</p>
+<p><a href="../data/cellranger-tiny-bcl-samplesheet-1.2.0.csv">samplesheet サンプルはこちら</a></p>
+<div class="highlight highlight-source-shell"><pre>cellranger mkfastq --id=tiny-bcl2 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<p>どちらにしても --run オプションは必須であり、 Illumina BCL へのパスを指定します。</p>
+<p>--id は出力ディレクトリ名です。必須ではありませんが明示したほうがよいでしょう。デフォルトは --run オプションで指定されるフローセルの名前です。</p>
+<p>また、QC を実行するには --qc オプションも合わせて指定する必要があります。</p>
+<p>その他のオプションについては 10xGenomics のドキュメント <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#arguments_options" rel="nofollow">Arguments and Options</a> を参照してください。</p>
+<p>サンプルが提供されていますので、ダウンロードしておきます。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+mkdir data
+<span class="pl-c1">cd</span> data
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-simple-1.2.0.csv
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<p>ダウンロードしたファイルを解答します。</p>
+<div class="highlight highlight-source-shell"><pre>tar -xzvf cellranger-tiny-bcl-1.2.0.tar.gz</pre></div>
+<p>ここまでの作業により、データは以下のように配置されているはずです。</p>
+<pre><code>/work
+├── data
+│         ├── cellranger-tiny-bcl-1.2.0
+│         └── cellranger-tiny-bcl-simple-1.2.0.csv
+│         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+└── refdata-cellranger-GRCh38-and-mm10-3.1.0
+</code></pre>
+<h3>
+<a id="user-content-2-2---csv-オプション" class="anchor" href="#2-2---csv-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-2. --csv オプション</h3>
+<p>--csv オプションを使用して <code>cellranger mkfastq</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv</pre></div>
+<p>実行ログは以下のように出力されます。 <code>Pipestance completed successfully!</code> と表示されていれば成功です。</p>
+<pre><code>$ cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+(省略)
+
+Outputs:
+- Run QC metrics:        null
+- FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+- Interop output folder: /work/tiny-bcl/outs/interop_path
+- Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-29 09:49:24 Shutting down.
+Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
+</code></pre>
+<p>全体のログは <a href="../data/cellranger_mkfastq_tiny-bcl.log">ここ</a> です。</p>
+<h3>
+<a id="user-content-2-3-csv-サンプルシートを確認" class="anchor" href="#2-3-csv-%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%82%B7%E3%83%BC%E3%83%88%E3%82%92%E7%A2%BA%E8%AA%8D" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-3. csv サンプルシートを確認</h3>
+<p>サンプルシートを見てみます。<br>
+<a href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a><br>
+Lane, Sample, Index の構成になっています。</p>
+<pre><code>$ cat /work/data/cellranger-tiny-bcl-simple-1.2.0.csv
+Lane,Sample,Index
+1,test_sample,SI-P03-C9
+</code></pre>
+<p>構成が簡単なため、10xGenomics は CSV サンプルシートを使用することを推奨しています。</p>
+<table>
+<thead>
+<tr>
+<th align="left">列名</th>
+<th align="left">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Lane</td>
+<td align="left">処理するフローセルのレーン。単一レーン、範囲（2〜4など）、または「*」のいずれかになります。</td>
+</tr>
+<tr>
+<td align="left">Sample</td>
+<td align="left">サンプルの名前。この名前は、生成されたすべての FASTQ ファイルのprefixとなり、すべてのダウンストリーム10xパイプラインの <code>--sample</code> 引数に対応します。 サンプル名は、イルミナの bcl2fastq 命名要件に準拠している必要があります。文字、数字、アンダースコア(_)、ハイフン(-)のみが許可されています。ドット(.)を含む他の記号は使用できません。</td>
+</tr>
+<tr>
+<td align="left">Index</td>
+<td align="left">ライブラリ構築に使用した 10x のサンプルインデックスセット, e.g., SI-GA-A12.</td>
+</tr>
+</tbody>
+</table>
+<h3>
+<a id="user-content-2-4---samplesheet-オプション" class="anchor" href="#2-4---samplesheet-%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-4. --samplesheet オプション</h3>
+<p>--samplesheet オプションを使用して <code>cellranger mkfastq</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger mkfastq --id=tiny-bcl2 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv</pre></div>
+<h3>
+<a id="user-content-2-5-quality-control-をつけて実行" class="anchor" href="#2-5-quality-control-%E3%82%92%E3%81%A4%E3%81%91%E3%81%A6%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2-5. Quality Control をつけて実行</h3>
+<p><code>--qc</code> オプションをつけて実行します。</p>
+<pre><code>cellranger mkfastq --id=tiny-bcl3 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc
+</code></pre>
+<p>QC 出力結果と構成については 10xGenomics のドキュメント <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#qc_metrics" rel="nofollow">Reading Quality Control Metrics</a> を参照してください。</p>
+<hr>
+<h2>
+<a id="user-content-3-cellranger-count-を実行" class="anchor" href="#3-cellranger-count-%E3%82%92%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. cellranger count を実行</h2>
+<p>この項では <code>cellranger count</code> を使用して Single-Library Analysis を行います。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count" rel="nofollow">Single-Library Analysis with Cell Ranger</a></p>
+<h3>
+<a id="user-content-3-1-簡単なサンプルで実行" class="anchor" href="#3-1-%E7%B0%A1%E5%8D%98%E3%81%AA%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%81%A7%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3-1. 簡単なサンプルで実行</h3>
+<p>順番に実行していれば 2-5 までの結果がありますので、それを使用して <code>cellranger count</code> コマンドを実行します。</p>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /work
+cellranger count --id=tiny-bcl3-count \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+--fastqs=./tiny-bcl3/outs/fastq_path \
+--expect-cells=1000</pre></div>
+<p>--fastqs オプションに前回の出力結果のうち、fastq_path ディレクトリを渡します。<br>
+--transcriptome オプションには 1-3 でダウンロードしたリファレンスファイルのディレクトリを指定します。<br>
+--except-cells は期待されるセル数ですが、ここでは公式ドキュメントのとおり、1000とします。（デフォルトは3000です）</p>
+<p>その他オプションは公式ドキュメントを参照してください。
+<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count#args" rel="nofollow">Command Line Argument</a></p>
+<h3>
+<a id="user-content-3-2-現実的なデータで実行" class="anchor" href="#3-2-%E7%8F%BE%E5%AE%9F%E7%9A%84%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%81%A7%E5%AE%9F%E8%A1%8C" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3-2. 現実的なデータで実行</h3>
+<p>10xgenomics は Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。</p>
+<p><a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets" rel="nofollow">https://support.10xgenomics.com/single-cell-gene-expression/datasets</a></p>
+<p>上記のうち、「1k PBMCs from a Healthy Donor (v3 chemistry)」をダウンロードします。</p>
+<div class="highlight highlight-source-shell"><pre>wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
+tar xvf pbmc_1k_v3_fastqs.tar</pre></div>
+<p>cellranger cout を実行します。<br>
+--fastqs にダウンロードしたサンプルの fastq ディレクトリを指定します。<br>
+--except-cells にはサンプルのページに <code>run with --expect-cells=1000</code> と記載がありますので、1000 を指定します。</p>
+<div class="highlight highlight-source-shell"><pre>cellranger count --id=pbmc_1k_v3 \
+--transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+--fastqs=./pbmc_1k_v3_fastqs/ \
+--expect-cells=1000</pre></div>
+<p>以下はログの一部です。<br>
+"Pipestance completed successfully!" と表示されていれば成功です。<br>
+全体のログは <a href="../data/cellranger_count_pbmc_1k_v3.log">ここ</a> にアップロードしています。</p>
+<pre><code>$ cellranger count --id=pbmc_1k_v3 \
+&gt; --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+&gt; --fastqs=./pbmc_1k_v3_fastqs/ \
+&gt; --expect-cells=1000
+(省略)
+
+Outputs:
+- Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+- Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
+- BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
+- BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
+- Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
+- Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
+- Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
+- Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
+- Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
+- Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
+- CRISPR-specific analysis:                 null
+- Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-30 09:08:05 Shutting down.
+Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
+</code></pre>
+<p>実行ログの最後 "Outputs:" にサマリの出力場所が記載されています。</p>
+<pre><code>Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+</code></pre>
+<p><a href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考に見てください。</p>
+<hr>
+<h2>
+<a id="user-content-option-ユーザインタフェース" class="anchor" href="#option-%E3%83%A6%E3%83%BC%E3%82%B6%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option: ユーザインタフェース</h2>
+<p>cellranger パイプラインにはユーザインターフェースが用意されています。</p>
+<p>公式ドキュメント：<a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a></p>
+<p>ユーザインターフェースの場所は実行ログに記載されています。</p>
+<pre><code>$ cellranger mkfastq --id=tiny-bcl5 --run=./data/cellranger-tiny-bcl-1.2.0 --samplesheet=./cellranger-tiny-bcl-samplesheet-1.2.0.csv --qc --uiport=80
+/work/cellranger-3.0.2/cellranger-cs/3.0.2/bin
+cellranger mkfastq (3.0.2)
+Copyright (c) 2019 10x Genomics, Inc.  All rights reserved.
+-------------------------------------------------------------------------------
+
+Martian Runtime - '3.0.2-v3.2.0'
+Serving UI at http://ip-172-31-40-38:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0 # &lt;--- ★ ここです ★
+
+Running preflight checks (please wait)...
+（以下省略）
+</code></pre>
+<p>AWS インスタンスで実行している、内部ネットワークアドレスが表示されていますので、外部ネットワークアドレスに読み直してアクセスします。</p>
+<p>インスタンスの外部ネットワークアドレスは以下のようにして取得することができます。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、目的のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「IPv4 パブリック IP」を探します。<br>
+なお、内部ネットワークアドレスは「プライベート IP」という名前で記載されています。</p>
+<p><a href="../image/ec2_34.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_34.PNG" alt="" style="max-width:100%;"></a></p>
+<p>外部ネットワークアドレスに読み替えるとユーザインターフェースの URL は以下のようになります。</p>
+<p><a href="http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0" rel="nofollow">http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0</a></p>
+<p>ブラウザで開くと以下のような画面が表示されます。</p>
+<p><a href="../image/pipeline_monitoring_ui.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/pipeline_monitoring_ui.PNG" alt="" style="max-width:100%;"></a></p>
+<p>より詳しい解説は <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/ui" rel="nofollow">The Cell Ranger User Interface</a> を参照してください。</p>
+<hr>
+<h3>
+<a id="user-content-注意１-セキュリティグループの変更" class="anchor" href="#%E6%B3%A8%E6%84%8F%EF%BC%91-%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%AE%E5%A4%89%E6%9B%B4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>注意１ セキュリティグループの変更</h3>
+<p>インスタンス起動した AWS インスタンスは無制限に全世界に公開しているわけではなくアクセス制限を行っています。今回は 22 番ポートのみ許可しています。<br>
+そのため、新しくアクセスするためにはセキュリティグループに対してポート番号とアクセス先を指定してアクセスを許可する必要があります。<br>
+以下の手順で設定します。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択します。<br>
+左端のメニューから「インスタンス」を選択した後、現在のインスタンスを選択します。<br>
+右下にインスタンスの情報が記載されていますので、そこから「セキュリティグループ」のリンクをクリックします。</p>
+<p><a href="../image/ec2_35.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_35.PNG" alt="" style="max-width:100%;"></a></p>
+<p>セキュリティグループの画面が表示されますので、「インバウンド」→「編集」とクリックして、セキュリティグループの編集画面を表示します。<br>
+「ルールの追加」ボタンをクリックして行を追加し、ポート番号を入力します。<br>
+アクセスを許可する IP アドレス範囲 (「マイIP」を選択すると、現在の自分のIPアドレスを設定できます) を入力したら「保存」を押してください。</p>
+<p><a href="../image/ec2_36.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_36.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-注意２-公開ポートを固定" class="anchor" href="#%E6%B3%A8%E6%84%8F%EF%BC%92-%E5%85%AC%E9%96%8B%E3%83%9D%E3%83%BC%E3%83%88%E3%82%92%E5%9B%BA%E5%AE%9A" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>注意２ 公開ポートを固定</h3>
+<p>cellranger パイプラインが設定する公開ポートはランダムなため、 <code>--uiport=3600</code> のように <code>--uiport</code> オプションをつけることで固定することができます。</p>
+<p>ただし、Linux では TCP/IP ポート番号のうち 1024 未満は特権ポート (privileged ports) といい、特権プロセス（CAP_NET_BIND_SERVICE ケーパビリティを持つプロセス）でないとアクセスできません。<br>
+そのため、3600 など 1024 以上のポート番号を指定したほうがよいでしょう。</p>
+<hr>
+<p>以上です。
+不要になった AWS インスタンスは以下を参考に適宜停止するか削除してください。</p>
+<ul>
+<li><a href="#5-%E7%89%87%E4%BB%98%E3%81%91-1">AWS EC2 を利用する場合</a></li>
+<li><a href="#5-%E7%89%87%E4%BB%98%E3%81%91">AWS Cloud9 を利用する場合</a></li>
+</ul>
+<hr>
+<h2>
+<a id="user-content-aws-cloud9-の使用方法" class="anchor" href="#aws-cloud9-%E3%81%AE%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS Cloud9 の使用方法</h2>
+<h3>
+<a id="user-content-1-aws-コンソールにログイン" class="anchor" href="#1-aws-%E3%82%B3%E3%83%B3%E3%82%BD%E3%83%BC%E3%83%AB%E3%81%AB%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. AWS コンソールにログイン</h3>
+<p><a href="https://aws.amazon.com" rel="nofollow">https://aws.amazon.com</a> を web ブラウザで開き、「コンソールにサインイン」をクリックします。</p>
+<p><a href="../image/ec2_1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_1.PNG" alt="" style="max-width:100%;"></a></p>
+<p>次の画面でアカウント、ユーザ名、パスワードを入力します。</p>
+<p><a href="../image/ec2_2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_2.PNG" alt="" style="max-width:100%;"></a></p>
+<p>AWS マネジメントコンソールで東京リージョンを選択しておきます。</p>
+<p><a href="../image/ec2_3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_3.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-2-ec2-インスタンスの起動" class="anchor" href="#2-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AE%E8%B5%B7%E5%8B%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. EC2 インスタンスの起動</h3>
+<p>AWS マネジメントコンソールで Cloud9 サービスを選択します。</p>
+<p><a href="../image/c9_1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_1.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「Create environment」をクリックします。</p>
+<p><a href="../image/c9_2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_2.PNG" alt="" style="max-width:100%;"></a></p>
+<p>まず作成する cloud9 環境に名前を付けます。<br>
+「Name」に名前 (任意の英数字) を入力し、「Next step」をクリックします。</p>
+<p><a href="../image/c9_3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_3.PNG" alt="" style="max-width:100%;"></a></p>
+<p>次に cloud9 環境の設定を以下内容で設定してください。</p>
+<ul>
+<li>Environment type: "Create a new instance for environment (EC2)"</li>
+<li>Instance type: "Other instance type" にチェックをつけて、"t3.2xlarge" を選択</li>
+<li>Platform: "Amazon Linux"</li>
+<li>Cost-saving setting: "After 30 minutes (Default)</li>
+</ul>
+<p>入力出来たら、ページの最後にある「Next step」をクリックします。</p>
+<p><a href="../image/c9_4.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_4.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、問題なければ「Create environment」をクリックしてください。</p>
+<p><a href="../image/c9_5.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_5.PNG" alt="" style="max-width:100%;"></a></p>
+<p>作成が開始されますので、黒い画面が消えるまで待ちます。</p>
+<p><a href="../image/c9_6.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_6.PNG" alt="" style="max-width:100%;"></a></p>
+<p>このような画面が表示されれば使用可能です。</p>
+<p><a href="../image/c9_7.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_7.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-3-ボリュームの追加" class="anchor" href="#3-%E3%83%9C%E3%83%AA%E3%83%A5%E3%83%BC%E3%83%A0%E3%81%AE%E8%BF%BD%E5%8A%A0" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. ボリュームの追加</h3>
+<p>今回は 1T のボリュームが必要ですので、追加でボリュームを作成します。</p>
+<p>AWS マネジメントコンソールで EC2 サービスを選択します。</p>
+<p><a href="../image/ec2_4.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_4.PNG" alt="" style="max-width:100%;"></a></p>
+<p>EC2 ダッシュボードが表示されますので、左端のメニューから「ボリューム」を選択し、「ボリュームの作成」ボタンを押します。</p>
+<p><a href="../image/c9_8.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_8.PNG" alt="" style="max-width:100%;"></a></p>
+<p>以下内容で設定してください。<br>
+それ以外の項目はデフォルトのままで構いません。</p>
+<ul>
+<li>ボリュームタイプ: gp2</li>
+<li>サイズ (GiB): 1000</li>
+<li>キー: 「タグの追加」を押して行を追加した後、キーに「Name」、値に名前 (任意の英数字) を入力します</li>
+</ul>
+<p>入力出来たら、「ボリュームの作成」ボタンを押します。</p>
+<p><a href="../image/c9_9.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_9.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「閉じる」ボタンを押します。</p>
+<p><a href="../image/c9_10.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_10.PNG" alt="" style="max-width:100%;"></a></p>
+<p>作成したボリュームは「available」になっています。</p>
+<p><a href="../image/c9_11.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_11.PNG" alt="" style="max-width:100%;"></a></p>
+<p>次に作成したボリュームを cloud9 環境にアタッチします。</p>
+<p>作成したボリュームを選択した後、「アクション」→「ボリュームのアタッチ」の順にクリックします。</p>
+<p><a href="../image/c9_12.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_12.PNG" alt="" style="max-width:100%;"></a></p>
+<p>ボリュームのアタッチするインスタンスを選択します。<br>
+cloud9 で作成したインスタンスには "aws-cloud9-{自分で設定したcloud9の名前}-{英数字}" という名前が付けられています。</p>
+<p><a href="../image/c9_13.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_13.PNG" alt="" style="max-width:100%;"></a></p>
+<p>アタッチ先が "/dev/sdf" であることを確認して、「アタッチ」ボタンを押します。</p>
+<p><a href="../image/c9_14.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_14.PNG" alt="" style="max-width:100%;"></a></p>
+<p>状態が「available」から「in-use」になれば成功です。</p>
+<p><a href="../image/c9_15.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_15.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-4-work-ディレクトリの準備" class="anchor" href="#4-work-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AE%E6%BA%96%E5%82%99" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. work ディレクトリの準備</h3>
+<p>ここからは作成した cloud9 でコマンドを実行します。<br>
+黄色で囲った部分がターミナルです。</p>
+<p><a href="../image/c9_16.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_16.PNG" alt="" style="max-width:100%;"></a></p>
+<p>まず、アタッチしたディスクが存在するかを確認します。</p>
+<div class="highlight highlight-source-shell"><pre>$ ls /dev/sdf
+/dev/sdf</pre></div>
+<p>フォーマットします。</p>
+<div class="highlight highlight-source-shell"><pre>$ sudo mkfs -t ext4 /dev/sdf
+mke2fs 1.43.5 (04-Aug-2017)
+Creating filesystem with 262144000 4k blocks and 65536000 inodes
+Filesystem UUID: 6e3c88af-05e2-4350-935e-6dd91301a047
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968, 
+        102400000, 214990848
+
+Allocating group tables: <span class="pl-k">done</span>                            
+Writing inode tables: <span class="pl-k">done</span>                            
+Creating journal (262144 blocks): <span class="pl-k">done</span>
+Writing superblocks and filesystem accounting information: <span class="pl-k">done</span>     </pre></div>
+<p>work ディレクトリにマウントします。</p>
+<div class="highlight highlight-source-shell"><pre>$ sudo mkdir /work
+$ sudo mount /dev/sdf /work
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs         16G   60K   16G   1% /dev
+tmpfs            16G     0   16G   0% /dev/shm
+/dev/nvme0n1p1  9.8G  5.7G  4.0G  60% /
+/dev/nvme1n1    984G   77M  934G   1% /work</pre></div>
+<p>work ディレクトリのパーミッションを変更します。</p>
+<div class="highlight highlight-source-shell"><pre>$ touch /work/file1
+touch: cannot touch ‘/work/file1’: Permission denied
+$ whoami
+ec2-user
+$ sudo chown ec2-user /work
+$ touch /work/file1
+$ ls -l /work
+total 16
+-rw-rw-r-- 1 ec2-user ec2-user     0 Jul 31 06:51 file1
+drwx------ 2 root     root     16384 Jul 31 06:50 lost+found</pre></div>
+<h3>
+<a id="user-content-5-片付け" class="anchor" href="#5-%E7%89%87%E4%BB%98%E3%81%91" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. 片付け</h3>
+<h4>
+<a id="user-content-51-インスタンスを終了する" class="anchor" href="#51-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E7%B5%82%E4%BA%86%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.1 インスタンスを終了する</h4>
+<p>ブラウザを閉じるだけでよいです。<br>
+AWS Cloud9 の環境はデフォルト設定で、30分無操作で停止状態になります。</p>
+<p><a href="../image/c9_17.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_17.PNG" alt="" style="max-width:100%;"></a></p>
+<h4>
+<a id="user-content-52-cloud9-の環境を削除する" class="anchor" href="#52-cloud9-%E3%81%AE%E7%92%B0%E5%A2%83%E3%82%92%E5%89%8A%E9%99%A4%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.2 cloud9 の環境を削除する</h4>
+<p>必要のない場合は削除します。</p>
+<p>AWS マネジメントコンソールから cloud9 サービスを選択し、作成した環境を選択した後、「Delete」をクリックします。</p>
+<p><a href="../image/c9_18.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_18.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、削除したい環境を十分に確認したらテキストボックスに「Delete」と入力した後、「Delete」ボタンを押します。</p>
+<p><a href="../image/c9_19.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/c9_19.PNG" alt="" style="max-width:100%;"></a></p>
+<p>アタッチしたボリュームを削除します。</p>
+<p>AWS マネジメントコンソールから ec2 サービスを選択し、左端のメニューから「ボリューム」を選択し、ボリュームを表示します。<br>
+今回作成したボリュームを選択した後、「アクション」→「Delete Volume」をクリックします。</p>
+<p><a href="../image/ec2_32.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_32.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、内容を確認したら、「はい、削除する」ボタンを押します。</p>
+<p><a href="../image/ec2_33.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_33.PNG" alt="" style="max-width:100%;"></a></p>
+<hr>
+<h2>
+<a id="user-content-aws-ec2-の利用" class="anchor" href="#aws-ec2-%E3%81%AE%E5%88%A9%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AWS EC2 の利用</h2>
+<h3>
+<a id="user-content-1-aws-コンソールにログイン-1" class="anchor" href="#1-aws-%E3%82%B3%E3%83%B3%E3%82%BD%E3%83%BC%E3%83%AB%E3%81%AB%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. AWS コンソールにログイン</h3>
+<p><a href="https://aws.amazon.com" rel="nofollow">https://aws.amazon.com</a> を web ブラウザで開き、「コンソールにサインイン」をクリックします。</p>
+<p><a href="../image/ec2_1.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_1.PNG" alt="" style="max-width:100%;"></a></p>
+<p>次の画面でアカウント、ユーザ名、パスワードを入力します。</p>
+<p><a href="../image/ec2_2.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_2.PNG" alt="" style="max-width:100%;"></a></p>
+<p>AWS マネジメントコンソールで東京リージョンを選択しておきます。</p>
+<p><a href="../image/ec2_3.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_3.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-2-ec2-インスタンスの起動-1" class="anchor" href="#2-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AE%E8%B5%B7%E5%8B%95-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. EC2 インスタンスの起動</h3>
+<p>AWS マネジメントコンソールで EC2 サービスを選択します。</p>
+<p><a href="../image/ec2_4.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_4.PNG" alt="" style="max-width:100%;"></a></p>
+<p>EC2 ダッシュボードが表示されますので、「インスタンスの作成」ボタンを押します。</p>
+<p><a href="../image/ec2_5.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_5.PNG" alt="" style="max-width:100%;"></a></p>
+<p>まず最初にマシンイメージを選択します。今回はAmazon Linux2 AMI (HVM) を使用します。<br>
+マシンイメージ名の横にある「選択」ボタンを押します。</p>
+<p><a href="../image/ec2_6.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_6.PNG" alt="" style="max-width:100%;"></a></p>
+<p>次にインスタンスタイプを選択します。今回はt3.2xlargeを使用します。<br>
+インスタンスタイプ名の先頭にあるチェックボックスを選択したら、ページの最後にある「次の手順」ボタンを押します。</p>
+<p><a href="../image/ec2_7.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_7.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「インスタンスの詳細の設定」では何もせず、ページの最後にある「次の手順」ボタンを押します。</p>
+<p><a href="../image/ec2_8.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_8.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「ストレージの追加」では 1T のボリュームを追加します。<br>
+まず、「新しいボリュームの追加」ボタンを押して行を追加し、サイズを「1000」と入力します。<br>
+入力後、ページの最後にある「次の手順」ボタンを押します。</p>
+<p><a href="../image/ec2_9.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_9.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「タグの追加」では作成するインスタンスに名前をつけます。<br>
+必須ではありませんが、名前がついていた方が管理しやすくなります。<br>
+まず、「タグの追加」ボタンを押して行を追加し、キーに「Name」、値に名前 (任意の英数字) を入力します。<br>
+入力後、ページの最後にある「次の手順」ボタンを押します。</p>
+<p><a href="../image/ec2_10.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_10.PNG" alt="" style="max-width:100%;"></a></p>
+<p>最後は「セキュリティグループの設定」です。<br>
+今回は新しくセキュリティグループを作成しますが、既存のグループがあればそちらを選択しても構いません。<br>
+まず「セキュリティグループ名」「説明」を入力します。<br>
+タイプ「SSH」を選択し、ソースにアクセスを許可しようとしている IP アドレスを入力します。「マイIP」を選択すると、現在の自分のIPアドレスを設定することができます。<br>
+入力後、ページの最後にある「確認と作成」ボタンを押します。</p>
+<p><a href="../image/ec2_11.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_11.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、問題なければ「起動」ボタンを押してください。</p>
+<p><a href="../image/ec2_12.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_12.PNG" alt="" style="max-width:100%;"></a></p>
+<p>キーペアの選択画面が表示されます。<br>
+ここでは新しいキーペアを作成しますが、既存のキーペアがある場合はそちらを使用しても構いません。<br>
+「キーペア名」を入力し、「キーペアのダウンロード」ボタンを押します。</p>
+<p><a href="../image/ec2_13.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_13.PNG" alt="" style="max-width:100%;"></a></p>
+<p>今回作成するキーペアはここでしかダウンロードできません。大切に保管してください。</p>
+<p><a href="../image/ec2_14.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_14.PNG" alt="" style="max-width:100%;"></a></p>
+<p>キーペアをダウンロードしたら、「インスタンスの作成」ボタンを押します。</p>
+<p><a href="../image/ec2_15.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_15.PNG" alt="" style="max-width:100%;"></a></p>
+<p>作成ステータス画面が表示されます。「インスタンスの表示」ボタンを押します。</p>
+<p><a href="../image/ec2_16.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_16.PNG" alt="" style="max-width:100%;"></a></p>
+<p>EC2 インスタンスリストが表示されます。<br>
+今回作成したインスタンスはまだ作成中であることが分かります。</p>
+<p><a href="../image/ec2_17.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_17.PNG" alt="" style="max-width:100%;"></a></p>
+<p>「チェックに合格しました」と表示されれば使用可能です。</p>
+<p><a href="../image/ec2_18.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_18.PNG" alt="" style="max-width:100%;"></a></p>
+<h3>
+<a id="user-content-3-作成したインスタンスに-ssh-ログイン" class="anchor" href="#3-%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AB-ssh-%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. 作成したインスタンスに SSH ログイン</h3>
+<p>先ほどのインスタンスリストで今回作成したインスタンスのパブリック DNS をコピーしておきます。</p>
+<p><a href="../image/ec2_19.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_19.PNG" alt="" style="max-width:100%;"></a></p>
+<p>ターミナルを開きます。</p>
+<ol>
+<li>
+<p>先ほどダウンロードしたキーペアのパーミッションを変更します。<br>
+ここでは <code>~/.ssh/</code> の下に保存していますが、適宜読み替えてください。</p>
+</li>
+<li>
+<p>次に <code>ssh</code> コマンドで作成したインスタンスにログインします。<br>
+Amazon Linux の場合、ユーザ名は <code>ec2-user</code> 固定です。<br>
+サーバのアドレスは先ほどコピーしたパブリック DNS を張り付けてください。</p>
+</li>
+<li>
+<p>続けますかと聞かれたら <code>yes</code> と入力してください。</p>
+</li>
+</ol>
+<p><a href="../image/ec2_20.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_20.PNG" alt="" style="max-width:100%;"></a></p>
+<p>ログインできましたか？</p>
+<h3>
+<a id="user-content-4-work-ディレクトリの準備-1" class="anchor" href="#4-work-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AE%E6%BA%96%E5%82%99-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. work ディレクトリの準備</h3>
+<p>アタッチしたディスクが存在するかを確認します。</p>
+<div class="highlight highlight-source-shell"><pre>$ ls /dev/sdb
+/dev/sdb</pre></div>
+<p>フォーマットします。</p>
+<div class="highlight highlight-source-shell"><pre>$ sudo mkfs -t ext4 /dev/sdb
+mke2fs 1.42.9 (28-Dec-2013)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+65536000 inodes, 262144000 blocks
+13107200 blocks (5.00%) reserved <span class="pl-k">for</span> the super user
+First data block=0
+Maximum filesystem blocks=2409627648
+8000 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+        102400000, 214990848
+
+Allocating group tables: <span class="pl-k">done</span>
+Writing inode tables: <span class="pl-k">done</span>
+Creating journal (32768 blocks): <span class="pl-k">done</span>
+Writing superblocks and filesystem accounting information: <span class="pl-k">done</span></pre></div>
+<p>work ディレクトリにマウントします。</p>
+<div class="highlight highlight-source-shell"><pre>$ sudo mkdir /work
+$ sudo mount /dev/sdb /work
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs         16G     0   16G   0% /dev
+tmpfs            16G     0   16G   0% /dev/shm
+tmpfs            16G  448K   16G   1% /run
+tmpfs            16G     0   16G   0% /sys/fs/cgroup
+/dev/nvme0n1p1  8.0G  1.2G  6.8G  15% /
+tmpfs           3.2G     0  3.2G   0% /run/user/0
+tmpfs           3.2G     0  3.2G   0% /run/user/1000
+/dev/nvme1n1    985G   77M  935G   1% /work</pre></div>
+<p>work ディレクトリのパーミッションを変更します。</p>
+<div class="highlight highlight-source-shell"><pre>$ touch /work/file1
+touch: cannot touch ‘/work/file1’: Permission denied
+$ sudo chown ec2-user /work
+$ touch /work/file1
+$ ls -l /work
+total 16
+-rw-rw-r-- 1 ec2-user ec2-user     0 Jul 31 02:35 file1
+drwx------ 2 root     root     16384 Jul 31 02:28 lost+found</pre></div>
+<h3>
+<a id="user-content-5-片付け-1" class="anchor" href="#5-%E7%89%87%E4%BB%98%E3%81%91-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. 片付け</h3>
+<h4>
+<a id="user-content-51-ターミナルから抜ける" class="anchor" href="#51-%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%E3%81%8B%E3%82%89%E6%8A%9C%E3%81%91%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.1 ターミナルから抜ける</h4>
+<p><code>exit</code> でログアウトします。</p>
+<div class="highlight highlight-source-shell"><pre>$ <span class="pl-c1">exit</span>
+<span class="pl-c1">logout</span>
+Connection to ec2-52-194-226-103.ap-northeast-1.compute.amazonaws.com closed.</pre></div>
+<h4>
+<a id="user-content-52-インスタンスを停止する" class="anchor" href="#52-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E5%81%9C%E6%AD%A2%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.2 インスタンスを停止する</h4>
+<p>インスタンスを起動したままでは課金対象になってしまいますので、使用しない場合は停止しておきます。<br>
+ただし、ディスクは停止した状態であっても課金対象となりますので、無課金状態にはなりません。</p>
+<p>※完全に削除したい場合はこの項目を飛ばして、次の 「3.3 インスタンスを削除する」に進んでください。</p>
+<p>AWS マネジメントコンソールから作成したインスタンスを選択し、「アクション」→「インスタンスの状態」とたどって「停止」をクリックします。</p>
+<p><a href="../image/ec2_21.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_21.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、停止したいインスタンスを十分に確認したら「停止する」ボタンを押します。</p>
+<p><a href="../image/ec2_22.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_22.PNG" alt="" style="max-width:100%;"></a></p>
+<p>停止処理が始まりました。</p>
+<p><a href="../image/ec2_23.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_23.PNG" alt="" style="max-width:100%;"></a></p>
+<p>完全に停止すると「stopped」と表示されます。</p>
+<p><a href="../image/ec2_24.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_24.PNG" alt="" style="max-width:100%;"></a></p>
+<h4>
+<a id="user-content-53-インスタンスを削除する" class="anchor" href="#53-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%92%E5%89%8A%E9%99%A4%E3%81%99%E3%82%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.3 インスタンスを削除する</h4>
+<p>必要のないインスタンスは削除します。</p>
+<p>AWS マネジメントコンソールから作成したインスタンスを選択し、「アクション」→「インスタンスの状態」とたどって「終了」をクリックします。</p>
+<p><a href="../image/ec2_25.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_25.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、削除したいインスタンスを十分に確認したら「はい、削除する」ボタンを押します。</p>
+<p><a href="../image/ec2_26.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_26.PNG" alt="" style="max-width:100%;"></a></p>
+<p>削除されたインスタンスは「terminated」と表示されます。一定期間表示されますが、その後リストからも消えます。</p>
+<p><a href="../image/ec2_27.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_27.PNG" alt="" style="max-width:100%;"></a></p>
+<p>アタッチしたボリュームを削除します。<br>
+※インスタンス削除時、一緒に削除する設定にしていた場合はすでに削除されていますので、この操作は必要ありません。</p>
+<p>左端のメニューから「ボリューム」を選択し、ボリュームを表示します。<br>
+今回作成したボリュームを選択した後、「アクション」→「Delete Volume」をクリックします。</p>
+<p><a href="../image/ec2_32.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_32.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、内容を確認したら、「はい、削除する」ボタンを押します。</p>
+<p><a href="../image/ec2_33.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_33.PNG" alt="" style="max-width:100%;"></a></p>
+<p>今回作成したセキュリティグループを削除します。</p>
+<p>左端のメニューから「セキュリティグループ」を選択し、セキュリティグループを表示します。<br>
+今回作成したセキュリティグループを選択した後、「アクション」→「セキュリティグループの削除」をクリックします。</p>
+<p><a href="../image/ec2_28.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_28.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、内容を確認したら、「はい、削除する」ボタンを押します。</p>
+<p><a href="../image/ec2_29.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_29.PNG" alt="" style="max-width:100%;"></a></p>
+<p>今回作成したキーペアを削除します。</p>
+<p>左端のメニューから「キーペア」を選択しキーペアを表示します。<br>
+今回作成したキーペアを選択した後、「削除」ボタンを押します。</p>
+<p><a href="../image/ec2_30.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_30.PNG" alt="" style="max-width:100%;"></a></p>
+<p>確認画面が表示されますので、内容を確認したら、「はい」ボタンを押します。</p>
+<p><a href="../image/ec2_31.PNG" target="_blank" rel="noopener noreferrer"><img src="../image/ec2_31.PNG" alt="" style="max-width:100%;"></a></p>
+
+</div>
+<script src="./js/auto-toc.js"></script>
+</body>
+</html>

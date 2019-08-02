@@ -8,30 +8,33 @@ body img {
 }
 
 #contents { 
-margin-left: 350px;
+  margin-left: 350px;
 
 }
-.toc {
-background: #f6f8fa;
-width: 300px;
-position: fixed;
-color: #666;
+#toc {
+  //background: #f6f8fa;
+  width: 300px;
+  position: fixed;
+  color: #666;
+  border: solid 1px #DDD;
 }
-.toc a {
-color: #444;
+#toc a {
+  color: #444;
 }
-.toc .toc-h2 {
-margin-left: 10px;
-margin-right: 10px;
+#toc .toc-list {
+  padding-left: 1em;
+  margin-right: 1em;
 }
-.toc .toc-h3 {
-margin-left: 30px;
-margin-right: 10px;
-font-size: small;
+#toc .toc-h2 {
+  border-top: solid 1px #DDD;
+  margin-top: 20px;
+  list-style-type:none;
 }
-.toc .toc-active {
-background: orange;
+#toc .toc-h3 {
+  margin-left: 30px;
+  font-size: small;
+  list-style-type:circle;
 }
-.toc.right {
-right: 0
+#toc .current {
+  background: orange;
 }
