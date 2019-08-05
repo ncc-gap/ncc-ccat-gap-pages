@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>2. cellranger mkfastq の実行 &#8212; cellranger 1.0.0 ドキュメント</title>
+    <link rel="stylesheet" href="_static/custom-alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="3. cellranger count を実行" href="cellranger_count.html" />
+    <link rel="prev" title="1. Cell Ranger のインストール" href="setup.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cellranger-mkfastq">
+<h1>2. cellranger mkfastq の実行<a class="headerlink" href="#cellranger-mkfastq" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>この項では <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> を使用して FASTQ を生成します。</p>
+<p>公式ドキュメント： <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq">Generating FASTQs with cellranger mkfastq</a></p>
+<div class="section" id="id1">
+<h2>2.1. コマンドとオプション<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>設定ファイルのサンプルが提供されていますので、ダウンロードしておきます。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
+mkdir data
+<span class="nb">cd</span> data
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-simple-1.2.0.csv
+wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2.0.csv
+</pre></div>
+</div>
+<p>ダウンロードしたファイルを解答します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xzvf cellranger-tiny-bcl-1.2.0.tar.gz
+</pre></div>
+</div>
+<p>ここまでの作業により、データは以下のように配置されているはずです。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/work
+├── data
+│         ├── cellranger-tiny-bcl-1.2.0
+│         └── cellranger-tiny-bcl-simple-1.2.0.csv
+│         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+└── refdata-cellranger-GRCh38-and-mm10-3.1.0
+</pre></div>
+</div>
+<p>cellranger mkfastq コマンドの基本形は以下のどちらかです</p>
+<div class="section" id="csv-10xgenomics">
+<h3>2.1.1. csv オプションを使用する場合 (10xGenomics 推奨)<a class="headerlink" href="#csv-10xgenomics" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p><a class="reference external" href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger mkfastq <span class="se">\</span>
+--id<span class="o">=</span>tiny-bcl <span class="se">\</span>
+--run<span class="o">=</span>./data/cellranger-tiny-bcl-1.2.0 <span class="se">\</span>
+--csv<span class="o">=</span>./data/cellranger-tiny-bcl-simple-1.2.0.csv
+</pre></div>
+</div>
+<p>&quot;--run&quot; オプションは必須です。Illumina BCL へのパスを指定します。</p>
+</div>
+<div class="section" id="samplesheet">
+<h3>2.1.2. samplesheet オプションを使用する場合<a class="headerlink" href="#samplesheet" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>samplesheet とは Illumina Experiment Manager 互換のサンプルシートのことであり、ファイルのパスを指定します。</p>
+<p><a class="reference external" href="../data/cellranger-tiny-bcl-samplesheet-1.2.0.csv">samplesheetサンプルはこちら</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger mkfastq <span class="se">\</span>
+--id<span class="o">=</span>tiny-bcl2 <span class="se">\</span>
+--run<span class="o">=</span>./data/cellranger-tiny-bcl-1.2.0 <span class="se">\</span>
+--samplesheet<span class="o">=</span>./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
+</pre></div>
+</div>
+<p>&quot;--run&quot; オプションは必須です。Illumina BCL へのパスを指定します。</p>
+</div>
+<div class="section" id="id2">
+<h3>2.1.3. その他オプション<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">--id</dt>
+<dd class="field-odd"><p>出力ディレクトリ名です。必須ではありませんが明示したほうがよいでしょう。デフォルトは &quot;--run&quot; オプションで指定されるフローセルの名前です。</p>
+</dd>
+<dt class="field-even">--qc</dt>
+<dd class="field-even"><p>QC を実行します。デフォルトでは実行されません。</p>
+</dd>
+</dl>
+<p>その他のオプションについては 10xGenomics のドキュメント <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#arguments_options">Arguments and Options</a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="csv">
+<h2>2.2. csv オプションで実行<a class="headerlink" href="#csv" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>&quot;--csv&quot; オプションを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> コマンドを実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
+
+cellranger mkfastq <span class="se">\</span>
+--id<span class="o">=</span>tiny-bcl <span class="se">\</span>
+--run<span class="o">=</span>./data/cellranger-tiny-bcl-1.2.0 <span class="se">\</span>
+--csv<span class="o">=</span>./data/cellranger-tiny-bcl-simple-1.2.0.csv
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">実行ログは以下のように出力されます。</div>
+<div class="line">&quot;Pipestance completed successfully!&quot; と表示されていれば成功です。</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+(省略)
+
+Outputs:
+- Run QC metrics:        null
+- FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+- Interop output folder: /work/tiny-bcl/outs/interop_path
+- Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-29 09:49:24 Shutting down.
+Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
+</pre></div>
+</div>
+<p>全体のログは <a class="reference external" href="../data/cellranger_mkfastq_tiny-bcl.log">ここ</a> です。</p>
+</div>
+<div class="section" id="id3">
+<h2>2.3. csv サンプルシートを確認<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">サンプルシートを見てみます。</div>
+<div class="line"><a class="reference external" href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a></div>
+<div class="line">Lane, Sample, Index の構成になっています。</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat /work/data/cellranger-tiny-bcl-simple-1.2.0.csv
+Lane,Sample,Index
+1,test_sample,SI-P03-C9
+</pre></div>
+</div>
+<p>構成が簡単なため、10xGenomics は CSV サンプルシートを使用することを推奨しています。</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>列名</p></th>
+<th class="head"><p>説明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lane</p></td>
+<td><p>処理するフローセルのレーン。単一レーン、範囲（2〜4など）、または「*」のいずれかになります。</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sample</p></td>
+<td><p>サンプルの名前。
+この名前は生成する FASTQ ファイルの prefix となり、すべての 10xGenomics パイプラインの <cite>--sample</cite> 引数に対応します。
+サンプル名は、イルミナの bcl2fastq 命名要件に準拠している必要があります。
+文字、数字、アンダースコア(_)、ハイフン(-)のみが許可されています。ドット(.)を含む他の記号は使用できません。</p></td>
+</tr>
+<tr class="row-even"><td><p>Index</p></td>
+<td><p>ライブラリ構築に使用した 10xGenomics のサンプルインデックスセット。 e.g., SI-GA-A12.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id4">
+<h2>2.4. samplesheet オプションで実行<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>&quot;--samplesheet&quot; オプションを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> コマンドを実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
+
+cellranger mkfastq <span class="se">\</span>
+--id<span class="o">=</span>tiny-bcl2 <span class="se">\</span>
+--run<span class="o">=</span>./data/cellranger-tiny-bcl-1.2.0 <span class="se">\</span>
+--samplesheet<span class="o">=</span>./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
+</pre></div>
+</div>
+</div>
+<div class="section" id="quality-control">
+<h2>2.5. Quality Control をつけて実行<a class="headerlink" href="#quality-control" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>&quot;--qc&quot; オプションをつけて実行します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cellranger</span> <span class="n">mkfastq</span> \
+<span class="o">--</span><span class="nb">id</span><span class="o">=</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl3</span> \
+<span class="o">--</span><span class="n">run</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span> \
+<span class="o">--</span><span class="n">samplesheet</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="n">samplesheet</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mf">0.</span><span class="n">csv</span> \
+<span class="o">--</span><span class="n">qc</span>
+</pre></div>
+</div>
+<p>QC 出力結果と構成については 10xGenomics のドキュメント <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#qc_metrics">Reading Quality Control Metrics</a> を参照してください。</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+
+    <h2><a href="index.html">Cell Ranger</a></h2>
+        <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">1. Cell Ranger のインストール</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#aws-ec2">1.1. AWS EC2 インスタンスを起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id1">1.2. Cell Ranger をダウンロード</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id2">1.3. リファレンスファイルの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id3">1.4. Cell Ranger にパスを通す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id4">1.5. インストールの確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#bcl2fastq2">1.6. bcl2fastq2 をインストール</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. cellranger mkfastq の実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">2.1. コマンドとオプション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#csv">2.2. csv オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2.3. csv サンプルシートを確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2.4. samplesheet オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quality-control">2.5. Quality Control をつけて実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_ui.html">4. Option: ユーザインタフェース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_cloud9.html">5. AWS Cloud9 の使用方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#aws">5.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#ec2">5.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id1">5.3. ボリュームの追加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#work">5.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id2">5.5. 片付け</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_ec2.html">6. AWS EC2 の利用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#aws">6.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ec2">6.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ssh">6.3. 作成したインスタンスに SSH ログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#work">6.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#id1">6.5. 片付け</a></li>
+</ul>
+</li>
+</ul>
+
+    
+</div><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="setup.html" title="前の章へ">1. Cell Ranger のインストール</a></li>
+      <li>Next: <a href="cellranger_count.html" title="次の章へ">3. cellranger count を実行</a></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Ai Okada.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/cellranger_mkfastq.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

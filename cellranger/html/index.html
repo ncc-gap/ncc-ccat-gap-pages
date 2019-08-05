@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>AWS 環境で Cell Ranger 環境を構築する &#8212; cellranger 1.0.0 ドキュメント</title>
+    <link rel="stylesheet" href="_static/custom-alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="1. Cell Ranger のインストール" href="setup.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="aws-cell-ranger">
+<h1>AWS 環境で Cell Ranger 環境を構築する<a class="headerlink" href="#aws-cell-ranger" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>2019/8/5 作成 NCC</p>
+<div class="section" id="cell-ranger">
+<h2>Cell Ranger とは<a class="headerlink" href="#cell-ranger" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Cell Ranger は single-cell の RNA-seq に対する解析パイプラインであり、Chromium single-cell RNA-seq によるシーケンスデータをアラインメントし、feature-barcode 行列を生成してクラスタリングと遺伝子発現分析を行います。</div>
+<div class="line">Cell Ranger には、single-cell 遺伝子発現実験に関連する4つのパイプラインが含まれています。</div>
+</div>
+<ul class="simple">
+<li><p><strong>cellranger mkfastq</strong> は Illumina シーケンサによって生成された Raw Base Call (BCL) ファイルを FASTQ ファイルに逆多重化します。</p></li>
+<li><p><strong>cellranger count</strong> は cellranger mkfastq で作成した FASTQ ファイルを使用して、アライメント、フィルタリング、バーコードカウント、および UMI カウントを実行します。</p></li>
+<li><p><strong>cellranger aggr</strong> は複数回の実行結果を集約し、結合データを分析します。</p></li>
+<li><p><strong>cellranger reanalyze</strong> は cellranger count または cellranger aggr によって生成された機能バーコード行列を取得し、調整可能なパラメータ設定を使用して次元削減、クラスタリング、および遺伝子発現アルゴリズムを再実行します。</p></li>
+</ul>
+<div class="line-block">
+<div class="line">これらのパイプラインは、Chromium-specific algorithms と RNA 解析に広く使用されているアラインメントツール STAR とを組み合わせたものです。</div>
+<div class="line">出力は標準的な BAM, MEX, CSV, HDF5 と HTML であり、細胞情報が付与されています。</div>
+</div>
+<p>詳しくは以下を参考にしてください。</p>
+<p><a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger">What is Cell Ranger?</a></p>
+<p>本文書では Cell Ranger 公式ドキュメントを参照しながら AWS
+インスタンス上に Cell Raner 環境を構築し、サンプルデータを cellranger
+count を使用して解析してみるまでを解説します。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">1. Cell Ranger のインストール</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_mkfastq.html">2. cellranger mkfastq の実行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_ui.html">4. Option: ユーザインタフェース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_cloud9.html">5. AWS Cloud9 の使用方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_ec2.html">6. AWS EC2 の利用</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+
+    <h2><a href="#">Cell Ranger</a></h2>
+        <ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">1. Cell Ranger のインストール</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#aws-ec2">1.1. AWS EC2 インスタンスを起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id1">1.2. Cell Ranger をダウンロード</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id2">1.3. リファレンスファイルの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id3">1.4. Cell Ranger にパスを通す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id4">1.5. インストールの確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#bcl2fastq2">1.6. bcl2fastq2 をインストール</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_mkfastq.html">2. cellranger mkfastq の実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id1">2.1. コマンドとオプション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#csv">2.2. csv オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id3">2.3. csv サンプルシートを確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id4">2.4. samplesheet オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#quality-control">2.5. Quality Control をつけて実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_ui.html">4. Option: ユーザインタフェース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_cloud9.html">5. AWS Cloud9 の使用方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#aws">5.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#ec2">5.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id1">5.3. ボリュームの追加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#work">5.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id2">5.5. 片付け</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_ec2.html">6. AWS EC2 の利用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#aws">6.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ec2">6.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ssh">6.3. 作成したインスタンスに SSH ログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#work">6.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#id1">6.5. 片付け</a></li>
+</ul>
+</li>
+</ul>
+
+    
+</div><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="setup.html" title="次の章へ">1. Cell Ranger のインストール</a></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Ai Okada.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

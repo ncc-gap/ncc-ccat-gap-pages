@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. cellranger count を実行 &#8212; cellranger 1.0.0 ドキュメント</title>
+    <link rel="stylesheet" href="_static/custom-alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="4. Option: ユーザインタフェース" href="cellranger_ui.html" />
+    <link rel="prev" title="2. cellranger mkfastq の実行" href="cellranger_mkfastq.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cellranger-count">
+<h1>3. cellranger count を実行<a class="headerlink" href="#cellranger-count" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>この項では <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">count</span></code> を使用して Single-Library Analysis を行います。</p>
+<p>公式ドキュメント： <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count">Single-Library Analysis with Cell Ranger</a></p>
+<div class="section" id="id1">
+<h2>3.1. 簡単なサンプルで実行<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>順番に実行していれば <a class="reference external" href="./cellranger_mkfastq.html#quality-control">2-5</a> までの結果がありますので、それを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">count</span></code> コマンドを実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
+cellranger count --id<span class="o">=</span>tiny-bcl3-count <span class="se">\</span>
+--transcriptome<span class="o">=</span>./refdata-cellranger-GRCh38-and-mm10-3.1.0 <span class="se">\</span>
+--fastqs<span class="o">=</span>./tiny-bcl3/outs/fastq_path <span class="se">\</span>
+--expect-cells<span class="o">=</span><span class="m">1000</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">--fastqs</dt>
+<dd class="field-odd"><p>前回の出力結果のうち、&quot;fastq_path  ディレクトリを渡します。</p>
+</dd>
+<dt class="field-even">--transcriptome</dt>
+<dd class="field-even"><p><a class="reference external" href="./setup.html#id2">1-3</a> でダウンロードしたリファレンスファイルのディレクトリを指定します。</p>
+</dd>
+<dt class="field-odd">--except-cells</dt>
+<dd class="field-odd"><p>期待されるセル数ですが、ここでは公式ドキュメントのとおり、1000とします。（デフォルトは3000です）</p>
+</dd>
+</dl>
+<p>その他オプションは公式ドキュメントを参照してください。 <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count#args">Command Line Argument</a></p>
+</div>
+<div class="section" id="id2">
+<h2>3.2. 現実的なデータで実行<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>10xgenomics は Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。</p>
+<p><a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/datasets">https://support.10xgenomics.com/single-cell-gene-expression/datasets</a></p>
+<p>上記のうち、「1k PBMCs from a Healthy Donor (v3 chemistry)」をダウンロードします。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
+tar xvf pbmc_1k_v3_fastqs.tar
+</pre></div>
+</div>
+<p>cellranger cout を実行します。</p>
+<dl class="field-list simple">
+<dt class="field-odd">--fastqs</dt>
+<dd class="field-odd"><p>ダウンロードしたサンプルの fastq ディレクトリを指定します。</p>
+</dd>
+<dt class="field-even">--except-cells</dt>
+<dd class="field-even"><p>サンプルのページに <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">with</span> <span class="pre">--expect-cells=1000</span></code> と記載がありますので、1000 を指定します。</p>
+</dd>
+</dl>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger count --id<span class="o">=</span>pbmc_1k_v3 <span class="se">\</span>
+--transcriptome<span class="o">=</span>./refdata-cellranger-GRCh38-and-mm10-3.1.0 <span class="se">\</span>
+--fastqs<span class="o">=</span>./pbmc_1k_v3_fastqs/ <span class="se">\</span>
+--expect-cells<span class="o">=</span><span class="m">1000</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">以下はログの一部です。</div>
+<div class="line">&quot;Pipestance completed successfully!&quot; と表示されていれば成功です。</div>
+<div class="line">全体のログは <a class="reference external" href="./data/cellranger_count_pbmc_1k_v3.log">ここ</a> にアップロードしています。</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cellranger count --id=pbmc_1k_v3 \
+&gt; --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+&gt; --fastqs=./pbmc_1k_v3_fastqs/ \
+&gt; --expect-cells=1000
+(省略)
+
+Outputs:
+- Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+- Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
+- BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
+- BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
+- Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
+- Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
+- Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
+- Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
+- Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
+- Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
+- CRISPR-specific analysis:                 null
+- Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-30 09:08:05 Shutting down.
+Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
+</pre></div>
+</div>
+<p>実行ログの最後 &quot;Outputs:&quot; にサマリの出力場所が記載されています。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">summary</span> <span class="n">HTML</span><span class="p">:</span>                         <span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">pbmc_1k_v3</span><span class="o">/</span><span class="n">outs</span><span class="o">/</span><span class="n">web_summary</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考に見てください。</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+
+    <h2><a href="index.html">Cell Ranger</a></h2>
+        <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">1. Cell Ranger のインストール</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#aws-ec2">1.1. AWS EC2 インスタンスを起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id1">1.2. Cell Ranger をダウンロード</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id2">1.3. リファレンスファイルの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id3">1.4. Cell Ranger にパスを通す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#id4">1.5. インストールの確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#bcl2fastq2">1.6. bcl2fastq2 をインストール</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_mkfastq.html">2. cellranger mkfastq の実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id1">2.1. コマンドとオプション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#csv">2.2. csv オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id3">2.3. csv サンプルシートを確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id4">2.4. samplesheet オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#quality-control">2.5. Quality Control をつけて実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. cellranger count を実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">3.1. 簡単なサンプルで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">3.2. 現実的なデータで実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_ui.html">4. Option: ユーザインタフェース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_cloud9.html">5. AWS Cloud9 の使用方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#aws">5.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#ec2">5.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id1">5.3. ボリュームの追加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#work">5.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id2">5.5. 片付け</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_ec2.html">6. AWS EC2 の利用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#aws">6.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ec2">6.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ssh">6.3. 作成したインスタンスに SSH ログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#work">6.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#id1">6.5. 片付け</a></li>
+</ul>
+</li>
+</ul>
+
+    
+</div><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cellranger_mkfastq.html" title="前の章へ">2. cellranger mkfastq の実行</a></li>
+      <li>Next: <a href="cellranger_ui.html" title="次の章へ">4. Option: ユーザインタフェース</a></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Ai Okada.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/cellranger_count.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

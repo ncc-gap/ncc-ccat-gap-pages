@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Cell Ranger のインストール &#8212; cellranger 1.0.0 ドキュメント</title>
+    <link rel="stylesheet" href="_static/custom-alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="2. cellranger mkfastq の実行" href="cellranger_mkfastq.html" />
+    <link rel="prev" title="AWS 環境で Cell Ranger 環境を構築する" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cell-ranger">
+<h1>1. Cell Ranger のインストール<a class="headerlink" href="#cell-ranger" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>公式ドキュメント： <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation">Cell Ranger Installation</a></p>
+<div class="section" id="aws-ec2">
+<h2>1.1. AWS EC2 インスタンスを起動<a class="headerlink" href="#aws-ec2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>AWS コンソールにログインし、EC2 インスタンスを起動します。</p>
+<p>Cell Ranger を使用するには以下の <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements">システム要件</a> が提示されていますので、1TByte のディスクストレージ (gp2) をつけてインスタンスタイプ t3.2xlarge を選択します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">Requirements</span>
+ <span class="o">-</span> <span class="mi">8</span><span class="o">-</span><span class="n">core</span> <span class="n">Intel</span>
+ <span class="o">-</span> <span class="mi">64</span><span class="n">GB</span> <span class="n">RAM</span>
+ <span class="o">-</span> <span class="mi">1</span><span class="n">TB</span> <span class="n">free</span> <span class="n">disk</span> <span class="n">space</span>
+ <span class="o">-</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">CentOS</span><span class="o">/</span><span class="n">RedHat</span> <span class="mf">6.0</span> <span class="ow">or</span> <span class="n">Ubuntu</span> <span class="mf">12.04</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">セキュリティグループではポート 22 番を開けておいてください。</div>
+<div class="line">その他の設定はデフォルトのままで構いません。</div>
+</div>
+<p>詳細な手順は以下を参照してください。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="./aws_cloud9.html">AWS Cloud9 を利用する場合</a></p></li>
+<li><p><a class="reference external" href="./aws_ec2.html">AWS EC2 を利用する場合</a></p></li>
+</ul>
+</div></blockquote>
+<div class="line-block">
+<div class="line">EC2 インスタンスを起動したら、 SSH ログインし、アタッチしたストレージを初期化して <code class="docutils literal notranslate"><span class="pre">/work</span></code> ディレクトリにマウントしておきます。</div>
+<div class="line">実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて <code class="docutils literal notranslate"><span class="pre">/work</span></code> ディレクトリとしておきます。</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkfs -t ext4 /dev/sdb
+mkdir /work
+mount /dev/sdb /work
+<span class="nb">cd</span> /work/
+</pre></div>
+</div>
+<p>ターミナルはこのまま使いますので、ログインしたままにしておいてください。</p>
+</div>
+<div class="section" id="id1">
+<h2>1.2. Cell Ranger をダウンロード<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Cell Rangerは tar ファイルとして公開されています。</div>
+<div class="line">必要なソフトウェアの依存関係をすべてまとめたもので、さまざまな Linux ディストリビューションで動作するように事前にコンパイルされていますので、インストールはこのファイルをダウンロードして解凍するだけです。</div>
+<div class="line"><br /></div>
+<div class="line">まず、 <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest">このページ</a> にアクセスし、「10x Genomics End User Software License Agreement」を確認して必要事項を入力した後、「Continue to Downloads」ボタンをクリックします。</div>
+<div class="line"><br /></div>
+<div class="line">「Continue to Downloads」ボタンをクリックすると、次のような画面が表示されます。</div>
+<div class="line">赤枠の中がダウンロードコマンドですので、すべて選択して、先ほどログインしたターミナルに張り付けて実行します。</div>
+</div>
+<p><img alt="image0" src="_images/download1.PNG" /></p>
+<div class="line-block">
+<div class="line">ダウンロードしたファイルを解凍します。</div>
+<div class="line">ファイル名のバージョンはダウンロードしたファイルに合わせてください。</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xzvf cellranger-3.1.0.tar.gz
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>1.3. リファレンスファイルの準備<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line"><a class="reference external" href="#id1">1-2</a> で開いたダウンロード画面の下にリファレンスのダウンロードコマンドも表示されています。</div>
+<div class="line">赤枠の中をすべて選択して、ターミナルに張り付けて実行します。</div>
+</div>
+<p><img alt="image1" src="_images/download2.PNG" /></p>
+<div class="line-block">
+<div class="line"><a class="reference external" href="#id1">1-2</a> と同様にダウンロードしたファイルを解凍します。</div>
+<div class="line">ファイル名のバージョンはダウンロードしたファイルに合わせてください。</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>1.4. Cell Ranger にパスを通す<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>解凍した <code class="docutils literal notranslate"><span class="pre">cellranger-3.1.0</span></code> ディレクトリを PATH に追加します。これで <code class="docutils literal notranslate"><span class="pre">cellranger</span></code> パイプラインを実行することができます。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/work/cellranger-3.1.0:<span class="nv">$PATH</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>1.5. インストールの確認<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cellranger</span></code> パイプラインが正しくインストールされていることを確認するために <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">testrun</span></code> を実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger testrun --id<span class="o">=</span>tiny
+</pre></div>
+</div>
+<p>以下のように表示されれば成功です。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Pipestance completed successfully!
+</pre></div>
+</div>
+<p>パイプラインの実行結果は成否にかかわらず <code class="docutils literal notranslate"><span class="pre">tiny/tiny.mri.tgz</span></code> に出力されています。</p>
+</div>
+<div class="section" id="bcl2fastq2">
+<h2>1.6. bcl2fastq2 をインストール<a class="headerlink" href="#bcl2fastq2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの <code class="docutils literal notranslate"><span class="pre">bcl2fastq2</span></code> ツールは入っていませんので、別途インストールする必要があります。</div>
+<div class="line">以下のコマンドを実行してください。</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
+unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div id="toc" class="sidebarRow">
+
+    <h2><a href="index.html">Cell Ranger</a></h2>
+        <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Cell Ranger のインストール</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aws-ec2">1.1. AWS EC2 インスタンスを起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1.2. Cell Ranger をダウンロード</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1.3. リファレンスファイルの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">1.4. Cell Ranger にパスを通す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">1.5. インストールの確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bcl2fastq2">1.6. bcl2fastq2 をインストール</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_mkfastq.html">2. cellranger mkfastq の実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id1">2.1. コマンドとオプション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#csv">2.2. csv オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id3">2.3. csv サンプルシートを確認</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#id4">2.4. samplesheet オプションで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#quality-control">2.5. Quality Control をつけて実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_ui.html">4. Option: ユーザインタフェース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_cloud9.html">5. AWS Cloud9 の使用方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#aws">5.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#ec2">5.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id1">5.3. ボリュームの追加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#work">5.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_cloud9.html#id2">5.5. 片付け</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_ec2.html">6. AWS EC2 の利用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#aws">6.1. AWS コンソールにログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ec2">6.2. EC2 インスタンスの起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#ssh">6.3. 作成したインスタンスに SSH ログイン</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#work">6.4. work ディレクトリの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws_ec2.html#id1">6.5. 片付け</a></li>
+</ul>
+</li>
+</ul>
+
+    
+</div><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="前の章へ">AWS 環境で Cell Ranger 環境を構築する</a></li>
+      <li>Next: <a href="cellranger_mkfastq.html" title="次の章へ">2. cellranger mkfastq の実行</a></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Ai Okada.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/setup.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
