@@ -52,7 +52,7 @@ cellranger cout を実行します。
 
 | 以下はログの一部です。
 | "Pipestance completed successfully!" と表示されていれば成功です。
-| 全体のログは `ここ <./data/cellranger_count_pbmc_1k_v3.log>`__ にアップロードしています。
+| 全体のログは `ここ <../data/cellranger_count_pbmc_1k_v3.log>`__ にアップロードしています。
 
 ::
 
