@@ -1,0 +1,65 @@
+@import url("alabaster.css");
+
+/* font */
+body {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+}
+div.document { 
+    width: 100%;
+}
+
+div.body {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    max-width: none;
+    font-size: 16px;
+}
+div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    border-bottom: 1px solid #ccc;
+}
+
+div.bodywrapper {
+    margin: 0 0 0 380px;
+
+}
+div.sphinxsidebar {
+    width: 380px;
+
+}
+div.sphinxsidebar h3, div.sphinxsidebar h4 {
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-size: 16px;
+}
+
+div.sphinxsidebarwrapper {
+    padding: 8px 32px;
+}
+
+/* list */
+
+li.toctree-l1 {
+    margin-top: 15px;
+}
+
+/*
+/* table padding */
+dt.field-odd, dt.field-even {
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+dd.field-odd, dd.field-even {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* note directive */
+div.note {
+    background-image: none;
+}
+
+
+/* list */
+li > p:first-child {
+    margin-top: 15px;
+}
+*/
