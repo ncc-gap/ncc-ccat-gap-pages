@@ -1,5 +1,5 @@
-AWS 環境で Cell Ranger 環境を構築する
-=====================================
+AWS を使用して Cell Ranger 環境を構築する
+============================================
 
 2019/8/5 作成 NCC
 
@@ -21,9 +21,7 @@ Cell Ranger とは
 
 `What is Cell Ranger? <https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger>`__
 
-本文書では Cell Ranger 公式ドキュメントを参照しながら AWS
-インスタンス上に Cell Raner 環境を構築し、サンプルデータを cellranger
-count を使用して解析してみるまでを解説します。
+本文書では Cell Ranger 公式ドキュメントを参照しながら Amazon Web Services (AWS) の仮想サーバ (インスタンス) 上に Cell Raner 環境を構築し、サンプルデータを cellranger count コマンドで解析してみるまでを解説します。
 
 .. toctree::
    :maxdepth: 1
