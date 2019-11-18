@@ -16,7 +16,7 @@
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
     <link rel="next" title="2. cellranger mkfastq の実行" href="cellranger_mkfastq.html" />
-    <link rel="prev" title="AWS 環境で Cell Ranger 環境を構築する" href="index.html" />
+    <link rel="prev" title="AWS を使用して Cell Ranger 環境を構築する" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -128,10 +128,21 @@ mount /dev/sdb /work
 <h2>1.6. bcl2fastq2 をインストール<a class="headerlink" href="#bcl2fastq2" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <div class="line-block">
 <div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの <code class="docutils literal notranslate"><span class="pre">bcl2fastq2</span></code> ツールは入っていませんので、別途インストールする必要があります。</div>
-<div class="line">以下のコマンドを実行してください。</div>
+<div class="line">まず、次のイルミナのサイトをウェブブラウザで開きます。</div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
-unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+<p><a class="reference external" href="https://support.illumina.com/softwaredownload.html">https://support.illumina.com/softwaredownload.html</a></p>
+<div class="line-block">
+<div class="line">次に「bcl2fastq2 Conversion Software v2.20 Installer (Linux rpm)」をクリックしてください。</div>
+<div class="line">イルミナのユーザログインが必要です。ユーザIDを持っていない場合は「Don't have an account?」をクリックして作成してください。</div>
+<div class="line">ログインすると利用規約が表示されますので、確認し、問題なければ「Accept」をクリックします。</div>
+<div class="line">ダウンロードのパスが表示されますので、左側のコピーアイコンをクリックしてURLをコピーします。</div>
+</div>
+<p><img alt="image3" src="_images/download3.PNG" /></p>
+<div class="line-block">
+<div class="line">ブラウザに URL を張り付けてダウンロードしてください。</div>
+<div class="line">ダウンロードできたら次のコマンドで解答しインストールします。</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
 sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 </pre></div>
 </div>
@@ -194,7 +205,7 @@ sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="前の章へ">AWS 環境で Cell Ranger 環境を構築する</a></li>
+      <li>Previous: <a href="index.html" title="前の章へ">AWS を使用して Cell Ranger 環境を構築する</a></li>
       <li>Next: <a href="cellranger_mkfastq.html" title="次の章へ">2. cellranger mkfastq の実行</a></li>
   </ul></li>
 </ul>

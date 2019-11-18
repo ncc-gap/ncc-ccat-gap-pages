@@ -16,7 +16,8 @@ cellranger count を実行
    cellranger count --id=tiny-bcl3-count \
    --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
    --fastqs=./tiny-bcl3/outs/fastq_path \
-   --expect-cells=1000
+   --expect-cells=1000 \
+   --chemistry=threeprime
 
 :--fastqs: 前回の出力結果のうち、"fastq_path  ディレクトリを渡します。
 :--transcriptome: `1-3 <./setup.html#id2>`__ でダウンロードしたリファレンスファイルのディレクトリを指定します。

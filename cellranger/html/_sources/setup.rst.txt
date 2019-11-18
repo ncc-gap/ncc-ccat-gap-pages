@@ -103,13 +103,25 @@ bcl2fastq2 をインストール
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | ここまでに cellranger パイプラインをインストールしましたが、イルミナの ``bcl2fastq2`` ツールは入っていませんので、別途インストールする必要があります。
-| 以下のコマンドを実行してください。
+| まず、次のイルミナのサイトをウェブブラウザで開きます。
+
+https://support.illumina.com/softwaredownload.html
+
+| 次に「bcl2fastq2 Conversion Software v2.20 Installer (Linux rpm)」をクリックしてください。
+| イルミナのユーザログインが必要です。ユーザIDを持っていない場合は「Don't have an account?」をクリックして作成してください。
+| ログインすると利用規約が表示されますので、確認し、問題なければ「Accept」をクリックします。
+| ダウンロードのパスが表示されますので、左側のコピーアイコンをクリックしてURLをコピーします。
+
+|image3|
+
+| ブラウザに URL を張り付けてダウンロードしてください。
+| ダウンロードできたら次のコマンドで解答しインストールします。
 
 .. code:: bash
 
-   wget http://jp.support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
    unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
    sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 
 .. |image0| image:: ../image/download1.PNG
 .. |image1| image:: ../image/download2.PNG
+.. |image3| image:: ../image/download3.PNG

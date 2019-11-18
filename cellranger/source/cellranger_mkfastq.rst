@@ -19,7 +19,7 @@ cellranger mkfastq の実行
    wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-simple-1.2.0.csv
    wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2.0.csv
 
-ダウンロードしたファイルを解答します。
+ダウンロードしたファイルを解凍します。
 
 .. code:: bash
 
