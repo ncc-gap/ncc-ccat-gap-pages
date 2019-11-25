@@ -53,3 +53,11 @@ source files. Use the Makefile to build the docs, like so:
    make builder
 where "builder" is one of the supported builders, e.g. html, latex or linkcheck.
 ```
+
+
+## ビルド
+
+```bash
+make html
+```
+

@@ -12,11 +12,11 @@ Cell Ranger を使用するには以下の `システム要件 <https://support.
 
 ::
 
-   System Requirements
-    - 8-core Intel
-    - 64GB RAM
-    - 1TB free disk space
-    - 64-bit CentOS/RedHat 6.0 or Ubuntu 12.04
+    System Requirements
+     - 8-core Intel
+     - 64GB RAM
+     - 1TB free disk space
+     - 64-bit CentOS/RedHat 6.0 or Ubuntu 12.04
 
 | セキュリティグループではポート 22 番を開けておいてください。
 | その他の設定はデフォルトのままで構いません。
@@ -31,10 +31,10 @@ Cell Ranger を使用するには以下の `システム要件 <https://support.
 
 .. code:: bash
 
-   mkfs -t ext4 /dev/sdb
-   mkdir /work
-   mount /dev/sdb /work
-   cd /work/
+    mkfs -t ext4 /dev/sdb
+    mkdir /work
+    mount /dev/sdb /work
+    cd /work/
 
 ターミナルはこのまま使いますので、ログインしたままにしておいてください。
 
@@ -56,7 +56,7 @@ Cell Ranger をダウンロード
 
 .. code:: bash
 
-   tar -xzvf cellranger-3.1.0.tar.gz
+    tar -xzvf cellranger-3.1.0.tar.gz
 
 リファレンスファイルの準備
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +71,7 @@ Cell Ranger をダウンロード
 
 .. code:: bash
 
-   tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz
+    tar -xzvf refdata-cellranger-GRCh38-and-mm10-3.1.0.tar.gz
 
 Cell Ranger にパスを通す
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,7 +80,7 @@ Cell Ranger にパスを通す
 
 .. code:: bash
 
-   export PATH=/work/cellranger-3.1.0:$PATH
+    export PATH=/work/cellranger-3.1.0:$PATH
 
 インストールの確認
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,23 +89,23 @@ Cell Ranger にパスを通す
 
 .. code:: bash
 
-   cellranger testrun --id=tiny
+    cellranger testrun --id=tiny
 
 以下のように表示されれば成功です。
 
 ::
 
-   Pipestance completed successfully!
+    Pipestance completed successfully!
 
 パイプラインの実行結果は成否にかかわらず ``tiny/tiny.mri.tgz`` に出力されています。
 
-bcl2fastq2 をインストール
+bcl2fastq をインストール
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| ここまでに cellranger パイプラインをインストールしましたが、イルミナの ``bcl2fastq2`` ツールは入っていませんので、別途インストールする必要があります。
+| ここまでに cellranger パイプラインをインストールしましたが、イルミナの ``bcl2fastq`` ツールは別途インストールする必要があります。
 | まず、次のイルミナのサイトをウェブブラウザで開きます。
 
-https://support.illumina.com/softwaredownload.html
+https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html
 
 | 次に「bcl2fastq2 Conversion Software v2.20 Installer (Linux rpm)」をクリックしてください。
 | イルミナのユーザログインが必要です。ユーザIDを持っていない場合は「Don't have an account?」をクリックして作成してください。
@@ -115,12 +115,23 @@ https://support.illumina.com/softwaredownload.html
 |image3|
 
 | ブラウザに URL を張り付けてダウンロードしてください。
-| ダウンロードできたら次のコマンドで解答しインストールします。
+| ダウンロードできたら次のコマンドで解凍しインストールします。
 
 .. code:: bash
 
-   unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
-   sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+    unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+    sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+
+
+.. note:: BCLシーケンスファイル形式
+    
+    `Illumina Web Site より引用 <https://jp.illumina.com/informatics/sequencing-data-analysis/sequence-file-formats.html>`__
+    
+    | NextSeq、HiSeq、およびNovaSeqのシーケンスシステムでは、生データファイルがバイナリベースコール（BCL）形式で生成されます。 このシーケンスファイル形式は、ユーザーが開発したデータ解析ツールやサードパーティーデータ解析ツールで使用するにはFASTQ形式への変換が必要です。
+    | 
+    | イルミナは、BCLファイルの変換のためにbcl2fastq変換ソフトウェアを提供しています。bcl2fastqは同梱されるスタンドアロン型変換ソフトウェアで、データをデマルチプレックスし、下流の解析のためにBCLファイルを標準のFASTQファイル形式に変換します
+    
+    `bcl2fastq2 のマニュアル <https://support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf>`__ 
 
 .. |image0| image:: ../image/download1.PNG
 .. |image1| image:: ../image/download2.PNG

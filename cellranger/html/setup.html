@@ -124,13 +124,13 @@ mount /dev/sdb /work
 </div>
 <p>パイプラインの実行結果は成否にかかわらず <code class="docutils literal notranslate"><span class="pre">tiny/tiny.mri.tgz</span></code> に出力されています。</p>
 </div>
-<div class="section" id="bcl2fastq2">
-<h2>1.6. bcl2fastq2 をインストール<a class="headerlink" href="#bcl2fastq2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="bcl2fastq">
+<h2>1.6. bcl2fastq をインストール<a class="headerlink" href="#bcl2fastq" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <div class="line-block">
-<div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの <code class="docutils literal notranslate"><span class="pre">bcl2fastq2</span></code> ツールは入っていませんので、別途インストールする必要があります。</div>
+<div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの <code class="docutils literal notranslate"><span class="pre">bcl2fastq</span></code> ツールは別途インストールする必要があります。</div>
 <div class="line">まず、次のイルミナのサイトをウェブブラウザで開きます。</div>
 </div>
-<p><a class="reference external" href="https://support.illumina.com/softwaredownload.html">https://support.illumina.com/softwaredownload.html</a></p>
+<p><a class="reference external" href="https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html">https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html</a></p>
 <div class="line-block">
 <div class="line">次に「bcl2fastq2 Conversion Software v2.20 Installer (Linux rpm)」をクリックしてください。</div>
 <div class="line">イルミナのユーザログインが必要です。ユーザIDを持っていない場合は「Don't have an account?」をクリックして作成してください。</div>
@@ -140,11 +140,22 @@ mount /dev/sdb /work
 <p><img alt="image3" src="_images/download3.PNG" /></p>
 <div class="line-block">
 <div class="line">ブラウザに URL を張り付けてダウンロードしてください。</div>
-<div class="line">ダウンロードできたら次のコマンドで解答しインストールします。</div>
+<div class="line">ダウンロードできたら次のコマンドで解凍しインストールします。</div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
 sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>BCLシーケンスファイル形式</p>
+<p><a class="reference external" href="https://jp.illumina.com/informatics/sequencing-data-analysis/sequence-file-formats.html">Illumina Web Site より引用</a></p>
+<div class="line-block">
+<div class="line">NextSeq、HiSeq、およびNovaSeqのシーケンスシステムでは、生データファイルがバイナリベースコール（BCL）形式で生成されます。 このシーケンスファイル形式は、ユーザーが開発したデータ解析ツールやサードパーティーデータ解析ツールで使用するにはFASTQ形式への変換が必要です。</div>
+<div class="line"><br /></div>
+<div class="line">イルミナは、BCLファイルの変換のためにbcl2fastq変換ソフトウェアを提供しています。bcl2fastqは同梱されるスタンドアロン型変換ソフトウェアで、データをデマルチプレックスし、下流の解析のためにBCLファイルを標準のFASTQファイル形式に変換します</div>
+</div>
+<p><a class="reference external" href="https://support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf">bcl2fastq2 のマニュアル</a></p>
 </div>
 </div>
 </div>
@@ -165,7 +176,7 @@ sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 <li class="toctree-l2"><a class="reference internal" href="#id2">1.3. リファレンスファイルの準備</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id3">1.4. Cell Ranger にパスを通す</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id4">1.5. インストールの確認</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bcl2fastq2">1.6. bcl2fastq2 をインストール</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bcl2fastq">1.6. bcl2fastq をインストール</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cellranger_mkfastq.html">2. cellranger mkfastq の実行</a><ul>
