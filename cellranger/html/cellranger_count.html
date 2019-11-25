@@ -63,6 +63,7 @@ cellranger count --id<span class="o">=</span>tiny-bcl3-count <span class="se">\<
 </div>
 <div class="section" id="id2">
 <h2>3.2. 現実的なデータで実行<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>※ <strong>実行には約3時間かかります。</strong></p>
 <p>10xgenomics は Single Cell Gene Expression Datasets を用意していますので、ダウンロードして試してみます。</p>
 <p><a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/datasets">https://support.10xgenomics.com/single-cell-gene-expression/datasets</a></p>
 <p>上記のうち、「1k PBMCs from a Healthy Donor (v3 chemistry)」をダウンロードします。</p>
@@ -90,38 +91,34 @@ tar xvf pbmc_1k_v3_fastqs.tar
 <div class="line">&quot;Pipestance completed successfully!&quot; と表示されていれば成功です。</div>
 <div class="line">全体のログは <a class="reference external" href="../data/cellranger_count_pbmc_1k_v3.log">ここ</a> にアップロードしています。</div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cellranger count --id=pbmc_1k_v3 \
-&gt; --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
-&gt; --fastqs=./pbmc_1k_v3_fastqs/ \
-&gt; --expect-cells=1000
-(省略)
-
-Outputs:
-- Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
-- Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
-- BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
-- BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
-- Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
-- Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
-- Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
-- Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
-- Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
-- Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
-- CRISPR-specific analysis:                 null
-- Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
-
-Waiting 6 seconds for UI to do final refresh.
-Pipestance completed successfully!
-
-2019-01-30 09:08:05 Shutting down.
-Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># (途中省略)</span>
+<span class="c1">#</span>
+<span class="c1"># Outputs:</span>
+<span class="c1"># - Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html</span>
+<span class="c1"># - Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv</span>
+<span class="c1"># - BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam</span>
+<span class="c1"># - BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai</span>
+<span class="c1"># - Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix</span>
+<span class="c1"># - Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5</span>
+<span class="c1"># - Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix</span>
+<span class="c1"># - Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5</span>
+<span class="c1"># - Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis</span>
+<span class="c1"># - Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5</span>
+<span class="c1"># - CRISPR-specific analysis:                 null</span>
+<span class="c1"># - Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe</span>
+<span class="c1">#</span>
+<span class="c1"># Waiting 6 seconds for UI to do final refresh.</span>
+<span class="c1"># Pipestance completed successfully!</span>
+<span class="c1">#</span>
+<span class="c1"># 2019-01-30 09:08:05 Shutting down.</span>
+<span class="c1"># Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz</span>
 </pre></div>
 </div>
 <p>実行ログの最後 &quot;Outputs:&quot; にサマリの出力場所が記載されています。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">summary</span> <span class="n">HTML</span><span class="p">:</span>                         <span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">pbmc_1k_v3</span><span class="o">/</span><span class="n">outs</span><span class="o">/</span><span class="n">web_summary</span><span class="o">.</span><span class="n">html</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考に見てください。</p>
+<p><a class="reference external" href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考にしてください。</p>
 </div>
 </div>
 

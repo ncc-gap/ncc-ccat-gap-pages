@@ -27,14 +27,14 @@ cellranger mkfastq の実行
 
 ここまでの作業により、データは以下のように配置されているはずです。
 
-::
+.. code:: bash
 
-   /work
-   ├── data
-   │         ├── cellranger-tiny-bcl-1.2.0
-   │         └── cellranger-tiny-bcl-simple-1.2.0.csv
-   │         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
-   └── refdata-cellranger-GRCh38-and-mm10-3.1.0
+    # /work/
+    # ├── data/
+    # │         ├── cellranger-tiny-bcl-1.2.0/
+    # │         └── cellranger-tiny-bcl-simple-1.2.0.csv
+    # │         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    # └── refdata-cellranger-GRCh38-and-mm10-3.1.0/
 
 
 cellranger mkfastq コマンドの基本形は以下のどちらかです
@@ -46,10 +46,12 @@ csv オプションを使用する場合 (10xGenomics 推奨)
 
 .. code:: bash
 
-   cellranger mkfastq \
-   --id=tiny-bcl \
-   --run=./data/cellranger-tiny-bcl-1.2.0 \
-   --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+    # 実行コマンドの例
+    
+    # cellranger mkfastq \
+    # --id=tiny-bcl \
+    # --run=./data/cellranger-tiny-bcl-1.2.0 \
+    # --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
 
 "--run" オプションは必須です。Illumina BCL へのパスを指定します。
 
@@ -62,10 +64,12 @@ samplesheet とは Illumina Experiment Manager 互換のサンプルシートの
 
 .. code:: bash
 
-   cellranger mkfastq \
-   --id=tiny-bcl2 \
-   --run=./data/cellranger-tiny-bcl-1.2.0 \
-   --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    # 実行コマンドの例
+    
+    # cellranger mkfastq \
+    # --id=tiny-bcl2 \
+    # --run=./data/cellranger-tiny-bcl-1.2.0 \
+    # --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
 
 "--run" オプションは必須です。Illumina BCL へのパスを指定します。
 
@@ -94,22 +98,21 @@ csv オプションで実行
 | 実行ログは以下のように出力されます。
 | "Pipestance completed successfully!" と表示されていれば成功です。
 
-::
+.. code:: bash
 
-   $ cellranger mkfastq --id=tiny-bcl --run=./data/cellranger-tiny-bcl-1.2.0 --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
-   (省略)
-
-   Outputs:
-   - Run QC metrics:        null
-   - FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
-   - Interop output folder: /work/tiny-bcl/outs/interop_path
-   - Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
-
-   Waiting 6 seconds for UI to do final refresh.
-   Pipestance completed successfully!
-
-   2019-01-29 09:49:24 Shutting down.
-   Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
+    # (途中省略)
+    # 
+    # Outputs:
+    # - Run QC metrics:        null
+    # - FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+    # - Interop output folder: /work/tiny-bcl/outs/interop_path
+    # - Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+    # 
+    # Waiting 6 seconds for UI to do final refresh.
+    # Pipestance completed successfully!
+    # 
+    # 2019-01-29 09:49:24 Shutting down.
+    # Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
 
 全体のログは `ここ <../data/cellranger_mkfastq_tiny-bcl.log>`__ です。
 
@@ -120,11 +123,12 @@ csv サンプルシートを確認
 | `csv サンプルはこちら <../data/cellranger-tiny-bcl-simple-1.2.0.csv>`__
 | Lane, Sample, Index の構成になっています。
 
-::
+.. code:: bash
 
-   $ cat /work/data/cellranger-tiny-bcl-simple-1.2.0.csv
-   Lane,Sample,Index
-   1,test_sample,SI-P03-C9
+   cat /work/data/cellranger-tiny-bcl-simple-1.2.0.csv
+
+|image0|
+
 
 構成が簡単なため、10xGenomics は CSV サンプルシートを使用することを推奨しています。
 
@@ -169,3 +173,5 @@ Quality Control をつけて実行
    --qc
 
 QC 出力結果と構成については 10xGenomics のドキュメント `Reading Quality Control Metrics <https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#qc_metrics>`__ を参照してください。
+
+.. |image0| image:: ../image/fq_1.PNG

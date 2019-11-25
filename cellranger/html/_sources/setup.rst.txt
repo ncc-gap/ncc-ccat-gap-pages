@@ -51,6 +51,11 @@ Cell Ranger をダウンロード
 
 |image0|
 
+.. code:: bash
+
+    cd /work
+    curl -o cellranger-3.1.0.tar.gz "http://cf.10xgenomics.com/releases/cell-exp/cellranger-3.1.0.tar.gz?{コピーしたコマンド}"
+
 | ダウンロードしたファイルを解凍します。
 | ファイル名のバージョンはダウンロードしたファイルに合わせてください。
 
@@ -65,6 +70,12 @@ Cell Ranger をダウンロード
 | 赤枠の中をすべて選択して、ターミナルに張り付けて実行します。
 
 |image1|
+
+.. code:: bash
+
+    curl -O http://cf.10xgenomics.com/supp/cell-exp/{コピーしたコマンド}
+
+ダウンロードに約4～5分かかります。
 
 | `1-2 <#id1>`__ と同様にダウンロードしたファイルを解凍します。
 | ファイル名のバージョンはダウンロードしたファイルに合わせてください。
@@ -85,7 +96,8 @@ Cell Ranger にパスを通す
 インストールの確認
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-``cellranger`` パイプラインが正しくインストールされていることを確認するために ``cellranger testrun`` を実行します。
+``cellranger`` パイプラインが正しくインストールされていることを確認するために ``cellranger testrun`` を実行します。  
+約 8～10 分かかります。
 
 .. code:: bash
 
@@ -119,6 +131,7 @@ https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.ht
 
 .. code:: bash
 
+    curl -o bcl2fastq2-v2-20-0-linux-x86-64.zip "https://files.softwaredownloads.illumina.com/{コピーしたURL}"
     unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
     sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 
