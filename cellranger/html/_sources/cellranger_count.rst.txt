@@ -1,4 +1,4 @@
-cellranger count を実行
+cellranger count の実行
 --------------------------
 
 この項では ``cellranger count`` を使用して Single-Library Analysis を行います。
@@ -12,18 +12,25 @@ cellranger count を実行
 
 .. code:: bash
 
-   cd /work
-   cellranger count --id=tiny-bcl3-count \
-   --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
-   --fastqs=./tiny-bcl3/outs/fastq_path \
-   --expect-cells=1000 \
-   --chemistry=threeprime
+    cd /work
+    cellranger count --id=tiny-bcl3-count \
+    --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+    --fastqs=./tiny-bcl3/outs/fastq_path \
+    --expect-cells=1000 \
+    --chemistry=threeprime
 
 :--fastqs: 前回の出力結果のうち、"fastq_path  ディレクトリを渡します。
 :--transcriptome: `1-3 <./setup.html#id2>`__ でダウンロードしたリファレンスファイルのディレクトリを指定します。
 :--except-cells: 期待されるセル数ですが、ここでは公式ドキュメントのとおり、1000とします。（デフォルトは3000です）
 
 その他オプションは公式ドキュメントを参照してください。 `Command Line Argument <https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count#args>`__
+
+以下のように表示されれば成功です。
+
+::
+
+    Pipestance completed successfully!
+
 
 現実的なデータで実行
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,8 +45,8 @@ https://support.10xgenomics.com/single-cell-gene-expression/datasets
 
 .. code:: bash
 
-   wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
-   tar xvf pbmc_1k_v3_fastqs.tar
+    wget http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_v3/pbmc_1k_v3_fastqs.tar
+    tar xvf pbmc_1k_v3_fastqs.tar
 
 cellranger cout を実行します。
 
@@ -48,10 +55,10 @@ cellranger cout を実行します。
 
 .. code:: bash
 
-   cellranger count --id=pbmc_1k_v3 \
-   --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
-   --fastqs=./pbmc_1k_v3_fastqs/ \
-   --expect-cells=1000
+    cellranger count --id=pbmc_1k_v3 \
+    --transcriptome=./refdata-cellranger-GRCh38-and-mm10-3.1.0 \
+    --fastqs=./pbmc_1k_v3_fastqs/ \
+    --expect-cells=1000
 
 | 以下はログの一部です。
 | "Pipestance completed successfully!" と表示されていれば成功です。

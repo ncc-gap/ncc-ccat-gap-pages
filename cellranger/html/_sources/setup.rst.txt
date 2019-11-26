@@ -8,7 +8,7 @@ AWS EC2 インスタンスを起動
 
 AWS コンソールにログインし、EC2 インスタンスを起動します。
 
-Cell Ranger を使用するには以下の `システム要件 <https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements>`__ が提示されていますので、1TByte のディスクストレージ (gp2) をつけてインスタンスタイプ t3.2xlarge を選択します。
+Cell Ranger を使用するには以下の `システム要件 <https://support.10xgenomics.com/single-cell-gene-expression/software/overview/system-requirements>`__ が提示されていますので、1TByte のディスクストレージ (gp2) をつけてインスタンスタイプ m5.4xlarge を選択します。
 
 ::
 

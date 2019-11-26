@@ -15,7 +15,7 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
-    <link rel="next" title="3. cellranger count を実行" href="cellranger_count.html" />
+    <link rel="next" title="3. cellranger count の実行" href="cellranger_count.html" />
     <link rel="prev" title="1. Cell Ranger のインストール" href="setup.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -54,10 +54,11 @@ wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2
 </div>
 <p>ここまでの作業により、データは以下のように配置されているはずです。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># /work/</span>
+<span class="c1"># ├── cellranger-3.1.0/</span>
 <span class="c1"># ├── data/</span>
-<span class="c1"># │         ├── cellranger-tiny-bcl-1.2.0/</span>
-<span class="c1"># │         └── cellranger-tiny-bcl-simple-1.2.0.csv</span>
-<span class="c1"># │         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv</span>
+<span class="c1"># │   ├── cellranger-tiny-bcl-1.2.0/</span>
+<span class="c1"># │   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv</span>
+<span class="c1"># │   └── cellranger-tiny-bcl-simple-1.2.0.csv</span>
 <span class="c1"># └── refdata-cellranger-GRCh38-and-mm10-3.1.0/</span>
 </pre></div>
 </div>
@@ -187,11 +188,11 @@ cellranger mkfastq <span class="se">\</span>
 <div class="section" id="quality-control">
 <h2>2.5. Quality Control をつけて実行<a class="headerlink" href="#quality-control" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <p>&quot;--qc&quot; オプションをつけて実行します。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cellranger</span> <span class="n">mkfastq</span> \
-<span class="o">--</span><span class="nb">id</span><span class="o">=</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl3</span> \
-<span class="o">--</span><span class="n">run</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span> \
-<span class="o">--</span><span class="n">samplesheet</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="n">samplesheet</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mf">0.</span><span class="n">csv</span> \
-<span class="o">--</span><span class="n">qc</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger mkfastq <span class="se">\</span>
+--id<span class="o">=</span>tiny-bcl3 <span class="se">\</span>
+--run<span class="o">=</span>./data/cellranger-tiny-bcl-1.2.0 <span class="se">\</span>
+--samplesheet<span class="o">=</span>./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv <span class="se">\</span>
+--qc
 </pre></div>
 </div>
 <p>QC 出力結果と構成については 10xGenomics のドキュメント <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq#qc_metrics">Reading Quality Control Metrics</a> を参照してください。</p>
@@ -225,7 +226,7 @@ cellranger mkfastq <span class="se">\</span>
 <li class="toctree-l2"><a class="reference internal" href="#quality-control">2.5. Quality Control をつけて実行</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count の実行</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
 </ul>
@@ -255,7 +256,7 @@ cellranger mkfastq <span class="se">\</span>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="setup.html" title="前の章へ">1. Cell Ranger のインストール</a></li>
-      <li>Next: <a href="cellranger_count.html" title="次の章へ">3. cellranger count を実行</a></li>
+      <li>Next: <a href="cellranger_count.html" title="次の章へ">3. cellranger count の実行</a></li>
   </ul></li>
 </ul>
 </div>

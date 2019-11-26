@@ -37,7 +37,7 @@ AWS マネジメントコンソールで Cloud9 サービスを選択します�
 次に cloud9 環境の設定を以下内容で設定してください。
 
 -  Environment type: “Create a new instance for environment (EC2)”
--  Instance type: “Other instance type” にチェックをつけて、“t3.2xlarge”
+-  Instance type: “Other instance type” にチェックをつけて、“m5.4xlarge”
    を選択
 -  Platform: “Amazon Linux”
 -  Cost-saving setting: "After 30 minutes (Default)
@@ -68,8 +68,18 @@ AWS マネジメントコンソールで EC2 サービスを選択します。
 
 |image16|
 
-EC2
-ダッシュボードが表示されますので、左端のメニューから「ボリューム」を選択し、「ボリュームの作成」ボタンを押します。
+| EC2 のダッシュボードが表示されます。
+|
+| 作成するボリュームは cloud9 で作成したインスタンスと同じアベイラビリティゾーンに作成する必要があります。
+| まず、cloud9 で作成したインスタンスのアベイラビリティーゾーンを確認します。
+| 左端のメニューから「インスタンス」を選択し、今回作成したインスタンスを探します。
+| cloud9 で作成したインスタンスには 「aws-cloud9-{自分で設定したcloud9の名前}-{英数字}」という名前が付けられています。
+
+|image31|
+
+今回作成したインスタンスのアベイラビリティーゾーンは「ap-northeast-1d」であることが分かりました。
+
+次に、左端のメニューから「ボリューム」を選択し、「ボリュームの作成」ボタンを押します。
 
 |image17|
 
@@ -78,6 +88,7 @@ EC2
 
 -  ボリュームタイプ: gp2
 -  サイズ (GiB): 1000
+-  アベイラリティーゾーン: (先ほど確認したアベイラビリティーゾーン)
 -  キー: 「タグの追加」を押して行を追加した後、キーに「Name」、値に名前
    (任意の英数字) を入力します
 
@@ -100,9 +111,7 @@ EC2
 |image21|
 
 | ボリュームのアタッチするインスタンスを選択します。
-| cloud9 で作成したインスタンスには
-  “aws-cloud9-{自分で設定したcloud9の名前}-{英数字}”
-  という名前が付けられています。
+| cloud9 で作成したインスタンスには 「aws-cloud9-{自分で設定したcloud9の名前}-{英数字}」という名前が付けられています。
 
 |image22|
 
@@ -239,3 +248,4 @@ AWS マネジメントコンソールから cloud9
 .. |image28| image:: ../image/c9_19.PNG
 .. |image29| image:: ../image/ec2_32.PNG
 .. |image30| image:: ../image/ec2_33.PNG
+.. |image31| image:: ../image/c9_20.PNG

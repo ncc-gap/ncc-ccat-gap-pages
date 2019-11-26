@@ -30,12 +30,12 @@ cellranger mkfastq の実行
 .. code:: bash
 
     # /work/
+    # ├── cellranger-3.1.0/
     # ├── data/
-    # │         ├── cellranger-tiny-bcl-1.2.0/
-    # │         └── cellranger-tiny-bcl-simple-1.2.0.csv
-    # │         └── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    # │   ├── cellranger-tiny-bcl-1.2.0/
+    # │   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    # │   └── cellranger-tiny-bcl-simple-1.2.0.csv
     # └── refdata-cellranger-GRCh38-and-mm10-3.1.0/
-
 
 cellranger mkfastq コマンドの基本形は以下のどちらかです
 
@@ -164,7 +164,7 @@ Quality Control をつけて実行
 
 "--qc" オプションをつけて実行します。
 
-::
+.. code:: bash
 
    cellranger mkfastq \
    --id=tiny-bcl3 \

@@ -60,7 +60,7 @@ step」をクリックします。</div>
 <p>次に cloud9 環境の設定を以下内容で設定してください。</p>
 <ul class="simple">
 <li><p>Environment type: “Create a new instance for environment (EC2)”</p></li>
-<li><p>Instance type: “Other instance type” にチェックをつけて、“t3.2xlarge”
+<li><p>Instance type: “Other instance type” にチェックをつけて、“m5.4xlarge”
 を選択</p></li>
 <li><p>Platform: “Amazon Linux”</p></li>
 <li><p>Cost-saving setting: &quot;After 30 minutes (Default)</p></li>
@@ -80,8 +80,17 @@ environment」をクリックしてください。</p>
 <p>今回は 1T のボリュームが必要ですので、追加でボリュームを作成します。</p>
 <p>AWS マネジメントコンソールで EC2 サービスを選択します。</p>
 <p><img alt="image16" src="_images/ec2_4.PNG" /></p>
-<p>EC2
-ダッシュボードが表示されますので、左端のメニューから「ボリューム」を選択し、「ボリュームの作成」ボタンを押します。</p>
+<div class="line-block">
+<div class="line">EC2 のダッシュボードが表示されます。</div>
+<div class="line"><br /></div>
+<div class="line">作成するボリュームは cloud9 で作成したインスタンスと同じアベイラビリティゾーンに作成する必要があります。</div>
+<div class="line">まず、cloud9 で作成したインスタンスのアベイラビリティーゾーンを確認します。</div>
+<div class="line">左端のメニューから「インスタンス」を選択し、今回作成したインスタンスを探します。</div>
+<div class="line">cloud9 で作成したインスタンスには 「aws-cloud9-{自分で設定したcloud9の名前}-{英数字}」という名前が付けられています。</div>
+</div>
+<p><img alt="image31" src="_images/c9_20.PNG" /></p>
+<p>今回作成したインスタンスのアベイラビリティーゾーンは「ap-northeast-1d」であることが分かりました。</p>
+<p>次に、左端のメニューから「ボリューム」を選択し、「ボリュームの作成」ボタンを押します。</p>
 <p><img alt="image17" src="_images/c9_8.PNG" /></p>
 <div class="line-block">
 <div class="line">以下内容で設定してください。</div>
@@ -90,6 +99,7 @@ environment」をクリックしてください。</p>
 <ul class="simple">
 <li><p>ボリュームタイプ: gp2</p></li>
 <li><p>サイズ (GiB): 1000</p></li>
+<li><p>アベイラリティーゾーン: (先ほど確認したアベイラビリティーゾーン)</p></li>
 <li><p>キー: 「タグの追加」を押して行を追加した後、キーに「Name」、値に名前
 (任意の英数字) を入力します</p></li>
 </ul>
@@ -104,9 +114,7 @@ environment」をクリックしてください。</p>
 <p><img alt="image21" src="_images/c9_12.PNG" /></p>
 <div class="line-block">
 <div class="line">ボリュームのアタッチするインスタンスを選択します。</div>
-<div class="line">cloud9 で作成したインスタンスには
-“aws-cloud9-{自分で設定したcloud9の名前}-{英数字}”
-という名前が付けられています。</div>
+<div class="line">cloud9 で作成したインスタンスには 「aws-cloud9-{自分で設定したcloud9の名前}-{英数字}」という名前が付けられています。</div>
 </div>
 <p><img alt="image22" src="_images/c9_13.PNG" /></p>
 <p>アタッチ先が “/dev/sdf”
@@ -227,7 +235,7 @@ Volume」をクリックします。</div>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#quality-control">2.5. Quality Control をつけて実行</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count の実行</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
 </ul>
