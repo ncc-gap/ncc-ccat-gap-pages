@@ -50,7 +50,17 @@
 <div class="line-block">
 <div class="line">セキュリティグループではポート 22 番を開けておいてください。</div>
 <div class="line">その他の設定はデフォルトのままで構いません。</div>
+<div class="line"><br /></div>
+<div class="line">EC2 インスタンスを起動したら、 SSH ログインし、アタッチしたストレージを初期化して /work ディレクトリにマウントしておきます。</div>
+<div class="line">実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて /work ディレクトリとしておきます。</div>
 </div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkfs -t ext4 /dev/sdb
+mkdir /work
+mount /dev/sdb /work
+<span class="nb">cd</span> /work
+</pre></div>
+</div>
+<p>ターミナルはこのまま使いますので、ログインしたままにしておいてください。</p>
 <p>詳細な手順は以下を参照してください。</p>
 <blockquote>
 <div><ul class="simple">
@@ -58,17 +68,6 @@
 <li><p><a class="reference external" href="./aws_ec2.html">AWS EC2 を利用する場合</a></p></li>
 </ul>
 </div></blockquote>
-<div class="line-block">
-<div class="line">EC2 インスタンスを起動したら、 SSH ログインし、アタッチしたストレージを初期化して <code class="docutils literal notranslate"><span class="pre">/work</span></code> ディレクトリにマウントしておきます。</div>
-<div class="line">実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて <code class="docutils literal notranslate"><span class="pre">/work</span></code> ディレクトリとしておきます。</div>
-</div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkfs -t ext4 /dev/sdb
-mkdir /work
-mount /dev/sdb /work
-<span class="nb">cd</span> /work/
-</pre></div>
-</div>
-<p>ターミナルはこのまま使いますので、ログインしたままにしておいてください。</p>
 </div>
 <div class="section" id="id1">
 <h2>1.2. Cell Ranger をダウンロード<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
@@ -115,28 +114,31 @@ curl -o cellranger-3.1.0.tar.gz <span class="s2">&quot;http://cf.10xgenomics.com
 </div>
 <div class="section" id="id3">
 <h2>1.4. Cell Ranger にパスを通す<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>解凍した <code class="docutils literal notranslate"><span class="pre">cellranger-3.1.0</span></code> ディレクトリを PATH に追加します。これで <code class="docutils literal notranslate"><span class="pre">cellranger</span></code> パイプラインを実行することができます。</p>
+<p>解凍した cellranger-3.1.0 ディレクトリを PATH に追加します。これで cellranger パイプラインを実行することができます。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/work/cellranger-3.1.0:<span class="nv">$PATH</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="id4">
 <h2>1.5. インストールの確認<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">cellranger</span></code> パイプラインが正しくインストールされていることを確認するために <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">testrun</span></code> を実行します。
+<p>cellranger パイプラインが正しくインストールされていることを確認するために cellranger testrun を実行します。
 約 8～10 分かかります。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger testrun --id<span class="o">=</span>tiny
 </pre></div>
 </div>
-<p>以下のように表示されれば成功です。</p>
+<p>次のように表示されれば成功です。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Pipestance completed successfully!
+
+2019-11-26 09:18:10 Shutting down.
+Saving pipestance info to &quot;tiny/tiny.mri.tgz&quot;
 </pre></div>
 </div>
-<p>パイプラインの実行結果は成否にかかわらず <code class="docutils literal notranslate"><span class="pre">tiny/tiny.mri.tgz</span></code> に出力されています。</p>
+<p>パイプラインの実行結果は成否にかかわらず tiny/tiny.mri.tgz に出力されています。</p>
 </div>
 <div class="section" id="bcl2fastq">
 <h2>1.6. bcl2fastq をインストール<a class="headerlink" href="#bcl2fastq" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <div class="line-block">
-<div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの <code class="docutils literal notranslate"><span class="pre">bcl2fastq</span></code> ツールは別途インストールする必要があります。</div>
+<div class="line">ここまでに cellranger パイプラインをインストールしましたが、イルミナの bcl2fastq ツールは別途インストールする必要があります。</div>
 <div class="line">まず、次のイルミナのサイトをウェブブラウザで開きます。</div>
 </div>
 <p><a class="reference external" href="https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html">https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html</a></p>
@@ -147,12 +149,12 @@ curl -o cellranger-3.1.0.tar.gz <span class="s2">&quot;http://cf.10xgenomics.com
 <div class="line">ダウンロードのパスが表示されますので、左側のコピーアイコンをクリックしてURLをコピーします。</div>
 </div>
 <p><img alt="image3" src="_images/download3.PNG" /></p>
-<div class="line-block">
-<div class="line">ブラウザに URL を張り付けてダウンロードしてください。</div>
-<div class="line">ダウンロードできたら次のコマンドで解凍しインストールします。</div>
-</div>
+<p>ブラウザに URL を張り付けてダウンロードしてください。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -o bcl2fastq2-v2-20-0-linux-x86-64.zip <span class="s2">&quot;https://files.softwaredownloads.illumina.com/{コピーしたURL}&quot;</span>
-unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+</pre></div>
+</div>
+<p>ダウンロードできたら次のコマンドで解凍しインストールします。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
 sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
 </pre></div>
 </div>

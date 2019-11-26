@@ -67,3 +67,18 @@ img {
   max-width: 800px;
   margin-bottom: 30px;
 }
+
+p.admonition-title {
+    display: none;
+}
+
+pre {
+    background: unset;
+    border: solid 1px darkgray;
+}
+div.highlight {
+    background-color: unset;
+}
+div.highlight-bash {
+    background: aliceblue;
+}

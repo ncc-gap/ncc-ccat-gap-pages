@@ -1,14 +1,14 @@
 cellranger count の実行
 --------------------------
 
-この項では ``cellranger count`` を使用して Single-Library Analysis を行います。
+この項では cellranger count を使用して Single-Library Analysis を行います。
 
 公式ドキュメント： `Single-Library Analysis with Cell Ranger <https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count>`__
 
 簡単なサンプルで実行
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-順番に実行していれば `2-5 <./cellranger_mkfastq.html#quality-control>`__ までの結果がありますので、それを使用して ``cellranger count`` コマンドを実行します。
+順番に実行していれば `2-5 <./cellranger_mkfastq.html#quality-control>`__ までの結果がありますので、それを使用して cellranger count コマンドを実行します。
 
 .. code:: bash
 
@@ -29,7 +29,26 @@ cellranger count の実行
 
 ::
 
+    Outputs:
+    - Run summary HTML:                         /work/tiny/outs/web_summary.html
+    - Run summary CSV:                          /work/tiny/outs/metrics_summary.csv
+    - BAM:                                      /work/tiny/outs/possorted_genome_bam.bam
+    - BAM index:                                /work/tiny/outs/possorted_genome_bam.bam.bai
+    - Filtered feature-barcode matrices MEX:    /work/tiny/outs/filtered_feature_bc_matrix
+    - Filtered feature-barcode matrices HDF5:   /work/tiny/outs/filtered_feature_bc_matrix.h5
+    - Unfiltered feature-barcode matrices MEX:  /work/tiny/outs/raw_feature_bc_matrix
+    - Unfiltered feature-barcode matrices HDF5: /work/tiny/outs/raw_feature_bc_matrix.h5
+    - Secondary analysis output CSV:            /work/tiny/outs/analysis
+    - Per-molecule read information:            /work/tiny/outs/molecule_info.h5
+    - CRISPR-specific analysis:                 null
+    - Loupe Cell Browser file:                  /work/tiny/outs/cloupe.cloupe
+    - Feature Reference:                        null
+    
+    Waiting 6 seconds for UI to do final refresh.
     Pipestance completed successfully!
+    
+    2019-11-26 09:18:10 Shutting down.
+    Saving pipestance info to "tiny/tiny.mri.tgz"
 
 
 現実的なデータで実行
@@ -51,7 +70,7 @@ https://support.10xgenomics.com/single-cell-gene-expression/datasets
 cellranger cout を実行します。
 
 :--fastqs: ダウンロードしたサンプルの fastq ディレクトリを指定します。
-:--except-cells: サンプルのページに ``run with --expect-cells=1000`` と記載がありますので、1000 を指定します。
+:--except-cells: サンプルのページに run with --expect-cells=1000 と記載がありますので、1000 を指定します。
 
 .. code:: bash
 
@@ -64,34 +83,32 @@ cellranger cout を実行します。
 | "Pipestance completed successfully!" と表示されていれば成功です。
 | 全体のログは `ここ <../data/cellranger_count_pbmc_1k_v3.log>`__ にアップロードしています。
 
-.. code:: bash
+::
 
-    # (途中省略)
-    #
-    # Outputs:
-    # - Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
-    # - Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
-    # - BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
-    # - BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
-    # - Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
-    # - Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
-    # - Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
-    # - Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
-    # - Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
-    # - Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
-    # - CRISPR-specific analysis:                 null
-    # - Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
-    #
-    # Waiting 6 seconds for UI to do final refresh.
-    # Pipestance completed successfully!
-    # 
-    # 2019-01-30 09:08:05 Shutting down.
-    # Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
+    Outputs:
+    - Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+    - Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
+    - BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
+    - BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
+    - Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
+    - Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
+    - Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
+    - Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
+    - Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
+    - Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
+    - CRISPR-specific analysis:                 null
+    - Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
+    
+    Waiting 6 seconds for UI to do final refresh.
+    Pipestance completed successfully!
+    
+    2019-01-30 09:08:05 Shutting down.
+    Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
 
 実行ログの最後 "Outputs:" にサマリの出力場所が記載されています。
 
-.. code:: bash
+::
 
-    # Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+    Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
 
 `ここ <../data/pbmc_1k_v3/outs/web_summary.html>`__ にアップロードしていますので、興味があれば参考にしてください。

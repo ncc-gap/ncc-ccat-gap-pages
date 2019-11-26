@@ -35,11 +35,11 @@
             
   <div class="section" id="cellranger-count">
 <h1>3. cellranger count の実行<a class="headerlink" href="#cellranger-count" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>この項では <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">count</span></code> を使用して Single-Library Analysis を行います。</p>
+<p>この項では cellranger count を使用して Single-Library Analysis を行います。</p>
 <p>公式ドキュメント： <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count">Single-Library Analysis with Cell Ranger</a></p>
 <div class="section" id="id1">
 <h2>3.1. 簡単なサンプルで実行<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>順番に実行していれば <a class="reference external" href="./cellranger_mkfastq.html#quality-control">2-5</a> までの結果がありますので、それを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">count</span></code> コマンドを実行します。</p>
+<p>順番に実行していれば <a class="reference external" href="./cellranger_mkfastq.html#quality-control">2-5</a> までの結果がありますので、それを使用して cellranger count コマンドを実行します。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
 cellranger count --id<span class="o">=</span>tiny-bcl3-count <span class="se">\</span>
 --transcriptome<span class="o">=</span>./refdata-cellranger-GRCh38-and-mm10-3.1.0 <span class="se">\</span>
@@ -61,7 +61,26 @@ cellranger count --id<span class="o">=</span>tiny-bcl3-count <span class="se">\<
 </dl>
 <p>その他オプションは公式ドキュメントを参照してください。 <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count#args">Command Line Argument</a></p>
 <p>以下のように表示されれば成功です。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Pipestance completed successfully!
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Outputs:
+- Run summary HTML:                         /work/tiny/outs/web_summary.html
+- Run summary CSV:                          /work/tiny/outs/metrics_summary.csv
+- BAM:                                      /work/tiny/outs/possorted_genome_bam.bam
+- BAM index:                                /work/tiny/outs/possorted_genome_bam.bam.bai
+- Filtered feature-barcode matrices MEX:    /work/tiny/outs/filtered_feature_bc_matrix
+- Filtered feature-barcode matrices HDF5:   /work/tiny/outs/filtered_feature_bc_matrix.h5
+- Unfiltered feature-barcode matrices MEX:  /work/tiny/outs/raw_feature_bc_matrix
+- Unfiltered feature-barcode matrices HDF5: /work/tiny/outs/raw_feature_bc_matrix.h5
+- Secondary analysis output CSV:            /work/tiny/outs/analysis
+- Per-molecule read information:            /work/tiny/outs/molecule_info.h5
+- CRISPR-specific analysis:                 null
+- Loupe Cell Browser file:                  /work/tiny/outs/cloupe.cloupe
+- Feature Reference:                        null
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-11-26 09:18:10 Shutting down.
+Saving pipestance info to &quot;tiny/tiny.mri.tgz&quot;
 </pre></div>
 </div>
 </div>
@@ -81,7 +100,7 @@ tar xvf pbmc_1k_v3_fastqs.tar
 <dd class="field-odd"><p>ダウンロードしたサンプルの fastq ディレクトリを指定します。</p>
 </dd>
 <dt class="field-even">--except-cells</dt>
-<dd class="field-even"><p>サンプルのページに <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">with</span> <span class="pre">--expect-cells=1000</span></code> と記載がありますので、1000 を指定します。</p>
+<dd class="field-even"><p>サンプルのページに run with --expect-cells=1000 と記載がありますので、1000 を指定します。</p>
 </dd>
 </dl>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cellranger count --id<span class="o">=</span>pbmc_1k_v3 <span class="se">\</span>
@@ -95,31 +114,29 @@ tar xvf pbmc_1k_v3_fastqs.tar
 <div class="line">&quot;Pipestance completed successfully!&quot; と表示されていれば成功です。</div>
 <div class="line">全体のログは <a class="reference external" href="../data/cellranger_count_pbmc_1k_v3.log">ここ</a> にアップロードしています。</div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># (途中省略)</span>
-<span class="c1">#</span>
-<span class="c1"># Outputs:</span>
-<span class="c1"># - Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html</span>
-<span class="c1"># - Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv</span>
-<span class="c1"># - BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam</span>
-<span class="c1"># - BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai</span>
-<span class="c1"># - Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix</span>
-<span class="c1"># - Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5</span>
-<span class="c1"># - Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix</span>
-<span class="c1"># - Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5</span>
-<span class="c1"># - Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis</span>
-<span class="c1"># - Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5</span>
-<span class="c1"># - CRISPR-specific analysis:                 null</span>
-<span class="c1"># - Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe</span>
-<span class="c1">#</span>
-<span class="c1"># Waiting 6 seconds for UI to do final refresh.</span>
-<span class="c1"># Pipestance completed successfully!</span>
-<span class="c1">#</span>
-<span class="c1"># 2019-01-30 09:08:05 Shutting down.</span>
-<span class="c1"># Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Outputs:
+- Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html
+- Run summary CSV:                          /work/pbmc_1k_v3/outs/metrics_summary.csv
+- BAM:                                      /work/pbmc_1k_v3/outs/possorted_genome_bam.bam
+- BAM index:                                /work/pbmc_1k_v3/outs/possorted_genome_bam.bam.bai
+- Filtered feature-barcode matrices MEX:    /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix
+- Filtered feature-barcode matrices HDF5:   /work/pbmc_1k_v3/outs/filtered_feature_bc_matrix.h5
+- Unfiltered feature-barcode matrices MEX:  /work/pbmc_1k_v3/outs/raw_feature_bc_matrix
+- Unfiltered feature-barcode matrices HDF5: /work/pbmc_1k_v3/outs/raw_feature_bc_matrix.h5
+- Secondary analysis output CSV:            /work/pbmc_1k_v3/outs/analysis
+- Per-molecule read information:            /work/pbmc_1k_v3/outs/molecule_info.h5
+- CRISPR-specific analysis:                 null
+- Loupe Cell Browser file:                  /work/pbmc_1k_v3/outs/cloupe.cloupe
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-30 09:08:05 Shutting down.
+Saving pipestance info to pbmc_1k_v3/pbmc_1k_v3.mri.tgz
 </pre></div>
 </div>
 <p>実行ログの最後 &quot;Outputs:&quot; にサマリの出力場所が記載されています。</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run summary HTML:                         /work/pbmc_1k_v3/outs/web_summary.html</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Run</span> <span class="n">summary</span> <span class="n">HTML</span><span class="p">:</span>                         <span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">pbmc_1k_v3</span><span class="o">/</span><span class="n">outs</span><span class="o">/</span><span class="n">web_summary</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 <p><a class="reference external" href="../data/pbmc_1k_v3/outs/web_summary.html">ここ</a> にアップロードしていますので、興味があれば参考にしてください。</p>

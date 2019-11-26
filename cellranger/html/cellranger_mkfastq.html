@@ -35,7 +35,7 @@
             
   <div class="section" id="cellranger-mkfastq">
 <h1>2. cellranger mkfastq の実行<a class="headerlink" href="#cellranger-mkfastq" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>この項では <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> を使用して FASTQ を生成します。</p>
+<p>この項では cellranger mkfastq を使用して FASTQ を生成します。</p>
 <p>公式ドキュメント： <a class="reference external" href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq">Generating FASTQs with cellranger mkfastq</a></p>
 <div class="section" id="id1">
 <h2>2.1. コマンドとオプション<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
@@ -53,25 +53,25 @@ wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2
 </pre></div>
 </div>
 <p>ここまでの作業により、データは以下のように配置されているはずです。</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># /work/</span>
-<span class="c1"># ├── cellranger-3.1.0/</span>
-<span class="c1"># ├── data/</span>
-<span class="c1"># │   ├── cellranger-tiny-bcl-1.2.0/</span>
-<span class="c1"># │   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv</span>
-<span class="c1"># │   └── cellranger-tiny-bcl-simple-1.2.0.csv</span>
-<span class="c1"># └── refdata-cellranger-GRCh38-and-mm10-3.1.0/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/work/
+├── cellranger-3.1.0/
+├── data/
+│   ├── cellranger-tiny-bcl-1.2.0/
+│   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+│   └── cellranger-tiny-bcl-simple-1.2.0.csv
+└── refdata-cellranger-GRCh38-and-mm10-3.1.0/
 </pre></div>
 </div>
 <p>cellranger mkfastq コマンドの基本形は以下のどちらかです</p>
 <div class="section" id="csv-10xgenomics">
 <h3>2.1.1. csv オプションを使用する場合 (10xGenomics 推奨)<a class="headerlink" href="#csv-10xgenomics" title="このヘッドラインへのパーマリンク">¶</a></h3>
 <p><a class="reference external" href="../data/cellranger-tiny-bcl-simple-1.2.0.csv">csv サンプルはこちら</a></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 実行コマンドの例</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 実行コマンドの例</span>
 
-<span class="c1"># cellranger mkfastq \</span>
-<span class="c1"># --id=tiny-bcl \</span>
-<span class="c1"># --run=./data/cellranger-tiny-bcl-1.2.0 \</span>
-<span class="c1"># --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv</span>
+<span class="n">cellranger</span> <span class="n">mkfastq</span> \
+<span class="o">--</span><span class="nb">id</span><span class="o">=</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span> \
+<span class="o">--</span><span class="n">run</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span> \
+<span class="o">--</span><span class="n">csv</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="n">simple</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mf">0.</span><span class="n">csv</span>
 </pre></div>
 </div>
 <p>&quot;--run&quot; オプションは必須です。Illumina BCL へのパスを指定します。</p>
@@ -80,12 +80,12 @@ wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2
 <h3>2.1.2. samplesheet オプションを使用する場合<a class="headerlink" href="#samplesheet" title="このヘッドラインへのパーマリンク">¶</a></h3>
 <p>samplesheet とは Illumina Experiment Manager 互換のサンプルシートのことであり、ファイルのパスを指定します。</p>
 <p><a class="reference external" href="../data/cellranger-tiny-bcl-samplesheet-1.2.0.csv">samplesheetサンプルはこちら</a></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 実行コマンドの例</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 実行コマンドの例</span>
 
-<span class="c1"># cellranger mkfastq \</span>
-<span class="c1"># --id=tiny-bcl2 \</span>
-<span class="c1"># --run=./data/cellranger-tiny-bcl-1.2.0 \</span>
-<span class="c1"># --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv</span>
+<span class="n">cellranger</span> <span class="n">mkfastq</span> \
+<span class="o">--</span><span class="nb">id</span><span class="o">=</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl2</span> \
+<span class="o">--</span><span class="n">run</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span> \
+<span class="o">--</span><span class="n">samplesheet</span><span class="o">=./</span><span class="n">data</span><span class="o">/</span><span class="n">cellranger</span><span class="o">-</span><span class="n">tiny</span><span class="o">-</span><span class="n">bcl</span><span class="o">-</span><span class="n">samplesheet</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mf">0.</span><span class="n">csv</span>
 </pre></div>
 </div>
 <p>&quot;--run&quot; オプションは必須です。Illumina BCL へのパスを指定します。</p>
@@ -105,7 +105,7 @@ wget http://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-samplesheet-1.2
 </div>
 <div class="section" id="csv">
 <h2>2.2. csv オプションで実行<a class="headerlink" href="#csv" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>&quot;--csv&quot; オプションを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> コマンドを実行します。</p>
+<p>&quot;--csv&quot; オプションを使用して cellranger mkfastq コマンドを実行します。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
 
 cellranger mkfastq <span class="se">\</span>
@@ -118,19 +118,19 @@ cellranger mkfastq <span class="se">\</span>
 <div class="line">実行ログは以下のように出力されます。</div>
 <div class="line">&quot;Pipestance completed successfully!&quot; と表示されていれば成功です。</div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># (途中省略)</span>
-<span class="c1">#</span>
-<span class="c1"># Outputs:</span>
-<span class="c1"># - Run QC metrics:        null</span>
-<span class="c1"># - FASTQ output folder:   /work/tiny-bcl/outs/fastq_path</span>
-<span class="c1"># - Interop output folder: /work/tiny-bcl/outs/interop_path</span>
-<span class="c1"># - Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv</span>
-<span class="c1">#</span>
-<span class="c1"># Waiting 6 seconds for UI to do final refresh.</span>
-<span class="c1"># Pipestance completed successfully!</span>
-<span class="c1">#</span>
-<span class="c1"># 2019-01-29 09:49:24 Shutting down.</span>
-<span class="c1"># Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># (途中省略)
+
+Outputs:
+- Run QC metrics:        null
+- FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+- Interop output folder: /work/tiny-bcl/outs/interop_path
+- Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+
+Waiting 6 seconds for UI to do final refresh.
+Pipestance completed successfully!
+
+2019-01-29 09:49:24 Shutting down.
+Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
 </pre></div>
 </div>
 <p>全体のログは <a class="reference external" href="../data/cellranger_mkfastq_tiny-bcl.log">ここ</a> です。</p>
@@ -175,7 +175,7 @@ cellranger mkfastq <span class="se">\</span>
 </div>
 <div class="section" id="id4">
 <h2>2.4. samplesheet オプションで実行<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>&quot;--samplesheet&quot; オプションを使用して <code class="docutils literal notranslate"><span class="pre">cellranger</span> <span class="pre">mkfastq</span></code> コマンドを実行します。</p>
+<p>&quot;--samplesheet&quot; オプションを使用して cellranger mkfastq コマンドを実行します。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /work
 
 cellranger mkfastq <span class="se">\</span>

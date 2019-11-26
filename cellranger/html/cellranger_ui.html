@@ -16,7 +16,7 @@
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
     <link rel="next" title="5. AWS Cloud9 の使用方法" href="aws_cloud9.html" />
-    <link rel="prev" title="3. cellranger count を実行" href="cellranger_count.html" />
+    <link rel="prev" title="3. cellranger count の実行" href="cellranger_count.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -93,7 +93,7 @@ http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0
 <p><img alt="image5" src="_images/ec2_36.PNG" /></p>
 <p><strong>注意２ 公開ポートを固定</strong></p>
 <div class="line-block">
-<div class="line">cellranger パイプラインが設定する公開ポートはランダムなため、<code class="docutils literal notranslate"><span class="pre">--uiport=3600</span></code> のように <code class="docutils literal notranslate"><span class="pre">--uiport</span></code> オプションをつけることで固定することができます。</div>
+<div class="line">cellranger パイプラインが設定する公開ポートはランダムなため、--uiport=3600 のように --uiport オプションをつけることで固定することができます。</div>
 <div class="line">ただし、Linux では TCP/IP ポート番号のうち 1024 未満は特権ポート (privileged ports) といい、特権プロセス（CAP_NET_BIND_SERVICE ケーパビリティを持つプロセス）でないとアクセスできません。</div>
 <div class="line">そのため、3600 など 1024 以上のポート番号を指定したほうがよいでしょう。</div>
 </div>
@@ -135,7 +135,7 @@ http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0
 <li class="toctree-l2"><a class="reference internal" href="cellranger_mkfastq.html#quality-control">2.5. Quality Control をつけて実行</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count を実行</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="cellranger_count.html">3. cellranger count の実行</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id1">3.1. 簡単なサンプルで実行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellranger_count.html#id2">3.2. 現実的なデータで実行</a></li>
 </ul>
@@ -164,7 +164,7 @@ http://13.58.138.49:3600?auth=sAsFRDQ4tBKJ9OGNG-7gJSWwPC9_8CfG3alhmyj0BC0
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="cellranger_count.html" title="前の章へ">3. cellranger count を実行</a></li>
+      <li>Previous: <a href="cellranger_count.html" title="前の章へ">3. cellranger count の実行</a></li>
       <li>Next: <a href="aws_cloud9.html" title="次の章へ">5. AWS Cloud9 の使用方法</a></li>
   </ul></li>
 </ul>

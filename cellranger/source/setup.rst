@@ -20,23 +20,23 @@ Cell Ranger を使用するには以下の `システム要件 <https://support.
 
 | セキュリティグループではポート 22 番を開けておいてください。
 | その他の設定はデフォルトのままで構いません。
-
-詳細な手順は以下を参照してください。
-
- - `AWS Cloud9 を利用する場合 <./aws_cloud9.html>`__
- - `AWS EC2 を利用する場合 <./aws_ec2.html>`__
-
-| EC2 インスタンスを起動したら、 SSH ログインし、アタッチしたストレージを初期化して ``/work`` ディレクトリにマウントしておきます。
-| 実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて ``/work`` ディレクトリとしておきます。
+|
+| EC2 インスタンスを起動したら、 SSH ログインし、アタッチしたストレージを初期化して /work ディレクトリにマウントしておきます。
+| 実際に使用する場合はマウント先のディレクトリ名はなんでも構いませんが、ここでは解説の記載に合わせて /work ディレクトリとしておきます。
 
 .. code:: bash
 
     mkfs -t ext4 /dev/sdb
     mkdir /work
     mount /dev/sdb /work
-    cd /work/
+    cd /work
 
 ターミナルはこのまま使いますので、ログインしたままにしておいてください。
+
+詳細な手順は以下を参照してください。
+
+ - `AWS Cloud9 を利用する場合 <./aws_cloud9.html>`__
+ - `AWS EC2 を利用する場合 <./aws_ec2.html>`__
 
 Cell Ranger をダウンロード
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,7 +87,7 @@ Cell Ranger をダウンロード
 Cell Ranger にパスを通す
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-解凍した ``cellranger-3.1.0`` ディレクトリを PATH に追加します。これで ``cellranger`` パイプラインを実行することができます。
+解凍した cellranger-3.1.0 ディレクトリを PATH に追加します。これで cellranger パイプラインを実行することができます。
 
 .. code:: bash
 
@@ -96,25 +96,28 @@ Cell Ranger にパスを通す
 インストールの確認
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-``cellranger`` パイプラインが正しくインストールされていることを確認するために ``cellranger testrun`` を実行します。  
+cellranger パイプラインが正しくインストールされていることを確認するために cellranger testrun を実行します。  
 約 8～10 分かかります。
 
 .. code:: bash
 
     cellranger testrun --id=tiny
 
-以下のように表示されれば成功です。
+次のように表示されれば成功です。
 
 ::
 
     Pipestance completed successfully!
+    
+    2019-11-26 09:18:10 Shutting down.
+    Saving pipestance info to "tiny/tiny.mri.tgz"
 
-パイプラインの実行結果は成否にかかわらず ``tiny/tiny.mri.tgz`` に出力されています。
+パイプラインの実行結果は成否にかかわらず tiny/tiny.mri.tgz に出力されています。
 
 bcl2fastq をインストール
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| ここまでに cellranger パイプラインをインストールしましたが、イルミナの ``bcl2fastq`` ツールは別途インストールする必要があります。
+| ここまでに cellranger パイプラインをインストールしましたが、イルミナの bcl2fastq ツールは別途インストールする必要があります。
 | まず、次のイルミナのサイトをウェブブラウザで開きます。
 
 https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html
@@ -126,15 +129,18 @@ https://jp.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.ht
 
 |image3|
 
-| ブラウザに URL を張り付けてダウンロードしてください。
-| ダウンロードできたら次のコマンドで解凍しインストールします。
+ブラウザに URL を張り付けてダウンロードしてください。
 
 .. code:: bash
 
     curl -o bcl2fastq2-v2-20-0-linux-x86-64.zip "https://files.softwaredownloads.illumina.com/{コピーしたURL}"
+
+ダウンロードできたら次のコマンドで解凍しインストールします。
+
+.. code:: bash
+
     unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
     sudo yum install -y bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
-
 
 .. note:: BCLシーケンスファイル形式
     

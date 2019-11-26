@@ -1,7 +1,7 @@
 cellranger mkfastq の実行
 ----------------------------
 
-この項では ``cellranger mkfastq`` を使用して FASTQ を生成します。
+この項では cellranger mkfastq を使用して FASTQ を生成します。
 
 公式ドキュメント： `Generating FASTQs with cellranger mkfastq <https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq>`__
 
@@ -27,15 +27,15 @@ cellranger mkfastq の実行
 
 ここまでの作業により、データは以下のように配置されているはずです。
 
-.. code:: bash
+::
 
-    # /work/
-    # ├── cellranger-3.1.0/
-    # ├── data/
-    # │   ├── cellranger-tiny-bcl-1.2.0/
-    # │   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv
-    # │   └── cellranger-tiny-bcl-simple-1.2.0.csv
-    # └── refdata-cellranger-GRCh38-and-mm10-3.1.0/
+    /work/
+    ├── cellranger-3.1.0/
+    ├── data/
+    │   ├── cellranger-tiny-bcl-1.2.0/
+    │   ├── cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    │   └── cellranger-tiny-bcl-simple-1.2.0.csv
+    └── refdata-cellranger-GRCh38-and-mm10-3.1.0/
 
 cellranger mkfastq コマンドの基本形は以下のどちらかです
 
@@ -44,14 +44,14 @@ csv オプションを使用する場合 (10xGenomics 推奨)
 
 `csv サンプルはこちら <../data/cellranger-tiny-bcl-simple-1.2.0.csv>`__
 
-.. code:: bash
+::
 
     # 実行コマンドの例
     
-    # cellranger mkfastq \
-    # --id=tiny-bcl \
-    # --run=./data/cellranger-tiny-bcl-1.2.0 \
-    # --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
+    cellranger mkfastq \
+    --id=tiny-bcl \
+    --run=./data/cellranger-tiny-bcl-1.2.0 \
+    --csv=./data/cellranger-tiny-bcl-simple-1.2.0.csv
 
 "--run" オプションは必須です。Illumina BCL へのパスを指定します。
 
@@ -62,14 +62,14 @@ samplesheet とは Illumina Experiment Manager 互換のサンプルシートの
 
 `samplesheetサンプルはこちら <../data/cellranger-tiny-bcl-samplesheet-1.2.0.csv>`__
 
-.. code:: bash
+::
 
     # 実行コマンドの例
     
-    # cellranger mkfastq \
-    # --id=tiny-bcl2 \
-    # --run=./data/cellranger-tiny-bcl-1.2.0 \
-    # --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
+    cellranger mkfastq \
+    --id=tiny-bcl2 \
+    --run=./data/cellranger-tiny-bcl-1.2.0 \
+    --samplesheet=./data/cellranger-tiny-bcl-samplesheet-1.2.0.csv
 
 "--run" オプションは必須です。Illumina BCL へのパスを指定します。
 
@@ -84,7 +84,7 @@ samplesheet とは Illumina Experiment Manager 互換のサンプルシートの
 csv オプションで実行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-"--csv" オプションを使用して ``cellranger mkfastq`` コマンドを実行します。
+"--csv" オプションを使用して cellranger mkfastq コマンドを実行します。
 
 .. code:: bash
 
@@ -98,21 +98,21 @@ csv オプションで実行
 | 実行ログは以下のように出力されます。
 | "Pipestance completed successfully!" と表示されていれば成功です。
 
-.. code:: bash
+::
 
     # (途中省略)
-    # 
-    # Outputs:
-    # - Run QC metrics:        null
-    # - FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
-    # - Interop output folder: /work/tiny-bcl/outs/interop_path
-    # - Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
-    # 
-    # Waiting 6 seconds for UI to do final refresh.
-    # Pipestance completed successfully!
-    # 
-    # 2019-01-29 09:49:24 Shutting down.
-    # Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
+    
+    Outputs:
+    - Run QC metrics:        null
+    - FASTQ output folder:   /work/tiny-bcl/outs/fastq_path
+    - Interop output folder: /work/tiny-bcl/outs/interop_path
+    - Input samplesheet:     /work/tiny-bcl/outs/input_samplesheet.csv
+    
+    Waiting 6 seconds for UI to do final refresh.
+    Pipestance completed successfully!
+    
+    2019-01-29 09:49:24 Shutting down.
+    Saving pipestance info to tiny-bcl/tiny-bcl.mri.tgz
 
 全体のログは `ここ <../data/cellranger_mkfastq_tiny-bcl.log>`__ です。
 
@@ -148,7 +148,7 @@ csv サンプルシートを確認
 samplesheet オプションで実行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-"--samplesheet" オプションを使用して ``cellranger mkfastq`` コマンドを実行します。
+"--samplesheet" オプションを使用して cellranger mkfastq コマンドを実行します。
 
 .. code:: bash
 

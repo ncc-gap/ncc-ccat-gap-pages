@@ -10,8 +10,8 @@ Cell Ranger とは
 | Cell Ranger には、single-cell 遺伝子発現実験に関連する4つのパイプラインが含まれています。
 
 -  **cellranger mkfastq** は Illumina シーケンサによって生成された Raw Base Call (BCL) ファイルを FASTQ ファイルに逆多重化します。
--  **cellranger count** は cellranger mkfastq で作成した FASTQ ファイルを使用して、アライメント、フィルタリング、バーコードカウント、および UMI カウントを実行します。
--  **cellranger aggr** は複数回の実行結果を集約し、結合データを分析します。
+-  **cellranger count** は cellranger mkfastq で作成した FASTQ ファイルを使用して、アライメント、フィルタリング、バーコードカウント、および UMI カウントを実行し、Chromiumセルラーバーコードを使用して、機能バーコードマトリックスを生成し、クラスターを決定し、遺伝子発現解析を実行します。
+-  **cellranger aggr** は cellranger count の複数回の実行結果を集約 (Aggregation) し、結合データを分析します。
 -  **cellranger reanalyze** は cellranger count または cellranger aggr によって生成された機能バーコード行列を取得し、調整可能なパラメータ設定を使用して次元削減、クラスタリング、および遺伝子発現アルゴリズムを再実行します。
 
 | これらのパイプラインは、Chromium-specific algorithms と RNA 解析に広く使用されているアラインメントツール STAR とを組み合わせたものです。
